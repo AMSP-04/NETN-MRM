@@ -2,6 +2,39 @@
 NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module
 
 
+## Introduction
+
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the purpose of a simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
+
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform negotiated and coordinated aggregation and disaggregation of models representing organizational units and individual entities, e.g. platforms, in a federated distributed simulation. 
+
+The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and primarily intended to support interoperability in a federated simulation (federation) based on HLA. A Federation Object Model (FOM) Module is used to specify how data is represented and exchanged in the federation. The NETN-MRM FOM module is available as an XML file for use in HLA based federations.
+
+
+### Purpose
+
+The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during simulation.
+
+The NETN-MRM FOM module provides a standard interface and protocol for conducting negotiated and coordinated aggregation and disaggregation of simulated units and entities.
+
+For example:
+* Disaggregation of a Batallion represented as an Aggregate Entity into Company level Aggregate Entities
+* Disaggregation of a Company to individual platforms such as vechicles and individual soldiers represented at an entity level
+* Aggregation of platforms represented as individual entities to an attribute of an aggregate unit representing e.g. a Platoon.
+* Triggering of Aggregation by user command
+* Triggering of Disaggregation based on geo-fencing
+
+### Scope
+
+NETN-MRM covers the following cases:
+
+* Disaggregation of AggregateEntity into lower level AggregateEntities
+* Disaggregation of AggregateEntity into Platforms
+* Aggregation of AggregateEntities into higher level AggregateEntity
+* Aggregation of Platforms into AggregateEntity
+* Triggering of Disaggregation
+* Triggering of Aggregation
+
 ## License
 
 Copyright (C) 2019 NATO/OTAN.

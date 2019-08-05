@@ -5,61 +5,110 @@ This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 In
 
 ## Introduction
 
-## Purpose
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the purpose of a simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
 
-The purpose of MRM is to enable interoperability sufficient for the intended purpose of the federation among HLA federates employing different levels of resolution.
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform negotiated and coordinated aggregation and disaggregation of models representing organizational units and individual entities, e.g. platforms, in a federated distributed simulation. 
 
-Resolution is defined as "The degree of detail used to represent aspects of the real world or a specified standard or referent by a model or simulation" [1] as it supports development of guidance and/or standards representing different "dimensions" of resolution [2]. Davis and Bigelow decompose an object's resolution into process, spatial, and temporal dimensions with the object-related dimension further decomposed into three components: entity level, attributes, and logical dependencies among attributes.
+The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and primarily intended to support interoperability in a federated simulation (federation) based on HLA. A Federation Object Model (FOM) Module is used to specify how data is represented and exchanged in the federation. The NETN-MRM FOM module is available as an XML file for use in HLA based federations.
 
-## Scope
 
-## MRM PATTERN CONCEPT
+### Purpose
 
-### Modelling Responsibility
-The MRM Pattern uses the Transfer of Modelling Responsibility Pattern to transfer ownership of instance attributes during the disaggregation and aggregation events. This is only sparsely described in this chapter; for detailed information about the TMR Pattern; see the Transfer of Modelling Responsibility (TMR) chapter.
+The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during simulation.
+
+The NETN-MRM FOM module provides a standard interface and protocol for conducting negotiated and coordinated aggregation and disaggregation of simulated units and entities.
+
+For example:
+* Disaggregation of a Batallion represented as an Aggregate Entity into Company level Aggregate Entities
+* Disaggregation of a Company to individual platforms such as vechicles and individual soldiers represented at an entity level
+* Aggregation of platforms represented as individual entities to an attribute of an aggregate unit representing e.g. a Platoon.
+* Triggering of Aggregation by user command
+* Triggering of Disaggregation based on geo-fencing
+
+### Scope
+
+NETN-MRM covers the following cases:
+
+* Disaggregation of AggregateEntity into lower level AggregateEntities
+* Disaggregation of AggregateEntity into Platforms
+* Aggregation of AggregateEntities into higher level AggregateEntity
+* Aggregation of Platforms into AggregateEntity
+* Triggering of Disaggregation
+* Triggering of Aggregation
+
+### Dependencies
+
+NETN-MRM is limited to units and entities referenced by UUID as defined in NETN-ORG, NETN-Aggregate and NETN-Physical. 
+
+NETN-MRM uses NETN-TMR for the transferring modelling responsibility of attributes as part of disaggregation and aggregation.
+
+## Overview
+
+An aggregate unit can be represented in the simulation at various state of aggregation.
+
+* In a **Fully Disaggregate** state, the aggregate unit may exist in the federation with status set as `inactive` but no update of attributes are made. Instead, **all** subunits and/or entities are registered and updated in the federation.
+
+* In a **Partially Disaggregate** state, the aggregate unit still updates all of its attributes but some entities and/or (sub)units are also represented and updated in the federation. The aggregate unit `silent` attribute is used to reference these entitis.
+
+*If Pseudo-Disaggregate, the aggregate unit sends updates and all Entities and/or (sub)units of the aggregate unit are updated but these “are not capable of full interaction with other entities” In a Disaggregate state, the aggregate unit sends updates and entities and/or (sub)units of the aggregate unit are updated*
+
+
+
+
+
+The NETN-MRM concept of aggregation and disaggregation involves the following basic steps:
+
+1. take the ownership of simulated entity attributes
+2. publishing new entities (if not already exist) either on a more aggregate or disaggregate level and 
+3. transfer modelling responsibility of these new entities to another federate.
+
+This requires the use of a MRM Management federate meeting the following requirements and functions: 
+
+* Responds to MRM Trigger interactions
+* Implements NETN-TMR
+* Have a representation of the Organization (ORBAT) with all units including UUIDs and holdings by subscription to NETN-ORG Units or by MSDL file.
+* Publish and subscribe to the NETN-Aggregate object class
+* Publish and subscribe to the NETN-Physical object class
+* Register NETN-Aggregate and/or NETN-Physical when required during aggregation/disaggregation
+* Update or transfer the modelling responsibility of updating aggegate unit attributes during the time the aggregate unit is in disaggregated state.
+* Set the `Status` attribute of a fully disaggregated NETN-Aggregate entity to `inactive`.
+
+
 
 ### High Resolution Units
 The High Resolution Units are the disaggregated elements of the original aggregate, and can themselves be smaller aggregates. A high resolution unit is an instance of the NETN Aggregate class or a NETN-Physical leaf class.
 
-### MRM Service Provider
-
-The MRM pattern describes a functionality implemented in a federate, either a federate whose main purpose is to act as a MRM Service Provider (MRM SP) or it may be implemented in a federate with another main purpose, e.g. a CGF federate. 
-
-The MRM SP requirements are:
-a.	The MRM SP shall have knowledge about the hierarchy in the ORBAT, which can be found in the MSDL file that defines the scenario units.
-b.	The MRM SP shall publish and subscribe to the NETN-Aggregate class.
-c.	The MRM SP is responsible for actions associated with the multi-resolution modelling. For example, the MRM SP is responsible for registering the entity instances (NETN-Physical leaf classes) according to the hierarchy defined in the ORBAT.
-d.	The MRM SP may be able to manage the high resolution units, for example, moving the units and assigning damage to them. The attributes associated with these capabilities shall be published and subscribed to.
-e.	If the MRM SP does not have the capability to manage the high resolution units and is not responsible for modelling these, it shall have knowledge of which federates are capable, and transfer the modelling responsibility (TMR) appropriately.
-f.	Only one MRM SP shall respond to a Trigger request. If more than one MRM SPs exist in a federation execution then the responsibility for aggregate units shall be divided between the MRM SPs.
-
 ### Aggregate Dynamic Attribute Update Responsibility
 
-When an aggregate unit is disaggregated, modelling responsibility for the aggregate unit's dynamic values shall be transferred to the MRM SP. Attributes with a static value shall not be transferred. The MRM SP is then responsible for updating the dynamic attributes. According to the DIS standard a fully disaggregated unit shall not be updated. The MRM pattern modifies this, the MRM SP shall update the dynamic attributes and the Status attribute (NETN) shall be set to Inactive.
+When an aggregate unit is disaggregated, modelling responsibility for the aggregate unit's dynamic values shall be transferred to the MRM SP. Attributes with a static value shall not be transferred. The MRM SP is then responsible for updating the dynamic attributes. .
 
 The federate responsible for the aggregate unit in Aggregate State gets information about the status of the subunits when the MRM SP updates the dynamic attributes of the aggregate unit according to the changes to the physical entities (the aggregate federate may not subscribe to physical object classes).
-Table 6-1: Responsibility for Updating the Dynamic Attributes 
-at NETN Aggregate Instances in Different Aggregate States.
+
+
  
 ### High Resolution Dynamic Attribute Update Responsibility
 The MRM SP registers the high resolution entities. Attributes with static values shall not be transferred and shall be initialised (and updated on a request) by the MRM SP with data from the ORBAT, e.g. UniqueID, Callsign, EntityType. Dynamic attributes shall be updated by a federate with the required capability.
 
+
+
 ### Aggregate Federate
 The Aggregate Federate (Aggregate Sim) publishes and subscribes to the NETN-Aggregate class.
 
-### Higher Resolution Federate
+### Disaggregate Federate
 The Higher Resolution Federate (HRF or Disaggregate Sim) shall publish and subscribe to the NETN-Physical leaf classes. It shall have the capability to manage physical entity attributes, such as movement and damage assessment. The Higher Resolution Federate can also publish and subscribe to the NETN-Aggregate class, e.g. when the result of a disaggregation of a battalion is units at platoon level.
 
 ### Trigger Federate
 A federate that triggers a MRM event shall have the capability to recognize events that require a higher resolution than the Aggregate Federate can provide to the simulation. This capability can be included in any federate e.g. the MRM SP or an Aggregate Federate. The functionality that the Trigger Federate represents can be replaced if the MRM SP is manually operated and the Trigger Federate is omitted.
 
-### Identification
-To identify units (aggregates and physical units) each unit shall have a specified unique id represented in an attribute. This attribute is defined in the NETN FOM modules and the value is specified in the MSDL specification of the ORBAT (or equivalent).
+
  
 ### MRM Interactions
  
 Figure 6-1: The Interaction Classes in the MRM FOM Module.
 For a description of the MRM interactions and the interaction parameters see the MRM FOM module.
+
+
+
 
 ## Disaggregation
 
@@ -77,6 +126,9 @@ For a description of the MRM interactions and the interaction parameters see the
  
 Figure 6-2: MRM Disaggregate. MRM Disaggregation Sequence Diagram.
 
+
+
+
 ## Aggregation
 
 1.	The MRM SP sends an MRM_AggregationRequest to both the Aggregate Sim and the Disaggregate Sim (Higher Resolution Federate).
@@ -88,6 +140,9 @@ Figure 6-2: MRM Disaggregate. MRM Disaggregation Sequence Diagram.
 7.	The MRM SP sends MRM_ActionComplete to inform the Aggregate Sim, and Disaggregate Sim that the aggregation is complete or cancelled.
  
 Figure 6-3: MRM Aggregate. MRM Aggregation Sequence Diagram.
+
+
+
 
 ## MRM TRIGGER
 1.	The MRM_Trigger interaction is sent from a federate that in some sense can detect the need for a disaggregation. It is not mandated that the MRM_Trigger interaction must be sent to the MRM Service Provider (MRM SP). The disaggregation process can start without a trigger interaction, e.g. a manually operation.
@@ -102,3 +157,29 @@ If the service for some reason is not doable by the MRM SP it shall first respon
  
 Figure 6-5: The MRM Request from the Trigger is Not Performed.
  
+
+<!--
+participant Aggregate
+
+participant MRM Manager
+
+participant Disaggregate
+
+
+autonumber 
+
+MRM Manager ->> Aggregate:DisaggregateRequest(Aggregate, LevelOfDisaggregation)
+Aggregate->>MRM Manager:Offer(OK)
+
+aboxright over Aggregate, MRM Manager:TMR Acquisition(Aggregate.Attributes)
+
+
+Disaggregate <- MRM Manager:Register Entities(DisaggregateEntities)
+
+
+aboxright over Disaggregate, MRM Manager:TMR Divestiture(DisaggregateEntities.Attributes)
+
+Disaggregate -> MRM Manager:Update Attributes(DisaggregateEntities.Attributes)
+
+autonumber off
+-->
