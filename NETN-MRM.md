@@ -1,7 +1,7 @@
 # NETN-MRM
 
 Copyright (C) 2019 NATO/OTAN.
-This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 International License](LICENSE.md).
+This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 International License](LICENCE.md).
 
 ## Introduction
 
@@ -40,7 +40,7 @@ NETN-MRM covers the following cases:
 
 NETN-MRM is limited to units and entities referenced by UUID as defined in NETN-ORG, NETN-Aggregate and NETN-Physical. 
 
-NETN-MRM uses NETN-TMR for the transferring modelling responsibility of attributes as part of disaggregation and aggregation.
+NETN-MRM may use NETN-TMR for transferring modelling responsibility of attributes as part of disaggregation and aggregation.
 
 ## Overview
 
@@ -48,7 +48,7 @@ An aggregate unit can be represented in the simulation at various state of aggre
 
 * In a **Fully Disaggregate** state, the aggregate unit may exist in the federation with status set as `inactive` but no update of attributes are made. Instead, **all** subunits and/or entities are registered and updated in the federation.
 
-* In a **Partially Disaggregate** state, the aggregate unit still updates all of its attributes but some entities and/or (sub)units are also represented and updated in the federation. The aggregate unit `silent` attribute is used to reference these entitis.
+* In a **Partially Disaggregate** state, the aggregate unit still updates all of its attributes but some entities and/or (sub)units are also represented and updated in the federation. The aggregate unit's `silent` attribute is used to reference these entitis.
 
 *If Pseudo-Disaggregate, the aggregate unit sends updates and all Entities and/or (sub)units of the aggregate unit are updated but these “are not capable of full interaction with other entities” In a Disaggregate state, the aggregate unit sends updates and entities and/or (sub)units of the aggregate unit are updated*
 

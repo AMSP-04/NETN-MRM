@@ -19,7 +19,10 @@ NETN-MRM FOM Module v2.0 was developed by MSG-163 and included in NETN-FOM v3.0.
 * Update `modelIdentification` `poc` to include Release authority, Primary authors and Contributors
 * Update `modelIdentification` `applicationDomain` to empty.
 
-
+#### NETN-MRM#4 Make MRM not depend on TMR
+* Moved datatype `FederateName` from NETN-TMR to NETN-BASE.
+* Moved datatype `CancellationReasonEnum32` from NETN-TMR to NETN-BASE.
+* Removed NETN-MRM dependency on NETN-TMR.
 
 ### Changes for v1.1.1 
 NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.
