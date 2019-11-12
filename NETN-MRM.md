@@ -19,8 +19,8 @@ The purpose of NETN-MRM is to support federations where models are represented a
 The NETN-MRM FOM module provides a standard interface and protocol for conducting negotiated and coordinated aggregation and disaggregation of simulated units and entities.
 
 For example:
-* Disaggregation of a Batallion represented as an Aggregate Entity into Company level Aggregate Entities
-* Disaggregation of a Company to individual platforms such as vechicles and individual soldiers represented at an entity level
+* Disaggregation of a Battalion represented as an Aggregate Entity into Company level Aggregate Entities
+* Disaggregation of a Company to individual platforms such as vehicles and individual soldiers represented at an entity level
 * Aggregation of platforms represented as individual entities to an attribute of an aggregate unit representing e.g. a Platoon.
 * Triggering of Aggregation by user command
 * Triggering of Disaggregation based on geo-fencing
@@ -48,7 +48,7 @@ An aggregate unit can be represented in the simulation at various state of aggre
 
 * In a **Fully Disaggregate** state, the aggregate unit may exist in the federation with status set as `inactive` but no update of attributes are made. Instead, **all** subunits and/or entities are registered and updated in the federation.
 
-* In a **Partially Disaggregate** state, the aggregate unit still updates all of its attributes but some entities and/or (sub)units are also represented and updated in the federation. The aggregate unit's `silent` attribute is used to reference these entitis.
+* In a **Partially Disaggregate** state, the aggregate unit still updates all of its attributes but some entities and/or (sub)units are also represented and updated in the federation. The aggregate unit's `silent` attribute is used to reference these entities.
 
 *If Pseudo-Disaggregate, the aggregate unit sends updates and all Entities and/or (sub)units of the aggregate unit are updated but these “are not capable of full interaction with other entities” In a Disaggregate state, the aggregate unit sends updates and entities and/or (sub)units of the aggregate unit are updated*
 
@@ -70,7 +70,7 @@ This requires the use of a MRM Management federate meeting the following require
 * Publish and subscribe to the NETN-Aggregate object class
 * Publish and subscribe to the NETN-Physical object class
 * Register NETN-Aggregate and/or NETN-Physical when required during aggregation/disaggregation
-* Update or transfer the modelling responsibility of updating aggegate unit attributes during the time the aggregate unit is in disaggregated state.
+* Update or transfer the modelling responsibility of updating aggregate unit attributes during the time the aggregate unit is in disaggregated state.
 * Set the `Status` attribute of a fully disaggregated NETN-Aggregate entity to `inactive`.
 
 
