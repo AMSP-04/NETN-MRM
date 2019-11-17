@@ -5,7 +5,7 @@ This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 In
 
 ## Introduction
 
-Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the purpose of a simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
 
 The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform negotiated and coordinated aggregation and disaggregation of models representing organizational units and individual entities, e.g. platforms, in a federated distributed simulation. 
 
@@ -14,7 +14,7 @@ The specification is based on IEEE 1516 High Level Architecture (HLA) Object Mod
 
 ### Purpose
 
-The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during simulation.
+The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation.
 
 The NETN-MRM FOM module provides a standard interface and protocol for conducting negotiated and coordinated aggregation and disaggregation of simulated units and entities.
 
@@ -29,9 +29,9 @@ For example:
 
 NETN-MRM covers the following cases:
 
-* Disaggregation of AggregateEntity into lower level AggregateEntities
+* Disaggregation of AggregateEntity into lower-level AggregateEntities
 * Disaggregation of AggregateEntity into Platforms
-* Aggregation of AggregateEntities into higher level AggregateEntity
+* Aggregation of AggregateEntities into higher-level AggregateEntity
 * Aggregation of Platforms into AggregateEntity
 * Triggering of Disaggregation
 * Triggering of Aggregation
@@ -62,7 +62,7 @@ The NETN-MRM concept of aggregation and disaggregation involves the following ba
 2. publishing new entities (if not already exist) either on a more aggregate or disaggregate level and 
 3. transfer modelling responsibility of these new entities to another federate.
 
-This requires the use of a MRM Management federate meeting the following requirements and functions: 
+This requires the use of an MRM Management federate meeting the following requirements and functions: 
 
 * Responds to MRM Trigger interactions
 * Implements NETN-TMR
@@ -70,24 +70,24 @@ This requires the use of a MRM Management federate meeting the following require
 * Publish and subscribe to the NETN-Aggregate object class
 * Publish and subscribe to the NETN-Physical object class
 * Register NETN-Aggregate and/or NETN-Physical when required during aggregation/disaggregation
-* Update or transfer the modelling responsibility of updating aggregate unit attributes during the time the aggregate unit is in disaggregated state.
+* Update or transfer the modelling responsibility of updating aggregate unit attributes during the time the aggregate unit is in a disaggregated state.
 * Set the `Status` attribute of a fully disaggregated NETN-Aggregate entity to `inactive`.
 
 
 
 ### High Resolution Units
-The High Resolution Units are the disaggregated elements of the original aggregate, and can themselves be smaller aggregates. A high resolution unit is an instance of the NETN Aggregate class or a NETN-Physical leaf class.
+The High-Resolution Units are the disaggregated elements of the original aggregate, and can themselves be smaller aggregates. A high resolution-unit is an instance of the NETN Aggregate class or a NETN-Physical leaf class.
 
 ### Aggregate Dynamic Attribute Update Responsibility
 
-When an aggregate unit is disaggregated, modelling responsibility for the aggregate unit's dynamic values shall be transferred to the MRM SP. Attributes with a static value shall not be transferred. The MRM SP is then responsible for updating the dynamic attributes. .
+When an aggregate unit is disaggregated, modelling responsibility for the aggregate unit's dynamic values shall be transferred to the MRM SP. Attributes with a static value shall not be transferred. The MRM SP is then responsible for updating the dynamic attributes.
 
 The federate responsible for the aggregate unit in Aggregate State gets information about the status of the subunits when the MRM SP updates the dynamic attributes of the aggregate unit according to the changes to the physical entities (the aggregate federate may not subscribe to physical object classes).
 
 
  
 ### High Resolution Dynamic Attribute Update Responsibility
-The MRM SP registers the high resolution entities. Attributes with static values shall not be transferred and shall be initialised (and updated on a request) by the MRM SP with data from the ORBAT, e.g. UniqueID, Callsign, EntityType. Dynamic attributes shall be updated by a federate with the required capability.
+The MRM SP registers the high-resolution entities. Attributes with static values shall not be transferred and shall be initialised (and updated on a request) by the MRM SP with data from the ORBAT, e.g. UniqueID, Callsign, EntityType. Dynamic attributes shall be updated by a federate with the required capability.
 
 
 
@@ -95,17 +95,17 @@ The MRM SP registers the high resolution entities. Attributes with static values
 The Aggregate Federate (Aggregate Sim) publishes and subscribes to the NETN-Aggregate class.
 
 ### Disaggregate Federate
-The Higher Resolution Federate (HRF or Disaggregate Sim) shall publish and subscribe to the NETN-Physical leaf classes. It shall have the capability to manage physical entity attributes, such as movement and damage assessment. The Higher Resolution Federate can also publish and subscribe to the NETN-Aggregate class, e.g. when the result of a disaggregation of a battalion is units at platoon level.
+The Higher Resolution Federate (HRF or Disaggregate Sim) shall publish and subscribe to the NETN-Physical leaf classes. It shall have the capability to manage physical entity attributes, such as movement and damage assessment. The Higher Resolution Federate can also publish and subscribe to the NETN-Aggregate class, e.g. when the result of disaggregation of a battalion is units at platoon level.
 
 ### Trigger Federate
-A federate that triggers a MRM event shall have the capability to recognize events that require a higher resolution than the Aggregate Federate can provide to the simulation. This capability can be included in any federate e.g. the MRM SP or an Aggregate Federate. The functionality that the Trigger Federate represents can be replaced if the MRM SP is manually operated and the Trigger Federate is omitted.
+A federate that triggers an MRM event shall have the capability to recognize events that require a higher resolution than the Aggregate Federate can provide to the simulation. This capability can be included in any federate e.g. the MRM SP or an Aggregate Federate. The functionality that the Trigger Federate represents can be replaced if the MRM SP is manually operated and the Trigger Federate is omitted.
 
 
  
 ### MRM Interactions
  
 Figure 6-1: The Interaction Classes in the MRM FOM Module.
-For a description of the MRM interactions and the interaction parameters see the MRM FOM module.
+For a description of the MRM interactions and the interaction parameters, see the MRM FOM module.
 
 
 
@@ -132,8 +132,8 @@ Figure 6-2: MRM Disaggregate. MRM Disaggregation Sequence Diagram.
 ## Aggregation
 
 1.	The MRM SP sends an MRM_AggregationRequest to both the Aggregate Sim and the Disaggregate Sim (Higher Resolution Federate).
-2.	The MRM SP waits for the MRM_AggregationResponse from the Aggregate Sim and the Disaggregate Sim. If both federates are able to comply with the aggregation request, the MRM SP starts the transfer of modelling responsibility (TMR) pattern to acquire the ownership of instance attributes with dynamic attribute values from the Disaggregate Sim.
-3.	The MRM SP will need to acquire ownership of attributes of multiple object instances during a MRM aggregation process. For each (entity) object instance: The HLA Ownership callback attributeOwnershipNotification indicates that the TMR action between the MRM SP and the Disaggregate Sim has completed for the entity.
+2.	The MRM SP waits for the MRM_AggregationResponse from the Aggregate Sim and the Disaggregate Sim. If both federates can comply with the aggregation request, the MRM SP starts the transfer of modelling responsibility (TMR) pattern to acquire the ownership of instance attributes with dynamic attribute values from the Disaggregate Sim.
+3.	The MRM SP will need to acquire ownership of attributes of multiple object instances during an MRM aggregation process. For each (entity) object instance: The HLA Ownership callback attributeOwnershipNotification indicates that the TMR action between the MRM SP and the Disaggregate Sim has completed for the entity.
 4.	The entities are either deleted or deactivated by the MRM SP.
 5.	The MRM SP makes a TMR request (divest) to the Aggregate Sim for instance attributes of the aggregate object instance.
 6.	The HLA Ownership service attributeOwnershipDivestureIfWanted is a synchronized service and returns a set of instance attributes that have been divested. This is an indication for the MRM SP that the TMR action for the aggregate object instance with the Aggregate Sim is complete.
@@ -145,7 +145,7 @@ Figure 6-3: MRM Aggregate. MRM Aggregation Sequence Diagram.
 
 
 ## MRM TRIGGER
-1.	The MRM_Trigger interaction is sent from a federate that in some sense can detect the need for a disaggregation. It is not mandated that the MRM_Trigger interaction must be sent to the MRM Service Provider (MRM SP). The disaggregation process can start without a trigger interaction, e.g. a manually operation.
+1.	The MRM_Trigger interaction is sent from a federate that in some sense can detect the need for disaggregation. It is not mandated that the MRM_Trigger interaction must be sent to the MRM Service Provider (MRM SP). The disaggregation process can start without a trigger interaction, e.g. a manual operation.
 2.	The MRM SP sends an MRM_TriggerResponse to the Trigger Federate, which contains the TransactionId which is used in subsequent interactions related to this MRM_Trigger.
 3.	The Disaggregation or the Aggregation sequence is executed depending on the AggregateState in the MRM_Trigger interaction.
 4.	The MRM SP sends MRM_ActionComplete to inform the Trigger Federate that the aggregation is complete.
@@ -153,7 +153,7 @@ Figure 6-3: MRM Aggregate. MRM Aggregation Sequence Diagram.
 Figure 6-4: A Trigger Activates a Disaggregation or an Aggregation Event.
 
 ## UNABLE TO COMPLY
-If the service for some reason is not doable by the MRM SP it shall first respond with an MRM_TriggerResponse and then send an MRM_ActionComplete with the parameter CompletionResult (Boolean) indicating that the requested action in the MRM_Trigger will not be executed. One reason for a negative response can for example be that an aggregate unit already has the requested aggregate state or a TMR action was not performed.
+If the service for some reason is not doable by the MRM SP it shall first respond with an MRM_TriggerResponse and then send an MRM_ActionComplete with the parameter CompletionResult (Boolean) indicating that the requested action in the MRM_Trigger will not be executed. One reason for a negative response can, for example, be that an aggregate unit already has the requested aggregate state or a TMR action was not performed.
  
 Figure 6-5: The MRM Request from the Trigger is Not Performed.
  

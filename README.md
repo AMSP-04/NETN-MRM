@@ -4,7 +4,7 @@ NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Modu
 
 ## Introduction
 
-Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the purpose of a simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
 
 The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform negotiated and coordinated aggregation and disaggregation of models representing organizational units and individual entities, e.g. platforms, in a federated distributed simulation. 
 
@@ -13,13 +13,13 @@ The specification is based on IEEE 1516 High Level Architecture (HLA) Object Mod
 
 ### Purpose
 
-The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during simulation.
+The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation.
 
 The NETN-MRM FOM module provides a standard interface and protocol for conducting negotiated and coordinated aggregation and disaggregation of simulated units and entities.
 
 For example:
 * Disaggregation of a Batallion represented as an Aggregate Entity into Company level Aggregate Entities
-* Disaggregation of a Company to individual platforms such as vechicles and individual soldiers represented at an entity level
+* Disaggregation of a Company to individual platforms such as vehicles and individual soldiers represented at an entity level
 * Aggregation of platforms represented as individual entities to an attribute of an aggregate unit representing e.g. a Platoon.
 * Triggering of Aggregation by user command
 * Triggering of Disaggregation based on geo-fencing
@@ -28,9 +28,9 @@ For example:
 
 NETN-MRM covers the following cases:
 
-* Disaggregation of AggregateEntity into lower level AggregateEntities
+* Disaggregation of AggregateEntity into lower-level AggregateEntities
 * Disaggregation of AggregateEntity into Platforms
-* Aggregation of AggregateEntities into higher level AggregateEntity
+* Aggregation of AggregateEntities into higher-level AggregateEntity
 * Aggregation of Platforms into AggregateEntity
 * Triggering of Disaggregation
 * Triggering of Aggregation
@@ -42,21 +42,21 @@ This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 In
 
 The work includes the [NETN-MRM.xml](NETN-MRM.xml) FOM Module and documentation NETN-MRM.md.
 
-Above licence gives you the right to use and redistribute the NETN FOM Module (XML file and Documentation) in its entirety without modification. You are also allowed to develop your own new FOM Modules (in separate XML files and separate documentation) that build-on/extends the NETN module by reference and including neccessary scaffolding classes. You are NOT allowed to modify this FOM Module or its documentation without prior permission by the NATO Modelling and Simulation Group. 
+Above licence gives you the right to use and redistribute the NETN FOM Module (XML file and Documentation) in its entirety without modification. You are also allowed to develop new FOM Modules (in separate XML files and separate documentation) that build-on/extends the NETN module by reference and including necessary scaffolding classes. You are NOT allowed to modify this FOM Module or its documentation without prior permission by the NATO Modelling and Simulation Group. 
 
-## Versions, updates and extentions
+## Versions, updates and extensions
 
-All updates and versioning of this work is coordinated by the NATO Modelleing and Simulation Coordination Office (MSCO), managed by the NATO Modelling and Simulation Group (NMSG) and performed as NATO Science and Technology Organization (STO) technical activities in support of the NMSG Modelling and Simulation Standards Subgroup (MS3).
+All updates and versioning of this work is coordinated by the NATO Modelling and Simulation Coordination Office (MSCO), managed by the NATO Modelling and Simulation Group (NMSG) and performed as NATO Science and Technology Organization (STO) technical activities in support of the NMSG Modelling and Simulation Standards Subgroup (MS3).
 
-Feedback on the use of this work, suggestions for improvements and identified issues are welcome and can be provided using GitGub issue tracking. To engage in the development and update of this FOM Module please contact your national NMSG representative.
+Feedback on the use of this work, suggestions for improvements and identified issues are welcome and can be provided using GitHub issue tracking. To engage in the development and update of this FOM Module please contact your national NMSG representative.
 
 Version numbering of this FOM Module and associated documentation is based on the following principles:
 
-* New official version number is assigned and in effect only when new release is made in the Master branch.
-* Updates in the Develop branch will not change version number.
-* In the FOM Module useHistory information include only information on official releases.
-* Update of the major version number is made if the change constitute a major restructuring, merging, addition or redefinition of semantics that breaks backward compatibility or cover entirely new concepts.
-* Update of the minor version number is made if the change constitute a minor additions to existing concepts and editorial changes that do not break backward compatibility but may require updates of software to use new concepts.
+* New official version number is assigned and in effect only when a new release is made in the Master branch.
+* Updates in the Develop branch will not change the version number.
+* In the FOM Module `useHistory` information includes only information on official releases.
+* Update of the major version number is made if the change constitutes a major restructuring, merging, addition or redefinition of semantics that breaks backward compatibility or cover entirely new concepts.
+* Update of the minor version number is made if the change constitutes minor additions to existing concepts and editorial changes that do not break backward compatibility but may require updates of software to use new concepts.
 * Patches are released to fix minor issues that do not break backward compatibility.
 
 |Version|Description|
