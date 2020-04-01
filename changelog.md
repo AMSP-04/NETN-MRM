@@ -5,24 +5,49 @@
 NETN-MRM FOM Module v2.0 was developed by MSG-163 and included in NETN-FOM v3.0.
 
 ### NETN-MRM#1 Rename FOM Module filename
-* Filename changed to NETN-MRM.xml without version number.
+* Changed Filename to NETN-MRM.xml
 
 ### NETN-MRM#3 Update modelIdentification
-* Change `modelIdentification` `securityClassification` from `unclassified` to `Not Classified`
-* Change `modelIdentification` `other` to include license information
-* Change `modelIdentification` `reference` to only refer to directly dependent FOM Modules
-* Add `modelIdentification` `useLimitation` to reflect Scope of FOM Module
-* Add `modelIdentification` `glyph` 
-* Update `modelIdentification` `purpose` to reflect Purpose of FOM Module 
-* Update `modelIdentification` `description` to reflect Introduction of FOM Module
-* Update `modelIdentification` `name` to NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module
-* Update `modelIdentification` `poc` to include Release authority, Primary authors and Contributors
-* Update `modelIdentification` `applicationDomain` to empty.
+* Changed `modelIdentification` `securityClassification` from `unclassified` to `Not Classified`
+* Changed `modelIdentification` `other` to include license information
+* Changed `modelIdentification` `reference` to only refer to directly dependent FOM Modules
+* Added `modelIdentification` `useLimitation` to reflect Scope of FOM Module
+* Added `modelIdentification` `glyph` 
+* Updated `modelIdentification` `purpose` to reflect Purpose of FOM Module 
+* Updated `modelIdentification` `description` to reflect Introduction of FOM Module
+* Updated `modelIdentification` `name` to NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module
+* Updated `modelIdentification` `poc` to include Release authority, Primary authors and Contributors
+* Updated `modelIdentification` `applicationDomain` to empty.
 
 #### NETN-MRM#4 Make MRM not depend on TMR
-* Moved datatype `FederateName` from NETN-TMR to NETN-BASE.
-* Moved datatype `CancellationReasonEnum32` from NETN-TMR to NETN-BASE.
 * Removed NETN-MRM dependency on NETN-TMR.
+
+#### NETN-MRM#5 Rename MRM_Object interaction class
+* Removed InteractionClass `MRM_Object`
+* Removed InteractionClass `MRM_TriggerResponse`
+* Removed InteractionClass `MRM_Trigger`
+* Renamed InteractionClass `MRM_DisaggregationRequest`
+* Renamed InteractionClass `MRM_AggregationRequest`
+* Removed InteractionClass `MRM_DisaggregationResponse` 
+* Removed InteractionClass `MRM_AggregationResponse`
+* Removed InteractionClass `MRM_CancelRequest`
+* Removed InteractionClass `MRM_ActionComplete` 
+* Added InteractionClass `MRM_Interaction`
+* Added InteractionClass `Request`
+* Added InteractionClass `Aggregate`
+* Added InteractionClass `Disaggregate`
+* Added InteractionClass `Divide`
+* Added InteractionClass `Merge`
+* Added InteractionClass `Inactivate`
+* Added InteractionClass `Activate`
+* Added InteractionClass `QuerySupportedCapabilities`
+* Added InteractionClass `CapabilitiesSupported`
+* Added InteractionClass `Response`
+* Removed Datatype `AggregateStateEnum32`
+* Renamed Datatype `NonComplianceReasonEnum` to `MRM_ResponseStatusEnumType`
+
+#### NETN-MRM#6 Complete MRM Documentation
+* Complete rewrite of the NETN-MRM Documentation. The pattern has been simplified and extended with additional capabilities for controlling the Aggregate Unit state during federation execution.
 
 ### Changes for v1.1.1 
 NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.

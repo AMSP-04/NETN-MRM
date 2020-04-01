@@ -3,24 +3,21 @@
     <modelIdentification>
         <name>NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module</name>
         <type>FOM</type>
-        <version>2.0 RC1</version>
-        <modificationDate>2019-08-01</modificationDate>
+        <version>2.0</version>
+        <modificationDate>2020-04-01</modificationDate>
         <securityClassification>Not Classified</securityClassification>
-        <purpose>The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during simulation.
-
-The NETN-MRM FOM module provides a standard interface and protocol for conducting negotiated and coordinated aggregation and disaggregation of simulated units and entities.
-</purpose>
+        <purpose>The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. </purpose>
         <applicationDomain></applicationDomain>
-        <description>The MRM FOM module specifies classes necessary to enable federation multi-resolution modeling.</description>
+        <description>The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modeling.</description>
         <useLimitation>NETN-MRM covers the following cases:
 
-* Disaggregation of AggregateEntity into lower level AggregateEntities
-* Disaggregation of AggregateEntity into Platforms
-* Aggregation of AggregateEntities into higher level AggregateEntity
-* Aggregation of Platforms into AggregateEntity
-* Triggering of Disaggregation
-* Triggering of Aggregation</useLimitation>
-        <useHistory>v1.1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0 in AMSP-04 Ed A.</useHistory>
+* Aggregation of subunits and/or physical entities
+* Disaggregation of unit into subunits and/or physical entities
+* Division of simulated unit into specific parts - resources divided and all entities simulated
+* Merge of previously divided parts with simulated unit.
+* Activate and Inactivate aggregate units' representation in the simulation</useLimitation>
+        <useHistory>v1.1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
+        <useHistory>v2.0.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
         <poc>
             <pocType>Release authority</pocType>
             <pocName>NATO Modelling and Simulation Group</pocName>
@@ -47,16 +44,6 @@ The NETN-MRM FOM module provides a standard interface and protocol for conductin
         </poc>
         <poc>
             <pocType>Contributor</pocType>
-            <pocName>Andy Bowers</pocName>
-            <pocOrg>MITRE</pocOrg>
-        </poc>
-        <poc>
-            <pocType>Contributor</pocType>
-            <pocName>Lennart Olsson</pocName>
-            <pocOrg>Pitch Technologies, Sweden</pocOrg>
-        </poc>
-        <poc>
-            <pocType>Contributor</pocType>
             <pocName>Bjorn Lofstrand</pocName>
             <pocOrg>Pitch Technologies, Sweden</pocOrg>
         </poc>
@@ -65,7 +52,7 @@ The NETN-MRM FOM module provides a standard interface and protocol for conductin
             <identification>NETN-BASE</identification>
         </reference>
         <other>
-Copyright © 2019 by NATO/OTAN. All rights reserved.
+Copyright © 2020 by NATO/OTAN. All rights reserved.
 This work is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License.
 
 Above license gives you the right to use and redistribute the NETN FOM Module (XML file and Documentation) in its entirety without modification. You are also allowed to develop your own new FOM Modules (in separate XML files and separate documentation) that build-on/extends the NETN module by reference. You are NOT allowed to modify the NETN FOM Module or its documentation without prior permission by the NATO Modelling and Simulation Group.</other>
@@ -80,176 +67,126 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
         <interactionClass>
             <name>HLAinteractionRoot</name>
             <interactionClass>
-                <name>MRM_Object</name>
+                <name>MRM_Interaction</name>
                 <sharing>Neither</sharing>
                 <transportation>HLAreliable</transportation>
                 <order>Receive</order>
-                <semantics>Base class for Multi-Resolution Modelling (MRM) interactions.</semantics>
+                <semantics>Base class for all MRM interactions.</semantics>
                 <parameter>
-                    <name>TransactionID</name>
+                    <name>EventId</name>
                     <dataType>TransactionId</dataType>
-                    <semantics>Identifier for this transaction. Required</semantics>
-                </parameter>
-                <parameter>
-                    <name>AggregateFederate</name>
-                    <dataType>FederateName</dataType>
-                    <semantics>Federate name; Required in MRM_DisaggregationRequest or MRM_AggregationRequest from MRM SP, and in MRM_DisaggregationResponse or MRM_AggregationResponse from AggregateFederate, else Optional.</semantics>
-                </parameter>
-                <parameter>
-                    <name>HigherResolutionFederate</name>
-                    <dataType>FederateName</dataType>
-                    <semantics>Federate name; Required in MRM_DisaggregationRequest or MRM_AggregationRequest from MRM SP, and in MRM_DisaggregationResponse or MRM_AggregationResponse from HigherResolutionFederate, else Optional.</semantics>
+                    <semantics>Unique identifier for all MRM interactions belonging to the same request/respons event.</semantics>
                 </parameter>
                 <interactionClass>
-                    <name>MRM_DisaggregationRequest</name>
-                    <sharing>PublishSubscribe</sharing>
+                    <name>Request</name>
+                    <sharing>Neither</sharing>
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
-                    <semantics>A request to disaggregate an object instance specified by a UUID.</semantics>
+                    <semantics>A base class for all MRM  Request events.</semantics>
                     <parameter>
-                        <name>AggregateUuid</name>
+                        <name>AggregateFederate</name>
+                        <dataType>FederateName</dataType>
+                        <semantics>Required: Name of federate responsible for the AggregatedUnit involved.</semantics>
+                    </parameter>
+                    <parameter>
+                        <name>AggregateUnit</name>
                         <dataType>UuidArrayOfHLAbyte16</dataType>
-                        <semantics>The UUID of the object instance intended for disaggregation.</semantics>
+                        <semantics>Required: Unique identifer for the AggregatedUnit involved.</semantics>
                     </parameter>
-                    <parameter>
-                        <name>AggregationState</name>
-                        <dataType>AggregateStateEnum32</dataType>
-                        <semantics>Informs Aggregate Federate of intended Aggregation State: 
-If Fully Disaggregate, the aggregate unit does not send updates and all Entities and/or (sub)units of the aggregate unit are updated 
-If Disaggregate, the aggregate unit sends updates and entities and/or (sub)units of the aggregate unit are updated 
-If Pseudo-Disaggregate, the aggregate unit sends updates and all Entities and/or (sub)units of the aggregate unit are updated but these “are not capable of full interaction with other entities” 
-If Partially Disaggregate, the aggregate unit send updates and some entities and/or (sub)units of the aggregate unit are updated, but others are not (and are accounted for using the “silent” attribute)</semantics>
-                    </parameter>
-                    <parameter>
-                        <name>UuidList</name>
-                        <dataType>ArrayOfUuid</dataType>
-                        <semantics>Optional for: Disaggregated and FullyDisaggregated 
-Required for: PartllyDisaggregated (and PseudoDisaggregated) 
- 
-The list of UUIDs which will be instantiated as a result of the disaggregation.</semantics>
-                    </parameter>
+                    <interactionClass>
+                        <name>Aggregate</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Instruction to the AggregateFederate to perform aggregation of the specified AggregateUnit's parts.</semantics>
+                        <parameter>
+                            <name>RemoveParts</name>
+                            <dataType>HLAboolean</dataType>
+                            <semantics>Optional: Indicates if the disaggregate parts is to be deleted from the federation execution. Default is TRUE - all parts should be deleted. If FALSE all disaggregate parts shall be set to inactive.</semantics>
+                        </parameter>
+                    </interactionClass>
+                    <interactionClass>
+                        <name>Disaggregate</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Instruction to perform a full disaggregation of an AggregatedUnit. All subunits and platforms will be registered in the federation.</semantics>
+                    </interactionClass>
+                    <interactionClass>
+                        <name>Divide</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Instruction to divide the simulated AggregateUnit into multiple simulated object. The resouces are divided among the simulated entities. After successful division two simulated entities represent the entire Unit. 1) The original AggregateUnit and 2) the divided unit or platform. Both these entities are simulated until merged.</semantics>
+                        <parameter>
+                            <name>Parts</name>
+                            <dataType>ArrayOfUuid</dataType>
+                            <semantics>Required: A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.</semantics>
+                        </parameter>
+                    </interactionClass>
+                    <interactionClass>
+                        <name>Merge</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Instruction to merg the simulated AggregateUnit with the selected divided parts. After successful merge the divided parts are removed from the federation and their resources are combined with the AggregatedUnit.</semantics>
+                        <parameter>
+                            <name>Parts</name>
+                            <dataType>ArrayOfUuid</dataType>
+                            <semantics>Required: A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.</semantics>
+                        </parameter>
+                    </interactionClass>
+                    <interactionClass>
+                        <name>QuerySupportedCapabilities</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>A request to query the capabilities of a specified federation to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.</semantics>
+                    </interactionClass>
+                    <interactionClass>
+                        <name>Activate</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Request federate to change of status of AggregateUnit to Active. If required the unit will be registered in the federation.</semantics>
+                    </interactionClass>
+                    <interactionClass>
+                        <name>Inactivate</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Request change of status of AggregateUnit to Inactive and if indicated remove it from the federation.</semantics>
+                        <parameter>
+                            <name>Remove</name>
+                            <dataType>HLAboolean</dataType>
+                            <semantics>Optional: Indicates if the Aggregate Unit shall be removed as an object instance in the federation. Default = FALSE - keep object instance in federation.</semantics>
+                        </parameter>
+                    </interactionClass>
                 </interactionClass>
                 <interactionClass>
-                    <name>MRM_DisaggregationResponse</name>
+                    <name>Response</name>
                     <sharing>PublishSubscribe</sharing>
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
                     <semantics>A response from the receiving federate indicating ability to comply with request.</semantics>
                     <parameter>
-                        <name>Acknowledge</name>
-                        <dataType>ResponseFlagEnum16</dataType>
-                        <semantics>The receiver federates response to the disaggregation request.</semantics>
-                    </parameter>
-                    <parameter>
-                        <name>NonComplianceReason</name>
-                        <dataType>NonComplianceReasonEnum</dataType>
+                        <name>Status</name>
+                        <dataType>MRM_ResponseStatusEnumType</dataType>
                         <semantics>An optional parameter sent only if the ResponseFlagEnum16 value equals 2, UnableToComply, to specify the reason for non-compliance.</semantics>
                     </parameter>
                 </interactionClass>
                 <interactionClass>
-                    <name>MRM_AggregationRequest</name>
+                    <name>CapabilitiesSupported</name>
                     <sharing>PublishSubscribe</sharing>
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
-                    <semantics>A request to aggregate a set of UUIDs</semantics>
+                    <semantics>An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the Aggregate unit specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
                     <parameter>
-                        <name>AggregateUuid</name>
-                        <dataType>UuidArrayOfHLAbyte16</dataType>
-                        <semantics>The UUID of the Aggregate object which will result from the aggregation.</semantics>
-                    </parameter>
-                    <parameter>
-                        <name>UuidList</name>
-                        <dataType>ArrayOfUuid</dataType>
-                        <semantics>Optional. The list of UUIDs which should be aggregated.</semantics>
+                        <name>CapabilityNames</name>
+                        <dataType>ArrayOfStringType</dataType>
+                        <semantics>A set of names indicating the capability of a federate to supoprt MRM events.</semantics>
                     </parameter>
                 </interactionClass>
-                <interactionClass>
-                    <name>MRM_AggregationResponse</name>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>A response from the receiving federate indicating ability to comply with request.</semantics>
-                    <parameter>
-                        <name>Acknowledge</name>
-                        <dataType>ResponseFlagEnum16</dataType>
-                        <semantics>The receiver federate's response to the request for  aggregation.</semantics>
-                    </parameter>
-                    <parameter>
-                        <name>NonComplianceReason</name>
-                        <dataType>NonComplianceReasonEnum</dataType>
-                        <semantics>An optional parameter sent only if the ResponseFlagEnum16 value equals 2, UnableToComply, to specify the reason for non-compliance.</semantics>
-                    </parameter>
-                </interactionClass>
-                <interactionClass>
-                    <name>MRM_CancelRequest</name>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>An interaction sent to cancel either a MRM_DisaggregationRequest or a MRM_AggregationRequest</semantics>
-                    <parameter>
-                        <name>Reason</name>
-                        <dataType>CancellationReasonEnum32</dataType>
-                        <semantics>Reason given for cancelling the request</semantics>
-                    </parameter>
-                </interactionClass>
-                <interactionClass>
-                    <name>MRM_ActionComplete</name>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>An interaction sent at the completion of either a DisaggregationRequest or AggregationRequest.</semantics>
-                    <parameter>
-                        <name>CompletionResult</name>
-                        <dataType>HLAboolean</dataType>
-                        <semantics>True if the MRM_Action is successfully completed, else false</semantics>
-                    </parameter>
-                </interactionClass>
-            </interactionClass>
-            <interactionClass>
-                <name>MRM_Trigger</name>
-                <sharing>PublishSubscribe</sharing>
-                <transportation>HLAreliable</transportation>
-                <order>Receive</order>
-                <semantics>A trigger to inform the MRM SP to disaggregate or to aggregate an object instance specified by a UUID.</semantics>
-                <parameter>
-                    <name>Instance</name>
-                    <dataType>UuidArrayOfHLAbyte16</dataType>
-                    <semantics>Required. This is the UUID of the object instance intended for disaggregation when triggering a DisaggregationRequest and it is the AggregateUuid when triggering an AggregationRequest</semantics>
-                </parameter>
-                <parameter>
-                    <name>AggregationState</name>
-                    <dataType>AggregateStateEnum32</dataType>
-                    <semantics>Informs Aggregate Federate of intended Aggregation State: 
-If Aggregate, the aggregate unit send updates 
-If Fully Disaggregate, the aggregate unit does not send updates and all Entities and/or (sub)units of the aggregate unit send updates 
-If Disaggregate, the aggregate unit sends updates and entities and/or (sub)units of the aggregate unit send updates 
-If Pseudo-Disaggregate, the aggregate unit sends updates and all Entities and/or (sub)units of the aggregate unit send updates but these “are not capable of full interaction with other entities” 
-If Partially Disaggregate, the aggregate unit send updates and some entities and/or (sub)units of the aggregate unit send updates, but others do not (and are accounted for using the “silent” attribute)</semantics>
-                </parameter>
-                <parameter>
-                    <name>UuidList</name>
-                    <dataType>ArrayOfUuid</dataType>
-                    <semantics>Optional when in triggering an AggregationRequest or DisaggregationRequest, state: Disaggregate and Fully Disaggregate 
- 
-Required when in triggering an  DisaggregationRequest, state: Partially Disaggregate and Pseudo Disaggregate.</semantics>
-                </parameter>
-            </interactionClass>
-            <interactionClass>
-                <name>MRM_TriggerResponse</name>
-                <sharing>PublishSubscribe</sharing>
-                <transportation>HLAreliable</transportation>
-                <order>Receive</order>
-                <semantics>An interaction sent in response to MRM_Trigger in order to inform the initiator of the MRM_Trigger interaction 1. that the MRM SP has received the interaction and will act on it and 2. of the TransactionID which will be used for the subsequent interactions associated with the particular trigger (to include the MRM_ActionComplete interaction).</semantics>
-                <parameter>
-                    <name>Instance</name>
-                    <dataType>UuidArrayOfHLAbyte16</dataType>
-                    <semantics>Required. This is the UUID of the object instance specified in the MRM_Trigger interaction.</semantics>
-                </parameter>
-                <parameter>
-                    <name>TransactionID</name>
-                    <dataType>TransactionId</dataType>
-                    <semantics>Required. The TransactionID which will be used for all interactions (to include the MRM_ActionComplete interaction) associated with the particular MRM_Trigger interaction.</semantics>
-                </parameter>
             </interactionClass>
         </interactionClass>
     </interactions>
@@ -260,56 +197,31 @@ Required when in triggering an  DisaggregationRequest, state: Partially Disaggre
         <simpleDataTypes/>
         <enumeratedDataTypes>
             <enumeratedData>
-                <name>NonComplianceReasonEnum</name>
+                <name>MRM_ResponseStatusEnumType</name>
                 <representation>RPRunsignedInteger32BE</representation>
-                <semantics>An enumerated list of reasons why a federate may not be able to comply with a MRM_DisaggregationRequest interaction.</semantics>
+                <semantics>An enumerated list of reasons why a federate may not be able to comply with a MRM request.</semantics>
                 <enumerator>
-                    <name>Other</name>
+                    <name>Success</name>
                     <value>0</value>
                 </enumerator>
                 <enumerator>
-                    <name>UnitUnknown</name>
+                    <name>UnknownUnit</name>
                     <value>1</value>
                 </enumerator>
                 <enumerator>
-                    <name>UnitAlreadyDisgaggregated</name>
+                    <name>AlreadyDisaggregated</name>
                     <value>2</value>
                 </enumerator>
                 <enumerator>
-                    <name>UnitNotOwned</name>
-                    <value>4</value>
-                </enumerator>
-                <enumerator>
-                    <name>UnitAlreadyAggregated</name>
-                    <value>3</value>
-                </enumerator>
-            </enumeratedData>
-            <enumeratedData>
-                <name>AggregateStateEnum32</name>
-                <representation>RPRunsignedInteger32BE</representation>
-                <semantics>Aggregate state</semantics>
-                <enumerator>
-                    <name>Other</name>
-                    <value>0</value>
-                </enumerator>
-                <enumerator>
-                    <name>Aggregated</name>
-                    <value>1</value>
-                </enumerator>
-                <enumerator>
-                    <name>Disaggregated</name>
-                    <value>2</value>
-                </enumerator>
-                <enumerator>
-                    <name>FullyDisaggregated</name>
+                    <name>AlreadyAggregated</name>
                     <value>3</value>
                 </enumerator>
                 <enumerator>
-                    <name>PseudoDisaggregated</name>
+                    <name>FailedToAcquire</name>
                     <value>4</value>
                 </enumerator>
                 <enumerator>
-                    <name>PartiallyDisaggregated</name>
+                    <name>PartDoesNotBelongToUnit</name>
                     <value>5</value>
                 </enumerator>
             </enumeratedData>
