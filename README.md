@@ -6,7 +6,7 @@ NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Modu
 
 Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
 
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform negotiated and coordinated aggregation and disaggregation of models representing organizational units and individual entities, e.g. platforms, in a federated distributed simulation. 
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated units into other aggregated subunits or entities, e.g. platforms, in a federated distributed simulation. 
 
 The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and primarily intended to support interoperability in a federated simulation (federation) based on HLA. A Federation Object Model (FOM) Module is used to specify how data is represented and exchanged in the federation. The NETN-MRM FOM module is available as an XML file for use in HLA based federations.
 
@@ -15,29 +15,26 @@ The specification is based on IEEE 1516 High Level Architecture (HLA) Object Mod
 
 The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation.
 
-The NETN-MRM FOM module provides a standard interface and protocol for conducting negotiated and coordinated aggregation and disaggregation of simulated units and entities.
-
 For example:
-* Disaggregation of a Batallion represented as an Aggregate Entity into Company level Aggregate Entities
+* Disaggregation of a Battalion represented as an Aggregate Entity into Company level Aggregate Entities
 * Disaggregation of a Company to individual platforms such as vehicles and individual soldiers represented at an entity level
 * Aggregation of platforms represented as individual entities to an attribute of an aggregate unit representing e.g. a Platoon.
-* Triggering of Aggregation by user command
-* Triggering of Disaggregation based on geo-fencing
+* Divide UAV equipped vfrom a Company unit to simulate some reconnaissanse operation in more detail.
+* Merge the Recce platoon on return from the mission with the Company unit. 
 
 ### Scope
 
 NETN-MRM covers the following cases:
 
-* Disaggregation of AggregateEntity into lower-level AggregateEntities
-* Disaggregation of AggregateEntity into Platforms
-* Aggregation of AggregateEntities into higher-level AggregateEntity
-* Aggregation of Platforms into AggregateEntity
-* Triggering of Disaggregation
-* Triggering of Aggregation
+* Aggregation of subunits and/or physical entities
+* Disaggregation of unit into subunits and/or physical entities
+* Division of simulated unit into specific parts - resources divided and all entities simulated
+* Merge of previously divided parts with simulated unit.
+* Activate and Inactivate aggregate units' representation in the simulation
 
 ## Licence
 
-Copyright (C) 2019 NATO/OTAN.
+Copyright (C) 2020 NATO/OTAN.
 This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 International License](LICENCE.md). 
 
 The work includes the [NETN-MRM.xml](NETN-MRM.xml) FOM Module and documentation NETN-MRM.md.
@@ -62,7 +59,7 @@ Version numbering of this FOM Module and associated documentation is based on th
 |Version|Description|
 |---|---|
 |v1.1.1 |Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0 in AMSP-04 Ed A. |
-|v2.0.0 (Planned) |Updated version of NETN-MRM FOM Module released as part of NETN-FOM v3.0 in AMSP-04 Ed B. |
+|v2.0.0 |Updated version of NETN-MRM FOM Module released as part of NETN-FOM v3.0 in AMSP-04 Ed B. |
 
 [Changelog](changelog.md)
 
