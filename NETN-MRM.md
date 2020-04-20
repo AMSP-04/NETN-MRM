@@ -7,7 +7,7 @@ This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 In
 
 Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
 
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated units into other aggregated subunits or entities, e.g. platforms, in a federated distributed simulation. 
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation. 
 
 The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and primarily intended to support interoperability in a federated simulation (federation) based on HLA. A Federation Object Model (FOM) Module is used to specify how data is represented and exchanged in the federation. The NETN-MRM FOM module is available as an XML file for use in HLA based federations.
 
@@ -17,51 +17,112 @@ The specification is based on IEEE 1516 High Level Architecture (HLA) Object Mod
 The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation.
 
 For example:
-* Disaggregation of a Battalion represented as an Aggregate Entity into Company level Aggregate Entities
-* Disaggregation of a Company to individual platforms such as vehicles and individual soldiers represented at an entity level
-* Aggregation of platforms represented as individual entities to an attribute of an aggregate unit representing e.g. a Platoon.
-* Divide UAV equipped vfrom a Company unit to simulate some reconnaissanse operation in more detail.
-* Merge the Recce platoon on return from the mission with the Company unit. 
+* Disaggregation of a Battalion represented as an `NETN_Aggregate` object into Company level `NETN_Aggregate` objects.
+* Disaggregation of a Company level unit, represented as an `NETN_Aggregate` object, to individual platforms e.g. `NETN_GroundVehicle` objects.
+* Aggregation of platforms represented as, e.g. `NETN_GroundVehicle` objects, to an attribute of a unit e.g. a Platoon, represented as an `NETN_Aggregate` object.
+* Dividing an individual equipment, e.g. UAV, from a Company unit to simulate some reconnaissanse operation in more detail.
+* Merging of a Recce platoon, represented as an `NETN_Aggregate` object, on its return from a mission with its source Company unit. 
 
 ### Scope
 
 NETN-MRM covers the following cases:
 
-* Aggregation of subunits and/or physical entities
-* Disaggregation of unit into subunits and/or physical entities
-* Division of simulated unit into specific parts - resources divided and all entities simulated
-* Merge of previously divided parts with simulated unit.
-* Activate and Inactivate aggregate units' representation in the simulation
+* Aggregation of simulated subunits and/or physical entities.
+* Disaggregation of unit into subunits and/or physical entities.
+* Division of simulated unit where resources are allocated between source unit and divided unit.
+* Division of simulated unit where equipment resources are removed from source unit and instead represented as physical entities.
+* Merging of previously divided entities with source unit.
+* Activation or Inactivation of entities represented in the simulation.
 
 ### Dependencies
 
-NETN-MRM refers to units and entities by UUID as defined in NETN-ORG, NETN-Aggregate and NETN-Physical.
+The NETN-MRM refers to simulated entities by UUID as defined in NETN-Aggregate and NETN-Physical. Implementation of Aggregation, Disaggregation and Divide also requires a knowledge of the structure and organization of units and allocation of equipment. Information contained in NETN-Aggregate, NETN-Physical, and indirectly in NETN-ORG, can be used to produce aggregation and diaggregation results. 
 
-In the MRM patterns, the acquisition of Unit and Physical entities may use may use NETN-TMR for transferring modelling responsibility of attributes.
+In the MRM patterns, the acquisition of modelling responsibilitiy of simulated entities may use NETN-TMR.
 
 ## Overview
 
-NETN-MRM requires the use of NETN-Aggregate and NETN-Physical Object Classes for the repreaentation of aggregate units and physical entities in the simulation.
+NETN-MRM requires the use of NETN-Aggregate and NETN-Physical Object Classes for the aggregate representation units and physical entities in the simulation.
 
-An aggregate unit can be represented in the simulation in various ways.
+An unit can be represented in the simulation in various ways.
 
 * Not explicitly registered in the federation as a simulated object but represented in scenario data such as NETN-ORG Unit or similar.
 
-* Registered as a actively simulated aggregate unit. The state of the aggregate unit is explicitly simulated by federates in the distributed federated simulation.
+* Registered as a actively simulated `NETN_Aggregate` object. The state of the unit is explicitly simulated by federates in the distributed federated simulation.
 
-* Registered as an inactive simulated Aggregate unit. The state of the aggregate unit is not explicitly simulated but derived from simulation of its subunits and/or pysical entities. 
+* Registered as an inactive `NETN_Aggregate` object. The state of the unit is not explicitly simulated but derived from simulation of its subunits and/or pysical entities. 
 
-* Registered as a divided aggregate unit where one or more of its parts are also simulated. Resources of the aggregated unit are split between the simulated entities when divided.
+* Registered as divided with a source `NETN_Aggregate` object where one or more of its parts are also simulated as `NETN_Aggregate` or NETN-Physical objects. The resources of the source unit are split between the simulated entities when divided.
 
-Deaggregation always constitutes a full deaggregation of all subunits and physical entities associated with an aggregate unit. The aggregated unit itself can remain registered in the federation as inactive and update state derived form the simulation of its deaggregated parts.
+Disaggregation of a unit always constitutes a full disaggregation of all subunits into active `NETN_Aggregate` objects. The aggregated unit itself can remain registered in the federation as an inactive `NETN_Aggregate` object and its state can be updated based on the simulation of its disaggregated parts.
+
+Aggregation of a unit always constitutes a full aggregation of all subunits into an active `NETN_Aggregate` object. The disaggregated units can remain registered in the federation as an inactive `NETN_Aggregate` object and its state can be updated based on the simulation of its aggregated parent.
+
+Division of a unit is a temporary allocation of specific resources from a source (orginal unit) represented as an active `NETN_Aggregate` object. The specified resources are contained and represented in the federation as an additional active `NETN_Aggregate` object or as individual physical entities representing specific equipment. 
+
+Merging of a previously divided unit will incorporate `NETN_Aggregate` object(s) and physical entities back to its source `NETN_Aggregate` object.
 
 MRM events can be requested and triggered using HLA interactions defined in the NETN-MRM FOM Module. All events are directed to a federate responsible for managing the MRM event. The result of a MRM event is reported to the requesting/triggering federate using a `Response` interaction.
 
-<img src="./images/NETN-MRM Interaction Class Tree.png" width="100%"/>
+<img src="./images/NETN-MRM Interaction Class Tree.png"/>
 
 Figure: MRM interactions and events
 
 The capability of a federate to support MRM events for a specific aggregate unit can be queried using the `QuerySupportedCapabilities` interaction. The response is provided using `CapabilitiesSupported` interaction and includes a list of names of available MRM events.
+
+## MRM actions
+
+All MRM actions use the same pattern of interaction. 
+1. A triggering federate requests a specified federate to perform an action on a specified aggregate entity using subclasses of interaction `Request`
+2. If possible, the action is performed.
+3. The success of the requested action is reported using the interaction  `Response`
+
+Before sending a more specific MRM request to a federate, the MRM capabilities supported by the federate may be queried. To query which MRM actions are supported, a `QueryCapabilitiesSupported` request interaction may be sent. All federates implementing NETN-MRM must implement support for `QueryCapabilitiesSupported` and provide a `CapabilitiesSupported` response interaction. If a federates is not responding to `QueryCapabilitiesSupported` it should be assumed not to support any MRM action. A federate not supporting a specific MRM action should never be requested such action.
+
+<img src="./images/query.svg" width="100%"/>
+
+<!--
+participant Trigger
+participant Federate
+autonumber 
+Trigger->Federate:QueryCapabilitiesSupported(Event#1, Federate)
+
+Federate->Trigger:CapabilitiesSupported (Event#1, CapabilityNames)
+
+space
+
+Trigger->Federate:Request(Event#2, Federate, AggregateEntity)
+
+activate Federate
+
+box over Federate:Perform MRM Action
+Trigger<-Federate:Response(Event#2, Status)
+
+
+deactivate Federate
+
+autonumber off
+
+-->
+
+Figure: Query and Request of MRM actions
+
+### Request
+|Attribute|Description|
+|---|---|
+|Federate|**Required:** Intended federate responsible for peforming the requested action. Sending federate should ensure that receiveing federate has capability to perform requested action. If not able to perform, a response interaction indicating failure should be returned. |
+|AggregateEntity|**Required for all requests except QuerySupportedCapabilities:** Unique identifer for the AggregatedEntity for which this request is related to. |
+
+### Response
+|Attribute|Description|
+|---|---|
+|Status|**Required:** Specifies the result of the request action. 0 indicates success.|
+
+### CapabilitiesSupported
+|Attribute|Description|
+|---|---|
+|CapabilityNames|**Required:** An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".|
+
 
 
 ## Disaggregate
@@ -204,8 +265,11 @@ autonumber off
 
 
 ## Activate
+An aggregate can not be activiated if any subparts is active.
+An aggrgate can not be activated if a divided units exist.
 
 ## Inactivate
+A divided unit can not be inactivated. Must first be merged.
+A aggegate unit can not be inactivated if a divided unit exists.
 
-## Response
 
