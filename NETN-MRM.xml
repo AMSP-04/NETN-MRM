@@ -80,12 +80,12 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <parameter>
                         <name>Federate</name>
                         <dataType>FederateName</dataType>
-                        <semantics>Required: Intended federate responsible for peforming the requested action. Sending federate should ensure that receiveing federate has capability to perform requested action. If not able to perform, a response interaction indicating failure should be returned. </semantics>
+                        <semantics>Required: Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate has the capability to perform requested action. If not able to perform, a response interaction indicating failure should be returned.</semantics>
                     </parameter>
                     <parameter>
                         <name>AggregateEntity</name>
                         <dataType>UuidArrayOfHLAbyte16</dataType>
-                        <semantics>Required for all requests except QuerySupportedCapabilities: Unique identifer for the AggregatedEntity for which this request is related to. </semantics>
+                        <semantics>Required for all requests except QuerySupportedCapabilities: Unique identifier for the AggregatedEntity for which this request is related to.</semantics>
                     </parameter>
                     <interactionClass>
                         <name>Aggregate</name>
@@ -94,9 +94,9 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <order>Receive</order>
                         <semantics>Instruction to the AggregateFederate to perform aggregation of the specified AggregateUnit's parts.</semantics>
                         <parameter>
-                            <name>RemoveParts</name>
+                            <name>RemoveSubunits</name>
                             <dataType>HLAboolean</dataType>
-                            <semantics>Optional: Indicates if the disaggregate parts is to be deleted from the federation execution. Default is TRUE - all parts should be deleted. If FALSE all disaggregate parts shall be set to inactive.</semantics>
+                            <semantics>Optional: Indicates if the disaggregate subunits (represented as aggregates in the federation) should be deleted from the federation execution. Default is TRUE - all subunits should be deleted. If FALSE all disaggregate subunits shall be set to inactive.</semantics>
                         </parameter>
                     </interactionClass>
                     <interactionClass>
@@ -113,9 +113,19 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <order>Receive</order>
                         <semantics>Instruction to divide the simulated AggregateUnit into multiple simulated object. The resouces are divided among the simulated entities. After successful division two simulated entities represent the entire Unit. 1) The original AggregateUnit and 2) the divided unit or platform. Both these entities are simulated until merged.</semantics>
                         <parameter>
-                            <name>Parts</name>
+                            <name>Equipment</name>
                             <dataType>ArrayOfUuid</dataType>
                             <semantics>Required: A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.</semantics>
+                        </parameter>
+                        <parameter>
+                            <name>Supplies</name>
+                            <dataType></dataType>
+                            <semantics></semantics>
+                        </parameter>
+                        <parameter>
+                            <name>Personnel</name>
+                            <dataType></dataType>
+                            <semantics></semantics>
                         </parameter>
                     </interactionClass>
                     <interactionClass>
@@ -165,8 +175,8 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <semantics>A response from the receiving federate indicating ability to comply with request.</semantics>
                     <parameter>
                         <name>Status</name>
-                        <dataType>MRM_ResponseStatusEnumType</dataType>
-                        <semantics>Required: Specifies the result of the request action. 0 indicates success.</semantics>
+                        <dataType>HLAboolean</dataType>
+                        <semantics>Required: Specifies the result of the request action. TRUE indicates success.</semantics>
                     </parameter>
                 </interactionClass>
                 <interactionClass>
@@ -174,11 +184,11 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <sharing>PublishSubscribe</sharing>
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
-                    <semantics>Required: An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the Aggregate unit specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
+                    <semantics>An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the Aggregate unit specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
                     <parameter>
                         <name>CapabilityNames</name>
                         <dataType>ArrayOfStringType</dataType>
-                        <semantics>A set of names indicating the capability of a federate to supoprt MRM events.</semantics>
+                        <semantics>Required: A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
                     </parameter>
                 </interactionClass>
             </interactionClass>
@@ -189,49 +199,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
     <dataTypes>
         <basicDataRepresentations/>
         <simpleDataTypes/>
-        <enumeratedDataTypes>
-            <enumeratedData>
-                <name>MRM_ResponseStatusEnumType</name>
-                <representation>RPRunsignedInteger32BE</representation>
-                <semantics>An enumerated list of reasons why a federate may not be able to comply with a MRM request.</semantics>
-                <enumerator>
-                    <name>Success</name>
-                    <value>0</value>
-                </enumerator>
-                <enumerator>
-                    <name>UnknownUnit</name>
-                    <value>1</value>
-                </enumerator>
-                <enumerator>
-                    <name>AlreadyDisaggregated</name>
-                    <value>2</value>
-                </enumerator>
-                <enumerator>
-                    <name>AlreadyAggregated</name>
-                    <value>3</value>
-                </enumerator>
-                <enumerator>
-                    <name>FailedToAcquire</name>
-                    <value>4</value>
-                </enumerator>
-                <enumerator>
-                    <name>PartDoesNotBelongToUnit</name>
-                    <value>5</value>
-                </enumerator>
-                <enumerator>
-                    <name>FailedToInactivateDividedEntityExists</name>
-                    <value>6</value>
-                </enumerator>
-                <enumerator>
-                    <name>FailedToActivateDisaggregateActive</name>
-                    <value>8</value>
-                </enumerator>
-                <enumerator>
-                    <name>FailedToInactivateIsDividedEntity</name>
-                    <value>7</value>
-                </enumerator>
-            </enumeratedData>
-        </enumeratedDataTypes>
+        <enumeratedDataTypes/>
         <arrayDataTypes/>
         <fixedRecordDataTypes/>
         <variantRecordDataTypes/>
