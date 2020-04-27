@@ -137,7 +137,7 @@ All MRM actions use the same pattern of interaction.
 
 Before sending a more specific MRM request to a federate, the MRM capabilities supported by the federate may be queried. To query which MRM actions are supported, a `QueryCapabilitiesSupported` request interaction may be sent. All federates implementing NETN-MRM must implement support for `QueryCapabilitiesSupported` and provide a `CapabilitiesSupported` response interaction. If a federates is not responding to `QueryCapabilitiesSupported` it should be assumed not to support any MRM action. A federate not supporting a specific MRM action should never be requested such action.
 
-<img src="./images/query.svg" width="100%"/>
+<img src="./images/query.svg"/>
 
 <!--
 participant Trigger
@@ -192,7 +192,7 @@ Figure: Query and Request of MRM actions
 
 A `Response` interaction with `Status` parameter set to `FALSE` should be sent if any of these conditions is not met.
 
-<img src="./images/disaggregate.svg" width="100%"/>
+<img src="./images/disaggregate.svg"/>
 
 
 
@@ -246,7 +246,7 @@ Figure: Disaggregation of a unit
 A `Response` interaction with `Status` parameter set to `FALSE` should be sent if any of these conditions is not met.
 
 
-<img src="./images/aggregation.svg" width="100%"/>
+<img src="./images/aggregation.svg"/>
 
 <!-- 
 participant Trigger
@@ -409,7 +409,7 @@ Federation<-Federate:Update Attribute Values (NETN_Aggregate, Status=Active)
 
 A `Response` interaction with `Status` parameter set to `FALSE` should be sent if any of these conditions is not met.
 
-<img src="./images/merge.svg" width="100%"/>
+<img src="./images/merge.svg"/>
 
 Figure: Merge divided parts with their aggregate unit
 
