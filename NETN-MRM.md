@@ -178,7 +178,7 @@ Figure: Query and Request of MRM actions
 ### CapabilitiesSupported
 |Attribute|Description|
 |---|---|
-|CapabilityNames|**Required:** A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".|
+|CapabilityNames|**Required:** A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Deactivate".|
 
 
 
@@ -454,9 +454,9 @@ On completion:
 
 A `Response` interaction with `Status` parameter set to `FALSE` should be sent if this condition is not met. Otherwise, the `AggregateUnit` attribute is updated to `Active`.
 
-### Inactivate
+### Deactivate
 *Conditions*
 
-* An `AggregateUnit` can not be inactivated if a divided unit exists.
+* An `AggregateUnit` can not be deactivated if a divided unit exists.
 
 A `Response` interaction with `Status` parameter set to `FALSE` should be sent if this condition is not met. Otherwise, the `AggregateUnit` attribute is updated to `Inactive`.

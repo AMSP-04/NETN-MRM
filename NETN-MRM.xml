@@ -83,9 +83,9 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <semantics>Required: Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate has the capability to perform requested action. If not able to perform, a response interaction indicating failure should be returned.</semantics>
                     </parameter>
                     <parameter>
-                        <name>AggregateEntity</name>
+                        <name>AggregateUnit</name>
                         <dataType>UuidArrayOfHLAbyte16</dataType>
-                        <semantics>Required for all requests except QuerySupportedCapabilities: Unique identifier for the AggregatedEntity for which this request is related to.</semantics>
+                        <semantics>Required for all requests except QuerySupportedCapabilities: Unique identifier for the NETN_Aggregate for which this request is related to.</semantics>
                     </parameter>
                     <interactionClass>
                         <name>Aggregate</name>
@@ -119,12 +119,12 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         </parameter>
                         <parameter>
                             <name>Supplies</name>
-                            <dataType></dataType>
+                            <dataType>NETN_ArrayOfSupplyStruct</dataType>
                             <semantics></semantics>
                         </parameter>
                         <parameter>
                             <name>Personnel</name>
-                            <dataType></dataType>
+                            <dataType>ArrayOfResourceStatus</dataType>
                             <semantics></semantics>
                         </parameter>
                     </interactionClass>
@@ -135,7 +135,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <order>Receive</order>
                         <semantics>Instruction to merg the simulated AggregateUnit with the selected divided parts. After successful merge the divided parts are removed from the federation and their resources are combined with the AggregatedUnit.</semantics>
                         <parameter>
-                            <name>Parts</name>
+                            <name>Subunits</name>
                             <dataType>ArrayOfUuid</dataType>
                             <semantics>Required: A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.</semantics>
                         </parameter>
@@ -155,13 +155,13 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <semantics>Request federate to change of status of AggregateUnit to Active. If required the unit will be registered in the federation.</semantics>
                     </interactionClass>
                     <interactionClass>
-                        <name>Inactivate</name>
+                        <name>Deactivate</name>
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
                         <semantics>Request change of status of AggregateUnit to Inactive and if indicated remove it from the federation.</semantics>
                         <parameter>
-                            <name>Remove</name>
+                            <name>RemoveUnit</name>
                             <dataType>HLAboolean</dataType>
                             <semantics>Optional: Indicates if the Aggregate Unit shall be removed as an object instance in the federation. Default = FALSE - keep object instance in federation.</semantics>
                         </parameter>
