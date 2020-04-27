@@ -114,18 +114,23 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <semantics>Instruction to divide the simulated AggregateUnit into multiple simulated object. The resouces are divided among the simulated entities. After successful division two simulated entities represent the entire Unit. 1) The original AggregateUnit and 2) the divided unit or platform. Both these entities are simulated until merged.</semantics>
                         <parameter>
                             <name>Equipment</name>
-                            <dataType>ArrayOfUuid</dataType>
-                            <semantics>Required: A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.</semantics>
-                        </parameter>
-                        <parameter>
-                            <name>Supplies</name>
-                            <dataType>NETN_ArrayOfSupplyStruct</dataType>
-                            <semantics></semantics>
+                            <dataType>ArrayOfResourceStruct</dataType>
+                            <semantics>Optional: Amount of equipment of different type and health status to be divided.</semantics>
                         </parameter>
                         <parameter>
                             <name>Personnel</name>
                             <dataType>ArrayOfResourceStatus</dataType>
-                            <semantics></semantics>
+                            <semantics>Optional: Amount of personnel of different type and health status to be divided.</semantics>
+                        </parameter>
+                        <parameter>
+                            <name>Supplies</name>
+                            <dataType>NETN_ArrayOfSupplyStruct</dataType>
+                            <semantics>Optional: Amount of supplies to divide.</semantics>
+                        </parameter>
+                        <parameter>
+                            <name>RegisterPhysicalEntities</name>
+                            <dataType>HLAboolean</dataType>
+                            <semantics>Optional: If true all Equipment of type Platform and Lifeform are published as individual objects in the federation. </semantics>
                         </parameter>
                     </interactionClass>
                     <interactionClass>
