@@ -4,7 +4,7 @@
         <name>NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module</name>
         <type>FOM</type>
         <version>2.0</version>
-        <modificationDate>2020-04-20</modificationDate>
+        <modificationDate>2020-05-04</modificationDate>
         <securityClassification>Not Classified</securityClassification>
         <purpose>The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. </purpose>
         <applicationDomain></applicationDomain>
