@@ -13,8 +13,7 @@ The specification is based on IEEE 1516 High Level Architecture (HLA) Object Mod
 
 
 ### Purpose
-
-The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation.
+The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. It supports patterns for aggregation and disaggregation of units, and division and merging of unit resources.
 
 For example:
 * Disaggregation of a Battalion represented as a `NETN_Aggregate` object into Company level `NETN_Aggregate` objects.
@@ -85,6 +84,7 @@ The `NETN_Aggregate` object class is a specialization/subclass of the RPR-FOM ob
 
 <img src="./images/NETN_Aggregate.png"/>
 
+Figure: The NETN_Aggregate object class
 
 |Attribute|Description|
 |---|---|
@@ -288,7 +288,7 @@ Figure: Aggregation of a unit
 * Division is only allowed for non-divided aggregate units registered in the federation as active `NETN_Aggregate` objects. 
 
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE`  if any of these conditions are false.
+The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
 
 <img src="./images/divide.svg"/>
 
@@ -314,6 +314,8 @@ Trigger<-Federate:Response(Event, Status)
 autonumber off
 -->
 
+Division of aggregate unit
+
 1. A federate sends a `Divide` request to a specified `Federate` indicating the `SourceAggregateUnit` object to divide and a list of the divided holdings. In the request, a flag indicates if each physical entities in the holdings should be registered as individual objects or not.
 
 Divide by either acquiring or registering an additional `NETN_Aggregate` or instances of `NETN-Physical` entities for platforms and lifeforms. 
@@ -325,10 +327,10 @@ If indicated, the federate registers specified platforms and lifeforms entities 
 
 *Conditions*
 
-* Reuse of existing instances for representing divided holdings is only allowed if not already in use, i.e. the `SourceUnit` attribute is not published or set to all zeros.
-* Reuse of existing instances for representing divided holdings requires the Federate performing division must be able to acquire modelling responsibilities for attributes `SourceUnit` and `Status` of these instances.
+* Re-use of existing instances for representing divided holdings is only allowed if not already in use, i.e. the `SourceUnit` attribute is not published or set to all zeros.
+* Re-use of existing instances for representing divided holdings requires the Federate performing division must be able to acquire modelling responsibilities for attributes `SourceUnit` and `Status` of these instances.
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE`  if any of these conditions are false.
+The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
 
 <img src="./images/dividephysical.svg"/>
 
@@ -356,6 +358,7 @@ end
 autonumber off
 
 -->
+Division into physical entity objects:
 1. If not reusing an existing object in the federation, the federate registers a physical entity in the federation as a corresponding `NETN-Physical` leaf class. Otherwise, acquire modelling responsibilities of the object to be reused as a representation for the physical entity.
 2. The federate updates the physical entity object with appropriate initial attribute values.
 3. The `SourceUnit` attribute of the registered physical entity is updated to reference the `SourceAggregateUnit`.
@@ -363,7 +366,7 @@ autonumber off
 5. The `SourceAggregateUnit` attributes are updated to reflect the reduction of holdings.
 6. The federate update the `Status` attribute of the physical entity object to `Active`.
 
-#### Dividing to Aggregate Entities
+#### Dividing to Aggregate Entity
 If indicated, the federate registers each specified resource as holdings of a new Aggregate entity object in the federation.
 
 <img src="./images/dividesub.svg"/>
@@ -389,13 +392,14 @@ Federation<-Federate:Update Attribute Values (SourceAggregateUnit, Attributes)
 Federation<-Federate:Update Attribute Values (NETN_Aggregate, Status=Active)
 
 -->
+Division of aggregate entities:
 
 1. If not reusing an existing object in the federation, then a single `NETN_Aggregate` object is registered in the federation. Otherwise, acquire modelling responsibilities of the `NETN_Aggregate` object to be reused as a representation for the divided holdings.
-9. The federate updates the `NETN_Aggregate` object with appropriate initial attribute values.
-10. The `SourceUnit` attribute of the `NETN_Aggregate` object is updated to reference the `SourceAggregateUnit`.
-11. The attribute `DividedUnitList` of the `SourceAggregateUnit` is updated to include a reference to the `NETN_Aggregate` object.
-12. The `SourceAggregateUnit` attributes are updated to reflect the reduction of holdings.
-13. The federate update the`Status` attribute of the `NETN_Aggregate` object to `Active`.
+2. The federate updates the `NETN_Aggregate` object with appropriate initial attribute values.
+3. The `SourceUnit` attribute of the `NETN_Aggregate` object is updated to reference the `SourceAggregateUnit`.
+4. The attribute `DividedUnitList` of the `SourceAggregateUnit` is updated to include a reference to the `NETN_Aggregate` object.
+5. The `SourceAggregateUnit` attributes are updated to reflect the reduction of holdings.
+6. The federate update the`Status` attribute of the `NETN_Aggregate` object to `Active`.
 
  
 ### Merge
@@ -406,7 +410,7 @@ Federation<-Federate:Update Attribute Values (NETN_Aggregate, Status=Active)
 * Merge is only allowed for an active `NETN_Aggregate` objects. 
 
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE`  if any of these conditions are false.
+The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
 
 <img src="./images/merge.svg"/>
 
@@ -432,6 +436,8 @@ Trigger<-Federate:Response(Event, Status)
 autonumber off
 -->
 
+Trigger the merge:
+
 1. A trigger federate sends a `Merge` request to a specified `Federate` with reference to the `SourceAggregateUnit` object and a list of the divided units to merge. In the request, a flag indicates if the divided units should remain in the federation as inactive entities or if they should be removed. 
 
 For each divided unit:
@@ -451,11 +457,11 @@ On completion:
 *Conditions*
 * An `AggregateUnit` can not be activated if any subunit is active.
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE`  if any of these conditions are false. Otherwise, the `AggregateUnit` attribute is updated to `Active`.
+The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false. Otherwise, the `AggregateUnit` attribute is updated to `Active`.
 
 ### Deactivate
 *Conditions*
 
 * An `AggregateUnit` can not be deactivated if a divided unit exists.
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE`  if this condition is false.
+The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if this condition is false.
