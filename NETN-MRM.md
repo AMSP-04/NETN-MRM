@@ -122,11 +122,9 @@ Figure: The NETN_Aggregate object class
 |---|---|
 |AggregateState|**Required:** Only the following values are used: `Aggregated`, `Disaggregated`, or `Fully Disaggregated`. When `Fully Disaggregated` the `Status` should be set to `Inactive`.|
 |Dimensions|**Required:**|
-|EntityIdentifiers|**Inherited:**|
-|IsPartOf|**Inherited:** Used when mounted or transported by other Aggregate entity|
-|SubAggregatesIdentifiers|**Inherited:** Reference to `NETN_Aggregate` object instances registered in the federation representing subunits.|
-|SilentAggregates|**Inherited:** |
-|SilentEntities|**Inherited:** |
+|IsPartOf|**Optional:** Used when mounted or transported by other Aggregate entity|
+|SubAggregatesIdentifiers|**Optional:** Reference to `NETN_Aggregate` object instances registered in the federation representing subunits.|
+
 
 ## MRM actions
 
@@ -165,18 +163,18 @@ autonumber off
 Figure: Query and Request of MRM actions
 
 **Request Interaction Class**
-|Attribute|Description|
+|Parameter|Description|
 |---|---|
 |Federate|**Required:** Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned. |
 |AggregateUnit|**Required for all requests except QuerySupportedCapabilities:** Unique identifier for the AggregateUnit for which this request is related to. |
 
 **Response Interaction Class**
-|Attribute|Description|
+|Parameter|Description|
 |---|---|
 |Status|**Required:** Specifies the result of the request action. TRUE indicates success.|
 
 **CapabilitiesSupported Interaction Class**
-|Attribute|Description|
+|Parameter|Description|
 |---|---|
 |CapabilityNames|**Required:** A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Deactivate".|
 
