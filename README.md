@@ -6,31 +6,32 @@ NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Modu
 
 Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
 
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated units into other aggregated subunits or entities, e.g. platforms, in a federated distributed simulation. 
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation. 
 
-The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and primarily intended to support interoperability in a federated simulation (federation) based on HLA. A Federation Object Model (FOM) Module is used to specify how data is represented and exchanged in the federation. The NETN-MRM FOM module is available as an XML file for use in HLA based federations.
+The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and primarily intended to support interoperability in a federated simulation (federation) based on HLA. A Federation Object Model (FOM) Module specifies how data is represented and exchanged in the federation. The NETN-MRM FOM module is available as an XML file for use in HLA based federations.
 
 
 ### Purpose
 
-The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation.
+The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation.
 
 For example:
-* Disaggregation of a Battalion represented as an Aggregate Entity into Company level Aggregate Entities
-* Disaggregation of a Company to individual platforms such as vehicles and individual soldiers represented at an entity level
-* Aggregation of platforms represented as individual entities to an attribute of an aggregate unit representing e.g. a Platoon.
-* Divide UAV equipped vfrom a Company unit to simulate some reconnaissanse operation in more detail.
-* Merge the Recce platoon on return from the mission with the Company unit. 
+* Disaggregation of a Battalion represented as a `NETN_Aggregate` object into Company level `NETN_Aggregate` objects.
+* Disaggregation of a Company level unit, represented as a `NETN_Aggregate` object, to individual platforms, e.g. `NETN_GroundVehicle` objects.
+* Aggregation of platforms represented as, e.g. `NETN_GroundVehicle` objects, to an attribute of a unit, e.g. a Platoon, represented as a `NETN_Aggregate` object.
+* Dividing individual equipment, e.g. UAV, from a Company unit to simulate some reconnaissance operation in more detail.
+* Merging of a Recce platoon, represented as a `NETN_Aggregate` object, on its return from a mission with its source Company unit. 
 
 ### Scope
 
 NETN-MRM covers the following cases:
 
-* Aggregation of subunits and/or physical entities
-* Disaggregation of unit into subunits and/or physical entities
-* Division of simulated unit into specific parts - resources divided and all entities simulated
-* Merge of previously divided parts with simulated unit.
-* Activate and Inactivate aggregate units' representation in the simulation
+* Aggregation of simulated subunits or physical entities.
+* Disaggregation of a unit into subunits or physical entities.
+* Division of simulated unit with re-allocation of resources between source unit and divided unit.
+* Division of simulated unit where equipment resources are removed from source unit and instead represented as physical entities.
+* Merging of previously divided entities with source unit.
+* Activation or Inactivation of entities represented in the simulation.
 
 ## Licence
 
