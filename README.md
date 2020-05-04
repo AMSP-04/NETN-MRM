@@ -13,7 +13,7 @@ The specification is based on IEEE 1516 High Level Architecture (HLA) Object Mod
 
 ### Purpose
 
-The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. It supports patterns for aggregation and disaggregation of units, and division and merging of unit resources.
+The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. It supports patterns for aggregation and disaggregation of units and division and merging of unit resources.
 
 For example:
 * Disaggregation of a Battalion represented as a `NETN_Aggregate` object into Company level `NETN_Aggregate` objects.

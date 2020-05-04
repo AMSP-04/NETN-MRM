@@ -13,7 +13,7 @@ The specification is based on IEEE 1516 High Level Architecture (HLA) Object Mod
 
 
 ### Purpose
-The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. It supports patterns for aggregation and disaggregation of units, and division and merging of unit resources.
+The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. It supports patterns for aggregation and disaggregation of units and division and merging of unit resources.
 
 For example:
 * Disaggregation of a Battalion represented as a `NETN_Aggregate` object into Company level `NETN_Aggregate` objects.
@@ -164,18 +164,18 @@ autonumber off
 
 Figure: Query and Request of MRM actions
 
-### Request
+**Request Interaction Class**
 |Attribute|Description|
 |---|---|
 |Federate|**Required:** Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned. |
 |AggregateUnit|**Required for all requests except QuerySupportedCapabilities:** Unique identifier for the AggregateUnit for which this request is related to. |
 
-### Response
+**Response Interaction Class**
 |Attribute|Description|
 |---|---|
 |Status|**Required:** Specifies the result of the request action. TRUE indicates success.|
 
-### CapabilitiesSupported
+**CapabilitiesSupported Interaction Class**
 |Attribute|Description|
 |---|---|
 |CapabilityNames|**Required:** A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Deactivate".|
@@ -190,7 +190,7 @@ Figure: Query and Request of MRM actions
 * The federate performing disaggregation must be able to acquire modelling responsibility of the `Status` attribute of the `NETN_Aggregate` object representing the aggregated unit. 
 * The federate performing disaggregation must be able to acquire modelling responsibility of the `Status` attribute of `NETN_Aggregate` objects representing the aggregated unit's subunits.  
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE`  if any of these conditions are false.
+The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
 
 <img src="./images/disaggregate.svg"/>
 
@@ -243,7 +243,7 @@ Figure: Disaggregation of a unit
 * The federate performing aggregation must be able to acquire modelling responsibility of the `Status` attribute of the `NETN_Aggregate` object representing the aggregated unit. 
 * The federate performing aggregation must be able to either remove `NETN_Aggregate` objects representing subunits from the federation or acquire modelling responsibility of the `Status` attribute of these objects. 
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE`  if any of these conditions are false.
+The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
 
 <img src="./images/aggregation.svg"/>
 
@@ -314,7 +314,7 @@ Trigger<-Federate:Response(Event, Status)
 autonumber off
 -->
 
-Division of aggregate unit
+The division of aggregate unit:
 
 1. A federate sends a `Divide` request to a specified `Federate` indicating the `SourceAggregateUnit` object to divide and a list of the divided holdings. In the request, a flag indicates if each physical entities in the holdings should be registered as individual objects or not.
 
@@ -358,7 +358,7 @@ end
 autonumber off
 
 -->
-Division into physical entity objects:
+The division into physical entity objects:
 1. If not reusing an existing object in the federation, the federate registers a physical entity in the federation as a corresponding `NETN-Physical` leaf class. Otherwise, acquire modelling responsibilities of the object to be reused as a representation for the physical entity.
 2. The federate updates the physical entity object with appropriate initial attribute values.
 3. The `SourceUnit` attribute of the registered physical entity is updated to reference the `SourceAggregateUnit`.
