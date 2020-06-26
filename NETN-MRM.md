@@ -1,5 +1,7 @@
 # NETN-MRM
 
+The NATO Education and Training Network (NETN) Multi-Resolution Modelling FOM Module.
+
 Copyright (C) 2020 NATO/OTAN.
 This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 International License](LICENCE.md).
 
@@ -13,7 +15,8 @@ The specification is based on IEEE 1516 High Level Architecture (HLA) Object Mod
 
 
 ### Purpose
-The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. It supports patterns for aggregation and disaggregation of units and division and merging of unit resources.
+
+The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. It supports patterns for aggregation and disaggregation of units and division and merging of unit resources. The module provides a common standard interface for the aggregated representation of equipment, personnel and supplies in a federated distributed simulation. The aggregated representation can be used to model the state of organiations, such as military units, without the need to represent each resource as individual simulated entities. The module extends the existing RPR-FOM v2.0 `AggregateEntity` object class with attributes to allow additional information to be associated with simulated aggregate entities.
 
 For example:
 * Disaggregation of a Battalion represented as a `NETN_Aggregate` object into Company level `NETN_Aggregate` objects.
@@ -26,6 +29,7 @@ For example:
 
 NETN-MRM covers the following cases:
 
+* Aggregate level modelling and simulation of units
 * Aggregation of simulated subunits or physical entities.
 * Disaggregation of a unit into subunits or physical entities.
 * Division of simulated unit with re-allocation of resources between source unit and divided unit.
@@ -33,9 +37,10 @@ NETN-MRM covers the following cases:
 * Merging of previously divided entities with source unit.
 * Activation or Inactivation of entities represented in the simulation.
 
+
 ### Dependencies
 
-The NETN-MRM refers to simulated entities by UUID as defined in NETN-Aggregate and NETN-Physical. Implementation of Aggregation, Disaggregation and Divide also requires a knowledge of the structure and organization of units and allocation of equipment. Information contained in NETN-Aggregate, NETN-Physical, and indirectly in NETN-ORG, can be used to produce aggregation and disaggregation results. 
+The NETN-MRM refers to simulated entities by UUID. Implementation of Aggregation, Disaggregation and Divide also requires a knowledge of the structure and organization of units and allocation of equipment as defined in NETN-ORG.
 
 In the MRM patterns, the acquisition of modelling responsibility of simulated entities may use NETN-TMR.
 
