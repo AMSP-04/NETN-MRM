@@ -162,17 +162,23 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                             <order>Receive</order>
                             <semantics>Optional: The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.</semantics>
                         </attribute>
-                        <attribute>
-                            <name>Symbol</name>
-                            <dataType>SymbolIdentifierArray15</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Required: The APP-6 (C) / MIL-STD 2525 (C) symbol code for the aggregate unit.</semantics>
-                        </attribute>
+                                <attribute>
+                                    <name>Symbol</name>
+                                    <dataType>HLAunicodeString</dataType>
+                                    <updateType>Conditional</updateType>
+                                    <updateCondition>On Change</updateCondition>
+                                    <ownership>DivestAcquire</ownership>
+                                    <sharing>PublishSubscribe</sharing>
+                                    <transportation>HLAbestEffort</transportation>
+                                    <order>Receive</order>
+                                    <semantics>Optional.
+
+The symbol code.
+15 characters indicate APP-6A, APP-6B, MIL-STD-2525B or MIL-STD-2525C format.
+20 or 30 digits indicates MIL-STD-2525D format.
+
+The selected format should be is specified in a Federation Agreement.</semantics>
+                                </attribute>
                         <attribute>
                             <name>Callsign</name>
                             <dataType>HLAunicodeString</dataType>
