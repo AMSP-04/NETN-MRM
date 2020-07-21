@@ -59,8 +59,8 @@ Version numbering of this FOM Module and associated documentation is based on th
 
 |Version|Description|
 |---|---|
-|v1.1.1 |Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0 in AMSP-04 Ed A. |
-|v2.0.0 |Updated version of NETN-MRM FOM Module released as part of NETN-FOM v3.0 in AMSP-04 Ed B. |
+|v1.1.1 |Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0|
+|v2.0.0 |Updated version of NETN-MRM FOM Module released as part of NETN-FOM v3.0|
 
 [Changelog](changelog.md)
 

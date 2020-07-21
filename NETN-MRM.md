@@ -7,7 +7,7 @@ This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 In
 
 ## Introduction
 
-Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of larger combined concepts. 
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of broader combined concepts. 
 
 The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation. 
 
@@ -22,7 +22,7 @@ For example:
 * Disaggregation of a Battalion represented as a `NETN_Aggregate` object into Company level `NETN_Aggregate` objects.
 * Disaggregation of a Company level unit, represented as a `NETN_Aggregate` object, to individual platforms, e.g. `NETN_GroundVehicle` objects.
 * Aggregation of platforms represented as, e.g. `NETN_GroundVehicle` objects, to an attribute of a unit, e.g. a Platoon, represented as a `NETN_Aggregate` object.
-* Dividing individual equipment, e.g. UAV, from a Company unit to simulate some reconnaissance operation in more detail.
+* Dividing individual pieces of equipment, e.g. UAV, from a Company unit to simulate some reconnaissance operation in more detail.
 * Merging of a Recce platoon, represented as a `NETN_Aggregate` object, on its return from a mission with its source Company unit. 
 
 ### Scope
@@ -40,7 +40,7 @@ NETN-MRM covers the following cases:
 
 ### Dependencies
 
-The NETN-MRM refers to simulated entities by UUID. Implementation of Aggregation, Disaggregation and Divide also requires a knowledge of the structure and organization of units and allocation of equipment as defined in NETN-ORG.
+The NETN-MRM refers to simulated entities by UUID. Implementation of Aggregation, Disaggregation and Divide also requires a knowledge of the structure and organisation of units and allocation of equipment as defined in NETN-ORG.
 
 In the MRM patterns, the acquisition of modelling responsibility of simulated entities may use NETN-TMR.
 
@@ -54,7 +54,7 @@ The model resolution of a unit can vary in a simulation.
 
 * Registered as an actively simulated `NETN_Aggregate` object. The state of the unit is explicitly simulated by federates in the distributed federated simulation.
 
-* Registered as an inactive `NETN_Aggregate` object. The simulation does not explicitly model the state. The simulation can derive state from the simulation of its subunits and physical entities. 
+* Registered as an inactive `NETN_Aggregate` object. The simulation does not explicitly model the state. The simulation can derive the status from the simulation of its subunits and physical entities. 
 
 * Registered as divided with a reduced source `NETN_Aggregate` object and subsets of the divided resources modelled as `NETN_Aggregate` or NETN-Physical objects. The resources of the source unit are split between the simulated entities when divided.
 
@@ -63,7 +63,7 @@ The model resolution of a unit can vary in a simulation.
 Figure: NETN_Aggregate object class as an extension of RPR-FOM
 
 
-A `NETN_Aggregate` object is a representation of an organizational unit including all equipment, personnel and supplies allocated to subunits. It is possible to disaggregate a `NETN_Aggregate` object into subunits each represented as a `NETN_Aggregate` object. It is possible to divide an aggregate representation of a unit and represent divided parts as a `NETN_Aggregate` objects or physical entities.
+A `NETN_Aggregate` object is a representation of an organisational unit including all equipment, personnel and supplies allocated to subunits. It is possible to disaggregate a `NETN_Aggregate` object into subunits each represented as a `NETN_Aggregate` object. It is possible to divide an aggregate representation of a unit and represent divided parts as a `NETN_Aggregate` objects or physical entities.
 
 
 Disaggregation of a unit always constitutes a full disaggregation of all subunits into active `NETN_Aggregate` objects. The aggregated unit itself can remain registered in the federation as an inactive `NETN_Aggregate` object, and its state can be updated based on the simulation of its disaggregated subunits.
@@ -93,7 +93,7 @@ Figure: The NETN_Aggregate object class
 
 |Attribute|Description|
 |---|---|
-|UniqueId|**Required:** A unique identifier for the object. The Universally Unique Identifier (UUID) is either generated or defined as part of scenario initialization, e.g. using NETN-ORG MSDL data. The unique identifier can serve dual purposes. It is a unique identification of the NETN_Aggregate object instance but can also be a reference to a NETN-ORG unit element with the same unique identifier.|
+|UniqueId|**Required:** A unique identifier for the object. The Universally Unique Identifier (UUID) is either generated or defined as part of scenario initialisation, e.g. using NETN-ORG MSDL data. The unique identifier can serve dual purposes. It is a unique identification of the NETN_Aggregate object instance but can also be a reference to a NETN-ORG unit element with the same unique identifier.|
 |Status|**Required:** Indicate if this aggregate unit currently is being simulated or not. E.g. units mounted or embarked on transports can be set to inactive. During an inactive state, the attribute values may not reflect an accurate, current value. Therefore, any subscribing federate can ignore inactive units. All attributes must be updated to represent the current status of the instance before setting the status to active.|
 |SubunitList|**Optional:** Reference to disaggregated representations of subsets of the aggregate unit when registered in the federation. Each element should refer to an existing NETN_Aggregate object in the federation. If not published, disaggregation is not supported.|
 |ParentUnit|**Optional:** Reference to parent aggregate entity. If not published, aggregation is not supported. The default value is 0000000000000000 (no parent unit).|
@@ -107,8 +107,8 @@ Figure: The NETN_Aggregate object class
 |Echelon|**Optional:** The size of the unit (level of command).|
 |EntityList|**Optional:** This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.|
 |SuppliesStatus|**Optional:** The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.|
-|EquipmentStatus|**Optional:** This summarizes the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.|
-|PersonnelStatus|**Optional:** This summarizes the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.|
+|EquipmentStatus|**Optional:** This summarises the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.|
+|PersonnelStatus|**Optional:** This summarises the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.|
 |VisualSignature|**Optional:** Describes the unit's susceptibility to electro-optical detection.|
 |HUMINTSignature|**Optional:** Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
 |ElectronicSignature|**Optional:** Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.|
@@ -330,8 +330,8 @@ If indicated, the federate registers specified platforms and lifeforms entities 
 
 *Conditions*
 
-* Re-use of existing instances for representing divided holdings is only allowed if not already in use, i.e. the `SourceUnit` attribute is not published or set to all zeros.
-* Re-use of existing instances for representing divided holdings requires the Federate performing division must be able to acquire modelling responsibilities for attributes `SourceUnit` and `Status` of these instances.
+* Reuse of existing instances for representing divided holdings is only allowed if not already in use, i.e. the `SourceUnit` attribute is not published or set to all zeros.
+* Reuse of existing instances for representing divided holdings requires the Federate performing division must be able to acquire modelling responsibilities for attributes `SourceUnit` and `Status` of these instances.
 
 The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
 
