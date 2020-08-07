@@ -63,7 +63,7 @@ NETN-MRM FOM Module v2.0 was developed by MSG-163 and included in NETN-FOM v3.0.
 
 * Changed datatype of `NETN_Aggregate.Mounted` to `PercentFloat64`
 * Changed datatype of `NETN_Aggregate.SourceUnit` to `UuidArrayOfHLAbyte16`
-* Changed datatype of `NETN_Aggregate.Symbol` to `SymbolIdentifierArray15`
+* Changed datatype of `NETN_Aggregate.Symbol` to `SymbolIdentifier`
 * Changed datatype of `NETN_Aggregate.Footprint` to `GeocentricPolygon `
 
 * Added attribute `Route` for  object class `NETN_Aggregate`
@@ -73,6 +73,7 @@ NETN-MRM FOM Module v2.0 was developed by MSG-163 and included in NETN-FOM v3.0.
 
 * Renamed attribute `NETN_Aggregate.UniqueID` to `NETN_Aggregate.UniqueId`
 
+* Renamed attribute `Symbol` of `NETN_Aggregate` to `SymbolId`
 * Renamed attribute `UnitEquipment`  of `NETN_Aggregate` to `EquipmentStatus`
 * Renamed attribute `UnitPersonnel`  of `NETN_Aggregate` to `PersonnelStatus`
 * Renamed attribute `UnitSupplies`  of `NETN_Aggregate` to `Supplies`
