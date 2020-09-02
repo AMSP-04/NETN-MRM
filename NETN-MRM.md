@@ -101,34 +101,34 @@ Figure: The NETN_Aggregate object class
 |SourceUnit|**Optional:** Reference to another active NETN_Aggregate instance from which this aggregate was divided. If not published, merging is not supported.|
 |EmbeddedUnitList|**Optional:** Reference to platforms or lifeforms embarked on this platform. If not published, transport of embedded units not supported.|
 |HigherHeadquarters|**Optional:** A reference to an entity representing the aggregate unit's superior or headquarters from which orders are given and to which reports are sent. The highest level unit or headquarters will publish 0000000000000000 as its HigherHeadquarters value. The referenced entity may or may not be registered in the federation as a NETN_Aggregate and/or NETN-ORG unit. If not published, the aggregate does not have a superior unit or headquarter. The default value is 0000000000000000 (no higher headquarters).|
-|Mounted|**Optional:** The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.|
-|SymbolId|**Optional:** A symbol identifier represented as a string. The symbol standard used is indicated using an URI notation (uri:xxxxxxxxxx). The following uri should be used for common symbology standards app6b, app6b, app6c, app6c, 2525b, 2525c, 2525d. If uri is not provided the symbol standard used is undefined.|
-|Callsign|**Required:**  A callsign used to address the unit. Callsigns should be unique in the context in which they are used but not required to be globally unique.|
-|Echelon|**Optional:** The size of the unit (level of command).|
-|EntityList|**Optional:** This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.|
-|SuppliesStatus|**Optional:** The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.|
-|EquipmentStatus|**Optional:** This summarises the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.|
-|PersonnelStatus|**Optional:** This summarises the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.|
-|VisualSignature|**Optional:** Describes the unit's susceptibility to electro-optical detection.|
-|HUMINTSignature|**Optional:** Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
-|ElectronicSignature|**Optional:** Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.|
-|CombatValue|**Optional:** A summary value (in per cent) of unit effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.|
-|CoverStatus|**Optional:** Describes the unit's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.|
-|CaptureStatus|**Optional:** The status of a person or unit with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
-|Mission|**Optional:** The operational task the aggregate has been ordered to perform.|
-|Activity|**Optional:** The current activity of the aggregate. This may differ from the mission due to casualties, readiness, etc.|
-|Route|**Optional:** The current path of movement. |
-|Destination|**Optional:** The current destination of movement. |
-|WeaponsControlOrder|**Optional:** Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.|
+|Mounted|**Optional.** The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.|
+|SymbolId|**Optional.** A symbol identifier represented as a string. |
+|Callsign|**Required.**  A callsign used to address the unit. Callsigns should be unique in the context in which they are used but not required to be globally unique.|
+|Echelon|**Optional.** The size of the unit (level of command).|
+|EntityList|**Optional.** This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.|
+|SuppliesStatus|**Optional.** The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.|
+|EquipmentStatus|**Optional.** This summarises the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.|
+|PersonnelStatus|**Optional.** This summarises the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.|
+|VisualSignature|**Optional.** Describes the unit's susceptibility to electro-optical detection.|
+|HUMINTSignature|**Optional.** Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
+|ElectronicSignature|**Optional.** Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.|
+|CombatValue|**Optional.** A summary value (in per cent) of unit effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.|
+|CoverStatus|**Optional.** Describes the unit's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.|
+|CaptureStatus|**Optional.** The status of a person or unit with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
+|Mission|**Optional.** The operational task the aggregate has been ordered to perform.|
+|Activity|**Optional.** The current activity of the aggregate. This may differ from the mission due to casualties, readiness, etc.|
+|Route|**Optional.** The current path of movement. |
+|Destination|**Optional.** The current destination of movement. |
+|WeaponsControlOrder|**Optional.** Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.|
 
 ### Specific use of inherited attributes
 
 | Attribute| Note|
 |---|---|
-|AggregateState|**Required:** Only the following values are used: `Aggregated`, `Disaggregated`, or `Fully Disaggregated`. When `Fully Disaggregated` the `Status` should be set to `Inactive`.|
-|Dimensions|**Required:**|
-|IsPartOf|**Optional:** Used when mounted or transported by other Aggregate entity|
-|SubAggregatesIdentifiers|**Optional:** Reference to `NETN_Aggregate` object instances registered in the federation representing subunits.|
+|AggregateState|**Required.** Only the following values are used: `Aggregated`, `Disaggregated`, or `Fully Disaggregated`. When `Fully Disaggregated` the `Status` should be set to `Inactive`.|
+|Dimensions|**Required.**|
+|IsPartOf|**Optional.** Used when mounted or transported by other Aggregate entity|
+|SubAggregatesIdentifiers|**Optional.** Reference to `NETN_Aggregate` object instances registered in the federation representing subunits.|
 
 
 ## MRM actions
@@ -170,18 +170,18 @@ Figure: Query and Request of MRM actions
 **Request Interaction Class**
 |Parameter|Description|
 |---|---|
-|Federate|**Required:** Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned. |
-|AggregateUnit|**Required for all requests except QuerySupportedCapabilities:** Unique identifier for the AggregateUnit for which this request is related to. |
+|Federate|**Required.** Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned. |
+|AggregateUnit|**Required for all requests except QuerySupportedCapabilities.** Unique identifier for the AggregateUnit for which this request is related to. |
 
 **Response Interaction Class**
 |Parameter|Description|
 |---|---|
-|Status|**Required:** Specifies the result of the request action. TRUE indicates success.|
+|Status|**Required.** Specifies the result of the request action. TRUE indicates success.|
 
 **CapabilitiesSupported Interaction Class**
 |Parameter|Description|
 |---|---|
-|CapabilityNames|**Required:** A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Deactivate".|
+|CapabilityNames|**Required.** A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Deactivate".|
 
 
 
