@@ -73,7 +73,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     </attribute>
                     <attribute>
                         <name>ParentUnit</name>
-                        <dataType>UuidArrayOfHLAbyte16</dataType>
+                        <dataType>UUID</dataType>
                         <updateType>NA</updateType>
                         <updateCondition>NA</updateCondition>
                         <ownership>DivestAcquire</ownership>
@@ -95,7 +95,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     </attribute>
                     <attribute>
                         <name>SourceUnit</name>
-                        <dataType>UuidArrayOfHLAbyte16</dataType>
+                        <dataType>UUID</dataType>
                         <updateType>Conditional</updateType>
                         <updateCondition>On change</updateCondition>
                         <ownership>DivestAcquire</ownership>
@@ -117,7 +117,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     </attribute>
                     <attribute>
                         <name>HigherHeadquarters</name>
-                        <dataType>UuidArrayOfHLAbyte16</dataType>
+                        <dataType>UUID</dataType>
                         <updateType>Conditional</updateType>
                         <updateCondition>On change</updateCondition>
                         <ownership>DivestAcquire</ownership>
@@ -311,7 +311,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     </parameter>
                     <parameter>
                         <name>AggregateUnit</name>
-                        <dataType>UuidArrayOfHLAbyte16</dataType>
+                        <dataType>UUID</dataType>
                         <semantics>Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.</semantics>
                     </parameter>
                     <interactionClass>
@@ -745,7 +745,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 </field>
                 <field>
                     <name>UnitAllocation</name>
-                    <dataType>UuidArrayOfHLAbyte16</dataType>
+                    <dataType>UUID</dataType>
                     <semantics>Reference to unit by UUID to which this entity is allocated as a resource. Unit may or may not be represented in the federation as a NETN_Aggregate and/or NETN-ORG Unit object.</semantics>
                 </field>
             </fixedRecordData>
