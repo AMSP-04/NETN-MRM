@@ -295,7 +295,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <semantics>Base class for all MRM interactions.</semantics>
                 <parameter>
                     <name>EventId</name>
-                    <dataType>TransactionId</dataType>
+                    <dataType>UUID</dataType>
                     <semantics>Unique identifier for all MRM interactions belonging to the same request/respons event.</semantics>
                 </parameter>
                 <interactionClass>

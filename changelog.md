@@ -1,5 +1,10 @@
 ## Changelog NETN-MRM
 
+### Changes for v3.0
+Version 3.0 was developed by MSG-191 and included in NETN-FOM v4.0.
+
+* Changed datatype `TransactionId` to `UUID`
+
 ### Changes for v2.0
 
 NETN-MRM FOM Module v2.0 was developed by MSG-163 and included in NETN-FOM v3.0.
