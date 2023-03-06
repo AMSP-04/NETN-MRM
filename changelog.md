@@ -4,6 +4,8 @@
 Version 3.0 was developed by MSG-191 and included in NETN-FOM v4.0.
 
 * Changed datatype `TransactionId` to `UUID`
+* Replaced all use of Array datatype `NETN_ArrayOfSupplyStruct` with `SupplyStructArray`
+* Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32` - NOTE Breaks backward compatibility
 
 ### Changes for v2.0
 

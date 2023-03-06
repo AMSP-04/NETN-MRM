@@ -174,7 +174,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         </attribute>
                         <attribute>
                             <name>SuppliesStatus</name>
-                            <dataType>NETN_ArrayOfSupplyStruct</dataType>
+                            <dataType>SupplyStructArray</dataType>
                             <updateType>Conditional</updateType>
                             <updateCondition>On change</updateCondition>
                             <ownership>DivestAcquire</ownership>
@@ -354,7 +354,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         </parameter>
                         <parameter>
                             <name>Supplies</name>
-                            <dataType>NETN_ArrayOfSupplyStruct</dataType>
+                            <dataType>SupplyStructArray</dataType>
                             <semantics>Optional. Amount of supplies to divide.</semantics>
                         </parameter>
                         <parameter>
@@ -603,17 +603,17 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <semantics>Specifies the visual structure</semantics>
                 <field>
                     <name>DVOSignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
+                    <dataType>PercentFloat32</dataType>
                     <semantics>A summary percentage of an aggregates susceptibility to detection by direct view optics, i.e. the human eye, binoculars, or telescopes. A unit with zero percent signature would be concealed from DVO detection.</semantics>
                 </field>
                 <field>
                     <name>I2SignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
+                    <dataType>PercentFloat32</dataType>
                     <semantics>A summary percentage of an aggregates susceptibility to detection by Image Intensifying sensors. A unit with zero percent signature would be invisible to image intensifiers (I2).</semantics>
                 </field>
                 <field>
                     <name>ThermalSignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
+                    <dataType>PercentFloat32</dataType>
                     <semantics>A summary percentage of an aggregates susceptibility to detection by thermal sensors. A unit with zero percent signature would be invisible to thermal sensors.</semantics>
                 </field>
             </fixedRecordData>
@@ -643,7 +643,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <semantics>Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
                 <field>
                     <name>HUMINTSignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
+                    <dataType>PercentFloat32</dataType>
                     <semantics>A summary percentage of an aggregates susceptibility to detection by human intelligence collectors. Zero percent signature means an aggregate is impervious to HUMINT.</semantics>
                 </field>
             </fixedRecordData>
@@ -653,7 +653,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <semantics>A summary percentage of an aggregates susceptibility to detection of its electronic emissions. Zero percent means that the aggregate has no electronic emissions.</semantics>
                 <field>
                     <name>ElectronicSignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
+                    <dataType>PercentFloat32</dataType>
                     <semantics>A summary percentage of an aggregates susceptibility to detection of its electronic emissions. Zero percent means that the aggregate has no electronic emissions.</semantics>
                 </field>
                 <field>
