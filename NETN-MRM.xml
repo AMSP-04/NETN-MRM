@@ -58,11 +58,20 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <name>BaseEntity</name>
                 <objectClass>
                     <name>AggregateEntity</name>
-                    <objectClass>
-                        <name>NETN_Aggregate</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <semantics>A group of one or more separate objects that operate together as part of an organization. These objects may be discrete, may be other aggregate objects, or may be a mixture of both.</semantics>
+                    <attribute>
+                        <name>TMP</name>
+                        <dataType>UUID</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition></updateCondition>
+                        <ownership>NoTransfer</ownership>
                         <sharing>PublishSubscribe</sharing>
-                        <semantics>Aggregate extensions for NETN</semantics>
-                        <attribute>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics></semantics>
+                    </attribute>
+                    <attribute>
                             <name>SubunitList</name>
                             <dataType>ArrayOfUuid</dataType>
                             <updateType>NA</updateType>
@@ -282,6 +291,10 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                             <order>Receive</order>
                             <semantics>Optional. Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.</semantics>
                         </attribute>
+                    <objectClass>
+                        <name>NETN_Aggregate</name>
+                        <sharing>PublishSubscribe</sharing>
+                        <semantics>Aggregate extensions for NETN</semantics>
                     </objectClass>
                 </objectClass>
             </objectClass>
