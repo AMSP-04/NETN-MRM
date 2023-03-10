@@ -61,236 +61,225 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <sharing>PublishSubscribe</sharing>
                     <semantics>A group of one or more separate objects that operate together as part of an organization. These objects may be discrete, may be other aggregate objects, or may be a mixture of both.</semantics>
                     <attribute>
-                        <name>TMP</name>
-                        <dataType>UUID</dataType>
+                        <name>SubunitList</name>
+                        <dataType>ArrayOfUuid</dataType>
                         <updateType>NA</updateType>
-                        <updateCondition></updateCondition>
-                        <ownership>NoTransfer</ownership>
+                        <updateCondition>NA</updateCondition>
+                        <ownership>DivestAcquire</ownership>
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics></semantics>
+                        <semantics>Optional. Reference to disaggregated representations of subsets of the aggregate unit when registered in the federation. Each element should refer to an existing NETN_Aggregate object in the federation. If not published, disaggregation is not supported.</semantics>
                     </attribute>
                     <attribute>
-                            <name>SubunitList</name>
-                            <dataType>ArrayOfUuid</dataType>
-                            <updateType>NA</updateType>
-                            <updateCondition>NA</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAreliable</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to disaggregated representations of subsets of the aggregate unit when registered in the federation. Each element should refer to an existing NETN_Aggregate object in the federation. If not published, disaggregation is not supported.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>ParentUnit</name>
-                            <dataType>UUID</dataType>
-                            <updateType>NA</updateType>
-                            <updateCondition>NA</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAreliable</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to parent aggregate entity. If not published, aggregation is not supported. The default value is 0000000000000000 (no parent unit).</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>DividedUnitList</name>
-                            <dataType>ArrayOfUuid</dataType>
-                            <updateType>NA</updateType>
-                            <updateCondition>NA</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAreliable</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to other aggregate or physical entities divided from the aggregate unit to represent specific subsets of holdings. If not published, a division is not supported.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>SourceUnit</name>
-                            <dataType>UUID</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to an active NETN_Aggregate instance, the source of a NETN-MRM division. If not published, merging is not supported. The default value is 0000000000000000 representing no source unit.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>EmbeddedUnitList</name>
-                            <dataType>ArrayOfUuid</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to units or platforms embarked on and transported by this unit. If not published, transport of embedded units not supported.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>HigherHeadquarters</name>
-                            <dataType>UUID</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. A reference to an entity representing the aggregate unit's superior or headquarters from which orders are given and to which reports are sent. The highest level unit or headquarters will publish 0000000000000000 as its HigherHeadquarters value. The referenced entity may or may not be registered in the federation as a NETN_Aggregate and/or NETN-ORG unit. If not published, the aggregate does not have a superior unit or headquarter. The default value is 0000000000000000 (no higher headquarters).</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Mounted</name>
-                            <dataType>PercentFloat64</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Callsign</name>
-                            <dataType>HLAunicodeString</dataType>
-                            <updateType>Static</updateType>
-                            <updateCondition>N/A</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Required. A callsign used to address the unit. Callsigns should be unique in the context in which they are used but not required to be globally unique.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Echelon</name>
-                            <dataType>EchelonEnum32</dataType>
-                            <updateType>Static</updateType>
-                            <updateCondition>N/A</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The size of the unit (level of command).</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>EntityList</name>
-                            <dataType>ArrayOfEntityStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>SuppliesStatus</name>
-                            <dataType>SupplyStructArray</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>EquipmentStatus</name>
-                            <dataType>ArrayOfResourceStatus</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. This summarizes the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>PersonnelStatus</name>
-                            <dataType>ArrayOfResourceStatus</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. This summarizes the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>VisualSignature</name>
-                            <dataType>VisualSignatureStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Describes the unit's susceptibility to electro-optical detection.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>HUMINTSignature</name>
-                            <dataType>HUMINTSignatureStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>ElectronicSignature</name>
-                            <dataType>ElectronicSignatureStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>CombatValue</name>
-                            <dataType>PercentFloat64</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. A summary value (in per cent) of unit effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>CoverStatus</name>
-                            <dataType>PercentFloat64</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Describes the unit's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>CaptureStatus</name>
-                            <dataType>CaptureStatusEnum8</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>The status of an aggregate with respect to its control or influence over its own activities.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>WeaponsControlOrder</name>
-                            <dataType>WeaponControlOrderEnum8</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.</semantics>
-                        </attribute>
+                        <name>ParentUnit</name>
+                        <dataType>UUID</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>NA</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to parent aggregate entity. If not published, aggregation is not supported. The default value is 0000000000000000 (no parent unit).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>DividedUnitList</name>
+                        <dataType>ArrayOfUuid</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>NA</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to other aggregate or physical entities divided from the aggregate unit to represent specific subsets of holdings. If not published, a division is not supported.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>SourceUnit</name>
+                        <dataType>UUID</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to an active NETN_Aggregate instance, the source of a NETN-MRM division. If not published, merging is not supported. The default value is 0000000000000000 representing no source unit.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>EmbeddedUnitList</name>
+                        <dataType>ArrayOfUuid</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to units or platforms embarked on and transported by this unit. If not published, transport of embedded units not supported.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>HigherHeadquarters</name>
+                        <dataType>UUID</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. A reference to an entity representing the aggregate unit's superior or headquarters from which orders are given and to which reports are sent. The highest level unit or headquarters will publish 0000000000000000 as its HigherHeadquarters value. The referenced entity may or may not be registered in the federation as a NETN_Aggregate and/or NETN-ORG unit. If not published, the aggregate does not have a superior unit or headquarter. The default value is 0000000000000000 (no higher headquarters).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>Mounted</name>
+                        <dataType>PercentFloat64</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>Callsign</name>
+                        <dataType>HLAunicodeString</dataType>
+                        <updateType>Static</updateType>
+                        <updateCondition>N/A</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Required. A callsign used to address the unit. Callsigns should be unique in the context in which they are used but not required to be globally unique.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>Echelon</name>
+                        <dataType>EchelonEnum32</dataType>
+                        <updateType>Static</updateType>
+                        <updateCondition>N/A</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. The size of the unit (level of command).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>EntityList</name>
+                        <dataType>ArrayOfEntityStruct</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>SuppliesStatus</name>
+                        <dataType>SupplyStructArray</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>EquipmentStatus</name>
+                        <dataType>ArrayOfResourceStatus</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. This summarizes the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>PersonnelStatus</name>
+                        <dataType>ArrayOfResourceStatus</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. This summarizes the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>VisualSignature</name>
+                        <dataType>VisualSignatureStruct</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Describes the unit's susceptibility to electro-optical detection.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>HUMINTSignature</name>
+                        <dataType>HUMINTSignatureStruct</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>ElectronicSignature</name>
+                        <dataType>ElectronicSignatureStruct</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>CombatValue</name>
+                        <dataType>PercentFloat64</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. A summary value (in per cent) of unit effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>CoverStatus</name>
+                        <dataType>PercentFloat64</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Describes the unit's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>CaptureStatus</name>
+                        <dataType>CaptureStatusEnum8</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>The status of an aggregate with respect to its control or influence over its own activities.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>WeaponsControlOrder</name>
+                        <dataType>WeaponControlOrderEnum8</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.</semantics>
+                    </attribute>
                     <objectClass>
                         <name>NETN_Aggregate</name>
                         <sharing>PublishSubscribe</sharing>
