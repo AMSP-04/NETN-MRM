@@ -1,30 +1,9 @@
-# NETN-MRM
-
-|Version| Date| Dependencies|
-|---|---|---|
-|2.0|2023-03-18|NETN-BASE, RPR-Physical, RPR-Aggregate|
-
-The purpose of the NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. 
-
 Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of broader combined concepts.
 
 The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation.
 
 The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. The NETN-MRM FOM module is available as an XML file for use in HLA-based federations.
 
-NETN-MRM covers the following cases:  
-* Aggregation of aggregated and/or physical entities 
-* Disaggregation of aggregated entities representing a unit into other aggregate and/or physical entities depending on NETN-ORG unit structure.
-* Division of aggregate entities into other aggregates or platforms by dividing holdings. 
-* Merge a previously divided entity with it's source aggregate entity. 
-* Activate and Inactivate aggregate entities in the federation
-
-For example:
-* Disaggregation of a Battalion Unit represented as an `AggregateEntity` object into Company level `AggregateEntity` objects.
-* Disaggregation of a Company level unit, represented as an `AggregateEntity` object, to individual platforms, e.g. represented as `GroundVehicle` objects.
-* Aggregation of equipment items, e.g. `GroundVehicle` objects, to a unit, e.g. a Platoon, represented as an `AggregateEntity` object.
-* Dividing individual pieces of equipment, e.g. UAV, from a Company unit to simulate some reconnaissance operation in more detail represented as another divided aggregated entity or as individual platforms.
-* Merging of a Recce platoon, represented as an `AggregateEntity` object, on its return from a mission with its source Company unit represented as another `AggregateEntity`. 
 
 
 ## Overview
@@ -33,12 +12,13 @@ NETN-MRM extends the RPR-FOM `AggregateEntity`, `Platform` and `Lifeform` object
 
 Implementation of aggregation, disaggregation, division and merge, requires knowledge of the structure and organisation of units and their equipment as defined in NETN-ORG.
 
-A `Unit`, as defined in NETN-ORG, can be represented in the federation as a single `AggregateEntity` object or as a collection of multiple `AggregateEntity`, `Platform` or `Lifeform` objects. E.g. a `Unit` with associated `EquipmentItems` in NETN-ORG can be represented as a combination of an `AggregateEntity` representing most of the unit and `Platform` and `Lifeform` entities to represent each equipment item associated with the unit.
+A `Unit`, as defined in NETN-ORG, can be represented in the federation as a single `AggregateEntity` object or as a collection of multiple `AggregateEntity`, `Platform` or `Lifeform` objects. E.g. a `Unit` with associated `EquipmentItems` in NETN-ORG can be represented as a combination of an `AggregateEntity` representing most of the unit and `Platform` entities to represent each platform equipment item associated with the unit.
 
 The initial representation of units in the federation can change during runtime. Use the MRM actions to request aggregation and disaggregation or to split the representation by dividing holdings among multiple aggregate entities, platforms or lifeforms objects.
 
-The attribute extensions provided in NETN-MRM are defined on RPR-FOM object classes, however, a subclass for NETN_Aggregate is provided and can be used to allow subscribers to discover and distinguish between RPR and entended NETN objects. Similar NETN subclasses for `Platforms` and `Lifeforms` are defined in the NETN-Physical FOM module on which NETN-MRM depends.
+The attribute extensions provided in NETN-MRM are defined on RPR-FOM object classes, however, a subclass for `NETN_Aggregate` is provided and can be used to allow subscribers to discover and distinguish between RPR and entended NETN objects. Similar NETN subclasses for `Platforms` and `Lifeforms` are defined in the NETN-Physical FOM module on which NETN-MRM depends.
 
+### Pattern
 
 All MRM actions use the same pattern of interaction. 
 
@@ -56,7 +36,7 @@ Federate->>Request: Response
 1. Before sending a more specific MRM request, the MRM capabilities supported by a federate can be queried. To query which MRM actions are supported, send a `QueryCapabilitiesSupported` request interaction. 
 2. All federates implementing NETN-MRM must implement support for `QueryCapabilitiesSupported` and provide a `CapabilitiesSupported` response interaction. If a federate is not responding to `QueryCapabilitiesSupported` it should be assumed it does not support any MRM action. Once a federate respond to this query, additional queries are not required before each MRM action.
 3. A federate requests an action on a specified `AggregateEntity` using subclasses of the interaction class `Request`
-4. The federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for aggregation and disaggregation MRM actions.  The federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for division and merging MRM actions. Performing the MRM action may include registering, deleting and updating objects in the federation.
+4. The federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for aggregation and disaggregation actions.  The federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for division and merging actions. Performing the action may include registering, deleting and updating objects in the federation.
 5. The federate then reports the success of the action using the interaction `Response`.
 
 
@@ -381,11 +361,11 @@ A base class for all MRM  Request events.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
-|AggregateEntity|UUID|Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.|
+|AggregateUnit|UUID|Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.|
 |Federate|FederateName|Required. Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned.|
 ### Aggregate
 
-Instruction to the AggregateFederate to perform aggregation of the specified AggregateEntity's parts.
+Instruction to the AggregateFederate to perform aggregation of the specified AggregateUnit's parts.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
@@ -395,7 +375,7 @@ Instruction to the AggregateFederate to perform aggregation of the specified Agg
 Instruction to perform a full disaggregation of a AggregatedUnit. All subunits and platforms will be registered in the federation.
 ### Divide
 
-Instruction to divide the simulated AggregateEntity into multiple simulated object. The resouces are divided among the simulated entities. After successful division two simulated entities represent the entire Unit. 1) The original AggregateEntity and 2) the divided unit or platform. Both these entities are simulated until merged.
+Instruction to divide the simulated AggregateUnit into multiple simulated object. The resouces are divided among the simulated entities. After successful division two simulated entities represent the entire Unit. 1) The original AggregateUnit and 2) the divided unit or platform. Both these entities are simulated until merged.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
@@ -405,20 +385,20 @@ Instruction to divide the simulated AggregateEntity into multiple simulated obje
 |Supplies|SupplyStructArray|Optional. Amount of supplies to divide.|
 ### Merge
 
-Instruction to merg the simulated AggregateEntity with the selected divided parts. After successful merge the divided parts are removed from the federation and their resources are combined with the AggregatedUnit.
+Instruction to merg the simulated AggregateUnit with the selected divided parts. After successful merge the divided parts are removed from the federation and their resources are combined with the AggregatedUnit.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
-|Subunits|ArrayOfUuid|Required. A set of unique identifiers of subelements of the AggregateEntity. These can be any subunit and/or equipment defined at a subunit on any level.|
+|Subunits|ArrayOfUuid|Required. A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.|
 ### QuerySupportedCapabilities
 
 A request to query the capabilities of a specified federation to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.
 ### Activate
 
-Request federate to change of status of AggregateEntity to Active. If required the unit will be registered in the federation.
+Request federate to change of status of AggregateUnit to Active. If required the unit will be registered in the federation.
 ### Deactivate
 
-Request change of status of AggregateEntity to Inactive and if indicated remove it from the federation.
+Request change of status of AggregateUnit to Inactive and if indicated remove it from the federation.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
@@ -492,3 +472,4 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 |ResourceStatusNumberStruct|NumberHealthyOrIntact, NumberSlightlyDamaged, NumberModeratelyDamaged, NumberSignificantlyDamaged, NumberDestroyed, ResourceName, ResourceType|The name of a resource and the number of instances of that resource by health status.|
 |SensorStruct|SensorStateEnum, SensorDamageState, SensorCoverage, SensorID|Defines a sensor,operational status, damage status, coverage and ID|
 |VisualSignatureStruct|DVOSignaturePercent, I2SignaturePercent, ThermalSignaturePercent|Specifies the visual structure|
+        
