@@ -75,7 +75,7 @@ subgraph NETN-ORG
 end
 ```
 
-* The federate application owning the `DisaggregatedEntities` attribute of the `AggregateEntity`, is capable of performing disaggregation.
+* The federate application owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is capable of performing disaggregation.
 * The `Status` of the `AggregateEntity` is `Active`.
 * The `AggregateEntity` attribute `Unit` refers to an existing NETN-ORG `Unit` object.
 * The NETN-ORG `Unit` object has one or more subunits.
@@ -194,7 +194,7 @@ Federate->>Request: Response
 
 ```
 
-1. A Request federate sends a `Aggregate` request indicating which `AggregateEntity` to aggregate. The Federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for performing the aggregation.
+1. A Request federate sends an `Aggregate` request indicating which `AggregateEntity` to aggregate. The Federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for performing the aggregation.
 2. The federate deletes all entities referenced by the `DisaggregatedEntities` attribute
 3. The federate updates all `AggregateEntity` attributes to reflect the current state including the `Status` set to `Active`.
 4. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate the successful completion of the request. If any of the conditions are false the `Status` parameter is set to `FALSE`.
@@ -229,8 +229,8 @@ Federate->>Request: Response
 1. A Request federate sends a `Divide` interaction indicating the `AggregateEntity` to divide and the list of resources to reallocate to new entities. The request also indicates if resources should be allocated to a new `AggregateEntity` or as one or more physical `Platform` or `Lifeform` objects. The Federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for performing the division.
 2. The federate registers either a new `AggregateEntity` or one or more `Platform` or `Lifeform` objects.
 3. The `AggregateEntity` and new entity are updated with the current status of allocated resources. 
-4.  The `AggregateEntity` is updated with attribute `DividedEntities` referencing all newly created entities. 
-5. All newly created entities are update with attribute `SourceAggregate` to refer to the `AggregateEntity`
+4.  The `AggregateEntity` is updated with the attribute `DividedEntities` referencing all newly created entities. 
+5. All newly created entities are updated with the attribute `SourceAggregate` to refer to the `AggregateEntity`
 2. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate the successful completion of the request. The federate sends the `Status` parameter set to `FALSE` if any of the conditions are false.
 
 After division the following is true:
@@ -251,7 +251,7 @@ AggregateEntity --Unit--> Unit
  end
 ```
 
-* A new `AggregateEntity` object exist with a `SourceAggregate` attribute referencing the divided `AggregateEntity`, OR
+* A new `AggregateEntity` object exists with a `SourceAggregate` attribute referencing the divided `AggregateEntity`, OR
 * One or more new `Platform` and `Lifeform` objects exist with `SourceAggregate`` attribute referencing the divided `AggregateEntity
 * The divided `AggregateEntity` references all new divided entities in the `DividedEntities` attribute.
 
