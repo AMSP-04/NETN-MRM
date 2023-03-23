@@ -8,19 +8,15 @@
         <securityClassification>Not Classified</securityClassification>
         <purpose>The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. </purpose>
         <applicationDomain></applicationDomain>
-        <description>Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of broader combined concepts.
-
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation.
-
-The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. The NETN-MRM FOM module is available as an XML file for use in HLA-based federations.
-</description>
+        <description>The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modeling.</description>
         <useLimitation>NETN-MRM covers the following cases:  
 * Aggregation of entities representing subunits and/or physical entities 
 * Disaggregation of entities representing a unit into entities representing subunits and/or physical entities 
 * Division of simulated entities into parts - resources divided and all entities simulated 
 * Merge of previously divided entities.</useLimitation>
-        <useHistory>v1.1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
-        <useHistory>v2.0.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
+        <useHistory notes="netn-mrm_1">v1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
+        <useHistory notes="netn-mrm_2">v2.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
+        <useHistory notes="netn-mrm_3">v3.0 - Updated version by MSG-191 to be part of NATO-FOM v4.0</useHistory>
         <poc>
             <pocType>Release authority</pocType>
             <pocName>NATO Modelling and Simulation Group</pocName>
@@ -29,7 +25,7 @@ The MRM FOM module specifies interaction classes necessary to enable federation 
         </poc>
         <poc>
             <pocType>Primary author</pocType>
-            <pocName>MSG-163 Evolution of NATO Standards for Federated Simulation</pocName>
+            <pocName>MSG-106 Enhanced CAX Architecture, Desing and Methodology</pocName>
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
         </poc>
@@ -41,7 +37,13 @@ The MRM FOM module specifies interaction classes necessary to enable federation 
         </poc>
         <poc>
             <pocType>Primary author</pocType>
-            <pocName>MSG-106 Enhanced CAX Architecture, Desing and Methodology</pocName>
+            <pocName>MSG-163 Evolution of NATO Standards for Federated Simulation</pocName>
+            <pocOrg>NATO Modelling and Simulation Group</pocOrg>
+            <pocEmail>msg@cso.nato.int</pocEmail>
+        </poc>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>MSG-191 NATO Standards for Federated Simulation and Services for Integration, Verification and Certification</pocName>
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
         </poc>
@@ -504,25 +506,6 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                             <semantics>Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicate which divided entities are to be merged back with the AggregateEntity.</semantics>
                         </parameter>
                     </interactionClass>
-                    <interactionClass>
-                        <name>Activate</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Request the change of status of an AggregateEntity to Active.</semantics>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>Deactivate</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Request change of status of an AggregateEntity to Inactive and if indicated remove it from the federation.</semantics>
-                        <parameter>
-                            <name>RemoveEntity</name>
-                            <dataType>HLAboolean</dataType>
-                            <semantics>Optional. Indicates if the entity shall be removed as an object instance in the federation. Default = FALSE - keep object instance in federation.</semantics>
-                        </parameter>
-                    </interactionClass>
                 </interactionClass>
                 <interactionClass>
                     <name>Response</name>
@@ -928,5 +911,114 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
             </fixedRecordData>
         </fixedRecordDataTypes>
     </dataTypes>
-    <notes/>
+    <notes>
+        <note>
+            <label>netn-mrm_1</label>
+            <semantics>NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.</semantics>
+        </note>
+        <note>
+            <label>netn-mrm_2</label>
+            <semantics>* Changed Filename to NETN-MRM.xml
+* Changed `modelIdentification` `securityClassification` from `unclassified` to `Not Classified`
+* Changed `modelIdentification` `other` to include license information
+* Changed `modelIdentification` `reference` to only refer to directly dependent FOM Modules
+* Added `modelIdentification` `useLimitation` to reflect Scope of FOM Module
+* Added `modelIdentification` `glyph` 
+* Updated `modelIdentification` `purpose` to reflect Purpose of FOM Module 
+* Updated `modelIdentification` `description` to reflect Introduction of FOM Module
+* Updated `modelIdentification` `name` to NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module
+* Updated `modelIdentification` `poc` to include Release authority, Primary authors and Contributors
+* Updated `modelIdentification` `applicationDomain` to empty.
+* Removed NETN-MRM dependency on NETN-TMR.
+* Merged NETN-Aggregate to NETN-MRM.
+* Removed InteractionClass `MRM_Object`
+* Removed InteractionClass `MRM_TriggerResponse`
+* Removed InteractionClass `MRM_Trigger`
+* Renamed InteractionClass `MRM_DisaggregationRequest`
+* Renamed InteractionClass `MRM_AggregationRequest`
+* Removed InteractionClass `MRM_DisaggregationResponse` 
+* Removed InteractionClass `MRM_AggregationResponse`
+* Removed InteractionClass `MRM_CancelRequest`
+* Removed InteractionClass `MRM_ActionComplete` 
+* Added InteractionClass `MRM_Interaction`
+* Added InteractionClass `Request`
+* Added InteractionClass `Aggregate`
+* Added InteractionClass `Disaggregate`
+* Added InteractionClass `Divide`
+* Added InteractionClass `Merge`
+* Added InteractionClass `Inactivate`
+* Added InteractionClass `Activate`
+* Added InteractionClass `QuerySupportedCapabilities`
+* Added InteractionClass `CapabilitiesSupported`
+* Added InteractionClass `Response`
+* Removed datatype `AggregateStateEnum32`
+* Removed datatype `EntityListVariableLengthStruct`
+* Removed datatype `UpdateTypeEnum32`
+* Removed datatype `SupportRelationshipStruct`
+* Removed datatype `FacingDegreesFloat32`
+* Removed datatype `CoverStatusStruct`
+* Removed datatype `CoverEnum8`
+* Removed datatype `CombatValueFloat64`
+* Removed datatype `SupportRelationshipEnum8`
+* Removed datatype `EchelonEnum8`
+* Removed datatype `PercentageUint32`
+* Renamed datatype `NonComplianceReasonEnum` to `MRM_ResponseStatusEnumType`
+* Replaced datatype `PercentageUint32` with `PercentUnsignedInteger32`
+* Replaced datatype `FacingDegreesFloat32` with `DirectionDegreesFloat32`
+* Replaced datatype `TimeSecInt64` with `EpochTimeSecInt64`
+* Moved datatype `QuantityFloat64` to NETN-BASE
+* Changed datatype of `NETN_Aggregate.Mounted` to `PercentFloat64`
+* Changed datatype of `NETN_Aggregate.SourceUnit` to `UuidArrayOfHLAbyte16`
+* Changed datatype of `NETN_Aggregate.Symbol` to `SymbolIdentifier`
+* Changed datatype of `NETN_Aggregate.Footprint` to `GeocentricPolygon `
+* Added attribute `Route` for  object class `NETN_Aggregate`
+* Added attribute `Destination` for  object class `NETN_Aggregate`
+* Updated semantics of attribute `NETN_Aggregate.UniqueId`
+* Renamed attribute `NETN_Aggregate.UniqueID` to `NETN_Aggregate.UniqueId`
+* Renamed attribute `Symbol` of `NETN_Aggregate` to `SymbolId`
+* Renamed attribute `UnitEquipment`  of `NETN_Aggregate` to `EquipmentStatus`
+* Renamed attribute `UnitPersonnel`  of `NETN_Aggregate` to `PersonnelStatus`
+* Renamed attribute `UnitSupplies`  of `NETN_Aggregate` to `Supplies`
+* Removed attribute `Footprint`of `NETN_Aggregate` object class
+* Removed attribute `SupportUnit` of `NETN_Aggregate` object class
+* Added field `ResourceType` to datatype `ResourceStatusNumberStruct`
+* Changed datatype of attribute `CoverStatus` of `NETN_Aggregate` to `PercentFloat64`
+* Changed datatype of attribute `CombatValue` of `NETN_Aggregate` to `PercentFloat64`
+* Changed datatype of attribute `EntityList` of `NETN_Aggregate` to `ArrayOfEntityStruct`
+* Changed datatype of attribute `Echelon` of `NETN_Aggregate` to `EchelonEnum32`
+* Added field `UnitAllocation` to datatype `EntityStruct`</semantics>
+        </note>
+        <note>
+            <label>netn-mrm_3</label>
+            <semantics>* Changed datatype `TransactionId` to `UUID`
+* Replaced all use of Array datatype `NETN_ArrayOfSupplyStruct` with `SupplyStructArray`
+* Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32`
+* Replaced all use of `PercentFloat64` with `PercentFloat32`
+* Moved attribute `SourceUnit`from NETN-Physical Platform and Lifeform object classes to the same classes in NETN-MRM and renamed to `SourceAggregate`
+* Moved attribute `EmbeddedUnitList`from NETN-Physical Platform object class to the same classes in NETN-MRM and rename to `MountedEntities`.
+* Changed datatype of `NETN_Aggregate` attribute `Route` to `ArrayOfWorldLocationStruct`
+* Changed datatype of `NETN_Aggregate` attribute `Destination` to `WorldLocationStruct`
+* Renamed `NETN_Aggregate` attribute `ParentUnit` to `ParentAggregate`
+* Renamed `NETN_Aggregate` attribute `SourceUnit` to `SourceAggregate`
+* Renamed `NETN_Aggregate` attribute `DividedUnitList` to `DividedEntities`
+* Renamed `NETN_Aggregate` attribute `EmbeddedUnitList` to `MountedEntities`
+* Renamed `NETN_Aggregate` attribute `SubunitList` to `DisaggregatedEntities`
+* Changed datatype of `NETN_Aggregate` attribute `Mounted` to `MountStruct`
+* Renamed `NETN_Aggregate` attribute `Mounted` to `MountedOn`
+* Moved all attributes from `NETN_Aggregate` to extend RPR-Aggregate object class `AggregateEntity`
+* Added attribute `Unit` to RPR-Physical `Aggregate` object class
+* Added attribute `ParentAggregate` to RPR-Physical `Platform` object class
+* Added attribute `EquipmentItem` to RPR-Physical `Platform` object class
+* Added attribute `MountedOn` to RPR-Physical `Platform` object class
+* Added attribute `MountedOn` to RPR-Physical `Lifeform` object class
+* Renamed parameter `RemoveSubunits` of interaction class `Aggregate` to `RemoveDisaggregatedEntities`
+* Renamed parameter `Subunits` of interaction class `Merge` to `DividedEntities`
+* Renamed parameter `RemoveUnit` of interaction class `Deactivate` to `RemoveEntity`
+* Renamed parameter `AggregateUnit` of interaction class `Request` to `AggregateEntity`
+* Moved interaction class `QueryCapabilitySupported` from subclass of `Request` to subclass of `MRM_Interaction`
+* Moved attribute `Federate` from interaction class `Request` to interaction class `QueryCapabilitySupported` and rename to `FederateApplication`
+* Removed interaction class `Activate`
+* Removed interaction class `Deactivate`</semantics>
+        </note>
+    </notes>
 </objectModel>
