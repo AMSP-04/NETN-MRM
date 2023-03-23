@@ -5,7 +5,7 @@
 |---|---|---|
 |3.0|2023-03-23|NETN-BASE, RPR-Aggregate|
 
-> [Full Documentation](NETN-FOM.md)
+> [Full Documentation](NETN-MRM.md)
 
 The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. 
 
