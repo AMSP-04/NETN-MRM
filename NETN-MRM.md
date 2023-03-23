@@ -292,31 +292,6 @@ After merging, all resources modelled in the previously divided entities are rep
 
 
 
-
-
-
-
-
-
-
-
-
-
-### Activate
-*Conditions*
-* An `AggregateEntity` can not be activated if any subunit is active.
-
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false. Otherwise, the `AggregateEntity` attribute is updated to `Active`.
-
-### Deactivate
-*Conditions*
-
-* An `AggregateEntity` can not be deactivated if a divided unit exists.
-
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if this condition is false.
-
-
-
 ## Object Classes
 
 Note that inherited and dependency parameters are not explicitly listed for each interaction class below. Only parameters defined in this FOM Module are listed. 
