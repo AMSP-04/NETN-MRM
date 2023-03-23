@@ -1,15 +1,19 @@
-# NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module
+# NETN-FOM
 
 
 |Version| Date| Dependencies|
 |---|---|---|
-|2.0|2020-09-02|NETN-BASE, RPR-Aggregate|
+|3.0|2023-03-23|NETN-BASE, RPR-Aggregate|
 
-> [Full Documentation](NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module.md)
+> [Full Documentation](NETN-FOM.md)
 
 The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. 
 
-The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modeling.
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of broader combined concepts.
+
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation.
+
+The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. The NETN-MRM FOM module is available as an XML file for use in HLA-based federations.
 
 NETN-MRM covers the following cases:  
 * Aggregation of entities representing subunits and/or physical entities 
@@ -21,7 +25,7 @@ NETN-MRM covers the following cases:
 
 Copyright (C) 2020 NATO/OTAN. This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 International License](LICENCE.md).
 
-The work includes the NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module.xml FOM Module and documentation.
+The work includes the NETN-FOM.xml FOM Module and documentation.
 
 The licence gives you the right to use and redistribute the NETN FOM Module (XML file and Documentation) in its entirety without modification. You are also allowed to develop new FOM Modules (in separate XML files and separate documentation) that build on or extend the NETN module by referencing and including necessary scaffolding classes. You are NOT allowed to modify this FOM Module or its documentation without prior permission from the NATO Modelling and Simulation Group.
 
@@ -40,8 +44,9 @@ Version numbering of this FOM Module and associated documentation is based on th
 
 |Version|
 |---|
-|v1.1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.|
-|v2.0.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.|
+|v1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.|
+|v2.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.|
+|v3.0 - Updated version by MSG-191 to be part of NATO-FOM v4.0|
 
 > [Changelog](changelog.md)
 

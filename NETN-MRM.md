@@ -1,8 +1,8 @@
-# NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module
+# NETN-FOM
 
 |Version| Date| Dependencies|
 |---|---|---|
-|2.0|2020-09-02|NETN-BASE, RPR-Aggregate|
+|3.0|2023-03-23|NETN-BASE, RPR-Aggregate|
 
 The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. 
 
@@ -11,7 +11,6 @@ Models of real-world objects, processes and phenomena are used to create a synth
 The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation.
 
 The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. The NETN-MRM FOM module is available as an XML file for use in HLA-based federations.
-
 
 NETN-MRM covers the following cases:  
 * Aggregation of entities representing subunits and/or physical entities 
@@ -290,8 +289,6 @@ After merging, all resources modelled in the previously divided entities are rep
 
 
 
-
-
 ## Object Classes
 
 Note that inherited and dependency parameters are not explicitly listed for each interaction class below. Only parameters defined in this FOM Module are listed. 
@@ -305,29 +302,51 @@ A group of one or more separate objects that operate together as part of an orga
     
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|Callsign|HLAunicodeString|Required. A callsign used to address the unit. Callsigns should be unique in the context in which they are used but not required to be globally unique.|
-|CaptureStatus|CaptureStatusEnum8|The status of an aggregate with respect to its control or influence over its own activities.|
-|CombatValue|PercentFloat64|Optional. A summary value (in per cent) of unit effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.|
-|CoverStatus|PercentFloat64|Optional. Describes the unit's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.|
-|DividedUnitList|ArrayOfUuid|Optional. Reference to other aggregate or physical entities divided from the aggregate unit to represent specific subsets of holdings. If not published, a division is not supported.|
-|Echelon|EchelonEnum32|Optional. The size of the unit (level of command).|
-|ElectronicSignature|ElectronicSignatureStruct|Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.|
-|EmbeddedUnitList|ArrayOfUuid|Optional. Reference to units or platforms embarked on and transported by this unit. If not published, transport of embedded units not supported.|
-|EntityList|ArrayOfEntityStruct|Optional. This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.|
+|Callsign|HLAunicodeString|Required. A name for the entity. Callsigns should be unique in the context in which they are used but not required to be globally unique.|
+|Unit|UUID|Optional: Reference to an existing NETN-ORG `Unit` object that is represented by this `AggregateEntity`. Default value is all zeros.|
+|ParentAggregate|UUID|Optional. If this AggregateEntity is the result of a disaggregation, this attribute references back to the AggregateEntity that was disaggregated. The default value is all zeros.|
+|DisaggregatedEntities|ArrayOfUuid|Optional. Reference to the disaggregated entities after this AggregateEntity has been disaggregated. Each element should refer to an existing entity in the federation. Status of this AggregateEntity shall be inactive if disaggregated entities exist.|
+|SourceAggregate|UUID|Optional. Reference to an active NETN_Aggregate instance, the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.|
+|DividedEntities|ArrayOfUuid|Optional. Reference to other aggregate or physical entities divided from the AggregateEntity to represent specific subsets of holdings.|
+|MountedOn|MountStruct|Optional. Mounting progress and reference to the host entity.|
+|MountedEntities|ArrayOfUuid|Optional. Reference to entities mounted on and transported by this AggregateEntity.|
+|EntityList|ArrayOfEntityStruct|Optional. This attribute provides data on all equipment, and lifeforms associated with this AggregateEntity, e.g. platforms, weapons, sensors and personnel.|
+|Destination|WorldLocationStruct|Optional. The current destination of movement.|
+|Route|ArrayOfWorldLocationStruct|Optional. The current path of movement.|
+|SuppliesStatus|SupplyStructArray|Optional. The type and quantities of supplies available (on hand) to the entity. If not provided, the amount of available supplies is undefined.|
 |EquipmentStatus|ArrayOfResourceStatus|Optional. This summarizes the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.|
-|HUMINTSignature|HUMINTSignatureStruct|Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
-|HigherHeadquarters|UUID|Optional. A reference to an entity representing the aggregate unit's superior or headquarters from which orders are given and to which reports are sent. The highest level unit or headquarters will publish 0000000000000000 as its HigherHeadquarters value. The referenced entity may or may not be registered in the federation as a NETN_Aggregate and/or NETN-ORG unit. If not published, the aggregate does not have a superior unit or headquarter. The default value is 0000000000000000 (no higher headquarters).|
-|Mounted|PercentFloat64|Optional. The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.|
-|ParentUnit|UUID|Optional. Reference to parent aggregate entity. If not published, aggregation is not supported. The default value is 0000000000000000 (no parent unit).|
 |PersonnelStatus|ArrayOfResourceStatus|Optional. This summarizes the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.|
-|SourceUnit|UUID|Optional. Reference to an active NETN_Aggregate instance, the source of a NETN-MRM division. If not published, merging is not supported. The default value is 0000000000000000 representing no source unit.|
-|SubunitList|ArrayOfUuid|Optional. Reference to disaggregated representations of subsets of the aggregate unit when registered in the federation. Each element should refer to an existing NETN_Aggregate object in the federation. If not published, disaggregation is not supported.|
-|SuppliesStatus|SupplyStructArray|Optional. The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.|
-|VisualSignature|VisualSignatureStruct|Describes the unit's susceptibility to electro-optical detection.|
+|VisualSignature|VisualSignatureStruct|Optional: Describes the susceptibility to electro-optical detection.|
+|HUMINTSignature|HUMINTSignatureStruct|Optional: Describes the susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
+|ElectronicSignature|ElectronicSignatureStruct|Optional: Describes the susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.|
+|CombatValue|PercentFloat32|Optional. A summary value (in percent) of the effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.|
+|CoverStatus|PercentFloat32|Optional. Describes the entity's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.|
+|CaptureStatus|CaptureStatusEnum8|Optional: The status of with respect to its control or influence over its own activities.|
 |WeaponsControlOrder|WeaponControlOrderEnum8|Optional. Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.|
+|HigherHeadquarters|UUID|Optional. A reference to an entity representing the superior or headquarters from which orders can be given and to which reports are sent. The referenced entity is a NETN-ORG `Unit` object. The default value is all zeros (no higher headquarters).|
+|Echelon|EchelonEnum32|Optional. The size of the AggregateEntity (level of command).|
 ### NETN_Aggregate
 
 Aggregate extensions for NETN
+### Lifeform
+
+A living military platform (human or not).
+    
+|Attribute|Datatype|Semantics|
+|---|---|---|
+|SourceAggregate|UUID|Optional. Reference to an active `AggregateEntity` instance from which this physical entity was divided. The default value is all zeros representing no source entity.|
+|MountedOn|MountStruct|Optional. Mounting progress and reference to the host entity.|
+### Platform
+
+A physical object under the control of armed forces upon which sensor, communication, or weapon systems may be mounted.
+    
+|Attribute|Datatype|Semantics|
+|---|---|---|
+|MountedOn|MountStruct|Optional. Mounting progress and reference to the host entity.|
+|EquipmentItem|UUID|Optional: Reference to a NETN-ORG EquipmentItem that is represented by this Platform. Default value is all zeros.|
+|ParentAggregate|UUID|Optional. If this Platform is the result of a disaggregation, this attribute references back to the AggregateEntity that was disaggregated. The default value is all zeros.|
+|SourceAggregate|UUID|Optional. Reference to an active Aggregate instance from which this physical entity was divided. If not published, merging is not supported. The default value is all zeros representing no source entity.|
+|MountedEntities|ArrayOfUuid|Optional. Reference to platforms or lifeforms mounted on this platform.|
 
 ## Interaction Classes
 
@@ -346,52 +365,38 @@ Base class for all MRM interactions.
 |EventId|UUID|Unique identifier for all MRM interactions belonging to the same request/respons event.|
 ### Request
 
-A base class for all MRM  Request events.
+A base class for all MRM  Request events to be performed on the specified AggregateEntity.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
-|AggregateUnit|UUID|Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.|
-|Federate|FederateName|Required. Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned.|
+|AggregateEntity|UUID|Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.|
 ### Aggregate
 
-Instruction to the AggregateFederate to perform aggregation of the specified AggregateUnit's parts.
+Instruction to the AggregateFederate to perform aggregation of the specified AggregateEntity's parts.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
-|RemoveSubunits|HLAboolean|Optional. Indicates if the disaggregate subunits (represented as aggregates in the federation) should be deleted from the federation execution. Default is TRUE - all subunits should be deleted. If FALSE all disaggregate subunits shall be set to inactive.|
+|RemoveDisaggregatedEntities|HLAboolean|Optional. Indicates if the disaggregated entities of the referenced AggregateEntity should be deleted after aggregation or not. Default is TRUE - all disaggregated entities shall be deleted and the DisaggregatedEntities attribute is set to empty . If FALSE, the status of all disaggregated entities shall be set to inactive and the DisaggregatedEntities attribute of the AggregateEntity shall keep reference to all disaggregated entities.|
 ### Disaggregate
 
-Instruction to perform a full disaggregation of a AggregatedUnit. All subunits and platforms will be registered in the federation.
+Instruction to perform a full disaggregation of an AggregatedEntity.
 ### Divide
 
-Instruction to divide the simulated AggregateUnit into multiple simulated object. The resouces are divided among the simulated entities. After successful division two simulated entities represent the entire Unit. 1) The original AggregateUnit and 2) the divided unit or platform. Both these entities are simulated until merged.
+Instruction to divide the simulated AggregateEntity into multiple simulated object.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |Equipment|ArrayOfResourceStatus|Optional. Amount of equipment of different type and health status to be divided.|
 |Personnel|ArrayOfResourceStatus|Optional. Amount of personnel of different type and health status to be divided.|
-|RegisterPhysicalEntities|HLAboolean|Optional. If true all Equipment of type Platform and Lifeform are published as individual objects in the federation.|
 |Supplies|SupplyStructArray|Optional. Amount of supplies to divide.|
+|RegisterPhysicalEntities|HLAboolean|Optional. If true all Equipment of type Platform and Lifeform are published as individual objects in the federation.|
 ### Merge
 
-Instruction to merg the simulated AggregateUnit with the selected divided parts. After successful merge the divided parts are removed from the federation and their resources are combined with the AggregatedUnit.
+Instruction to merge the simulated AggregateEntity with specified divided entities.
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
-|Subunits|ArrayOfUuid|Required. A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.|
-### QuerySupportedCapabilities
-
-A request to query the capabilities of a specified federation to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.
-### Activate
-
-Request federate to change of status of AggregateUnit to Active. If required the unit will be registered in the federation.
-### Deactivate
-
-Request change of status of AggregateUnit to Inactive and if indicated remove it from the federation.
-    
-|Parameter|Datatype|Semantics|
-|---|---|---|
-|RemoveUnit|HLAboolean|Optional. Indicates if the Aggregate Unit shall be removed as an object instance in the federation. Default = FALSE - keep object instance in federation.|
+|DividedEntities|ArrayOfUuid|Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicate which divided entities are to be merged back with the AggregateEntity.|
 ### Response
 
 A response from the receiving federate indicating ability to comply with request.
@@ -401,11 +406,18 @@ A response from the receiving federate indicating ability to comply with request
 |Status|HLAboolean|Required. Specifies the result of the request action. TRUE indicates success.|
 ### CapabilitiesSupported
 
-An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the Aggregate unit specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".
+An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the AggregateEntity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".
     
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |CapabilityNames|ArrayOfStringType|Required. A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".|
+### QuerySupportedCapabilities
+
+A request to query the capabilities of a specified federate to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.
+    
+|Parameter|Datatype|Semantics|
+|---|---|---|
+|FederateApplication|UUID|Required: The federate to be queried.|
 ## Datatypes
 
 Note that only datatypes defined in this FOM Module are listed below. Please refer to FOM Modules on which this module depends for other referenced datatypes.
@@ -416,13 +428,14 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 |ArrayOfEntityStruct|Data for one or more entities that comprise an entity list.|
 |ArrayOfResourceStatus|The array of health states for a named resource.|
 |ArrayOfSensorStruct|Array with definitio0ns of sensors, 1+ cardinality|
-|CaptureStatusEnum8|The status of a person or unit with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
+|CaptureStatusEnum8|The status of a simulated entity with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
 |ConcealmentEnum32|The reason for the objects concealment|
 |ElectronicSignatureStruct|A summary percentage of an aggregates susceptibility to detection of its electronic emissions. Zero percent means that the aggregate has no electronic emissions.|
 |EntityCategoryEnum32|Category of entity|
 |EntityStruct|An entity represented to the federation as part of the aggregate object which owns it.|
-|HUMINTSignatureStruct|Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
+|HUMINTSignatureStruct|Describes the entity susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
 |MissionStruct|The operational task the aggregate has been ordered to perform, the time the mission was assigned, and the estimated completion time.|
+|MountStruct|The current progress of the mounting of an entity.|
 |RangeFloat32|Range of sensor|
 |ResourceStatusNumberStruct|The name of a resource and the number of instances of that resource by health status.|
 |SensorStateEnum32|The emission states of aggregate sensors|
@@ -438,7 +451,7 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 ### Enumerated Datatypes
 |Name|Representation|Semantics|
 |---|---|---|
-|CaptureStatusEnum8|HLAoctet|The status of a person or unit with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
+|CaptureStatusEnum8|HLAoctet|The status of a simulated entity with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
 |ConcealmentEnum32|RPRunsignedInteger32BE|The reason for the objects concealment|
 |EntityCategoryEnum32|RPRunsignedInteger32BE|Category of entity|
 |SensorStateEnum32|RPRunsignedInteger32BE|The emission states of aggregate sensors|
@@ -455,10 +468,10 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 |Name|Fields|Semantics|
 |---|---|---|
 |ElectronicSignatureStruct|ElectronicSignaturePercent, SensorArray|A summary percentage of an aggregates susceptibility to detection of its electronic emissions. Zero percent means that the aggregate has no electronic emissions.|
-|EntityStruct|Callsign, EntityCategory, EntityStatus, IsDistinctObject, IsUnavailable, Facing, Concealment, OffsetLocation, UnitAllocation|An entity represented to the federation as part of the aggregate object which owns it.|
-|HUMINTSignatureStruct|HUMINTSignaturePercent|Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
+|EntityStruct|Callsign, EntityCategory, EntityStatus, IsDistinctObject, IsUnavailable, Facing, Concealment, OffsetLocation, Allocation|An entity represented to the federation as part of the aggregate object which owns it.|
+|HUMINTSignatureStruct|HUMINTSignaturePercent|Describes the entity susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
 |MissionStruct|StartTime, EndTime, MissionEnum|The operational task the aggregate has been ordered to perform, the time the mission was assigned, and the estimated completion time.|
+|MountStruct|Entity, Progress|The current progress of the mounting of an entity.|
 |ResourceStatusNumberStruct|NumberHealthyOrIntact, NumberSlightlyDamaged, NumberModeratelyDamaged, NumberSignificantlyDamaged, NumberDestroyed, ResourceName, ResourceType|The name of a resource and the number of instances of that resource by health status.|
 |SensorStruct|SensorStateEnum, SensorDamageState, SensorCoverage, SensorID|Defines a sensor,operational status, damage status, coverage and ID|
 |VisualSignatureStruct|DVOSignaturePercent, I2SignaturePercent, ThermalSignaturePercent|Specifies the visual structure|
-        

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelIdentification>
-        <name>NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module</name>
+        <name>NETN-FOM</name>
         <type>FOM</type>
-        <version>2.0</version>
-        <modificationDate>2020-09-02</modificationDate>
+        <version>3.0</version>
+        <modificationDate>2023-03-23</modificationDate>
         <securityClassification>Not Classified</securityClassification>
         <purpose>The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. </purpose>
         <applicationDomain></applicationDomain>
-        <description>The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modeling.</description>
+        <description>Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of broader combined concepts.
+
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation.
+
+The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. The NETN-MRM FOM module is available as an XML file for use in HLA-based federations.</description>
         <useLimitation>NETN-MRM covers the following cases:  
 * Aggregation of entities representing subunits and/or physical entities 
 * Disaggregation of entities representing a unit into entities representing subunits and/or physical entities 
