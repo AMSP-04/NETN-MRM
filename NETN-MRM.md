@@ -1,9 +1,23 @@
+# NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module
+
+|Version| Date| Dependencies|
+|---|---|---|
+|2.0|2020-09-02|NETN-BASE, RPR-Aggregate|
+
+The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. 
+
 Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of broader combined concepts.
 
 The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation.
 
 The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. The NETN-MRM FOM module is available as an XML file for use in HLA-based federations.
 
+
+NETN-MRM covers the following cases:  
+* Aggregation of entities representing subunits and/or physical entities 
+* Disaggregation of entities representing a unit into entities representing subunits and/or physical entities 
+* Division of simulated entities into parts - resources divided and all entities simulated 
+* Merge of previously divided entities.
 
 
 ## Overview
