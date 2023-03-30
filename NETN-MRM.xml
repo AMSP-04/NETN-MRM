@@ -328,6 +328,17 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <order>Receive</order>
                         <semantics>Optional. The size of the AggregateEntity (level of command).</semantics>
                     </attribute>
+                    <attribute>
+                        <name>Mission</name>
+                        <dataType>MissionStruct</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. The operational task the aggregate has been ordered to perform.</semantics>
+                    </attribute>
                     <objectClass>
                         <name>NETN_Aggregate</name>
                         <sharing>PublishSubscribe</sharing>
@@ -351,7 +362,6 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                             <order>Receive</order>
                             <semantics>Optional. Reference to an active `AggregateEntity` instance from which this physical entity was divided. The default value is all zeros representing no source entity.</semantics>
                         </attribute>
-                        
                     </objectClass>
                     <objectClass>
                         <name>Platform</name>
@@ -361,7 +371,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                             <name>EquipmentItem</name>
                             <dataType>UUID</dataType>
                             <updateType>NA</updateType>
-                            <updateCondition></updateCondition>
+                            <updateCondition>On change</updateCondition>
                             <ownership>DivestAcquire</ownership>
                             <sharing>PublishSubscribe</sharing>
                             <transportation>HLAreliable</transportation>
@@ -390,7 +400,6 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                             <order>Receive</order>
                             <semantics>Optional. Reference to an active Aggregate instance from which this physical entity was divided. If not published, merging is not supported. The default value is all zeros representing no source entity.</semantics>
                         </attribute>
-                        
                     </objectClass>
                 </objectClass>
             </objectClass>
@@ -963,32 +972,33 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
         </note>
         <note>
             <label>netn-mrm_3</label>
-            <semantics>* Changed datatype `TransactionId` to `UUID`
-* Replaced all use of Array datatype `NETN_ArrayOfSupplyStruct` with `SupplyStructArray`
-* Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32`
-* Replaced all use of `PercentFloat64` with `PercentFloat32`
-* Moved attribute `SourceUnit`from NETN-Physical Platform and Lifeform object classes to the same classes in NETN-MRM and renamed to `SourceAggregate`
-* Changed datatype of `NETN_Aggregate` attribute `Route` to `ArrayOfWorldLocationStruct`
-* Changed datatype of `NETN_Aggregate` attribute `Destination` to `WorldLocationStruct`
-* Renamed `NETN_Aggregate` attribute `ParentUnit` to `ParentAggregate`
-* Renamed `NETN_Aggregate` attribute `SourceUnit` to `SourceAggregate`
-* Renamed `NETN_Aggregate` attribute `DividedUnitList` to `DividedEntities`
-* Renamed `NETN_Aggregate` attribute `EmbeddedUnitList` to `MountedEntities`
-* Renamed `NETN_Aggregate` attribute `SubunitList` to `DisaggregatedEntities`
-* Changed datatype of `NETN_Aggregate` attribute `Mounted` to `MountStruct`
-* Renamed `NETN_Aggregate` attribute `Mounted` to `MountedOn`
-* Moved all attributes from `NETN_Aggregate` to extend RPR-Aggregate object class `AggregateEntity`
-* Added attribute `Unit` to RPR-Physical `Aggregate` object class
-* Added attribute `ParentAggregate` to RPR-Physical `Platform` object class
-* Added attribute `EquipmentItem` to RPR-Physical `Platform` object class
-* Renamed parameter `RemoveSubunits` of interaction class `Aggregate` to `RemoveDisaggregatedEntities`
-* Renamed parameter `Subunits` of interaction class `Merge` to `DividedEntities`
-* Renamed parameter `RemoveUnit` of interaction class `Deactivate` to `RemoveEntity`
-* Renamed parameter `AggregateUnit` of interaction class `Request` to `AggregateEntity`
-* Moved interaction class `QueryCapabilitySupported` from subclass of `Request` to subclass of `MRM_Interaction`
-* Moved attribute `Federate` from interaction class `Request` to interaction class `QueryCapabilitySupported` and rename to `FederateApplication`
-* Removed interaction class `Activate`
-* Removed interaction class `Deactivate`</semantics>
+            <semantics>* Changed datatype `TransactionId` to `UUID` 
+* Replaced all use of Array datatype `NETN_ArrayOfSupplyStruct` with `SupplyStructArray` 
+* Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32` 
+* Replaced all use of `PercentFloat64` with `PercentFloat32` 
+* Moved attribute `SourceUnit`from NETN-Physical Platform and Lifeform object classes to the same classes in NETN-MRM and renamed to `SourceAggregate` 
+* Changed datatype of `NETN_Aggregate` attribute `Route` to `ArrayOfWorldLocationStruct` 
+* Changed datatype of `NETN_Aggregate` attribute `Destination` to `WorldLocationStruct` 
+* Renamed `NETN_Aggregate` attribute `ParentUnit` to `ParentAggregate` 
+* Renamed `NETN_Aggregate` attribute `SourceUnit` to `SourceAggregate` 
+* Renamed `NETN_Aggregate` attribute `DividedUnitList` to `DividedEntities` 
+* Renamed `NETN_Aggregate` attribute `EmbeddedUnitList` to `MountedEntities` 
+* Renamed `NETN_Aggregate` attribute `SubunitList` to `DisaggregatedEntities` 
+* Changed datatype of `NETN_Aggregate` attribute `Mounted` to `MountStruct` 
+* Renamed `NETN_Aggregate` attribute `Mounted` to `MountedOn` 
+* Moved all attributes from `NETN_Aggregate` to extend RPR-Aggregate object class `AggregateEntity` 
+* Added attribute `Unit` to RPR-Physical `Aggregate` object class 
+* Added attribute `ParentAggregate` to RPR-Physical `Platform` object class 
+* Added attribute `EquipmentItem` to RPR-Physical `Platform` object class 
+* Renamed parameter `RemoveSubunits` of interaction class `Aggregate` to `RemoveDisaggregatedEntities` 
+* Renamed parameter `Subunits` of interaction class `Merge` to `DividedEntities` 
+* Renamed parameter `RemoveUnit` of interaction class `Deactivate` to `RemoveEntity` 
+* Renamed parameter `AggregateUnit` of interaction class `Request` to `AggregateEntity` 
+* Moved interaction class `QueryCapabilitySupported` from subclass of `Request` to subclass of `MRM_Interaction` 
+* Moved attribute `Federate` from interaction class `Request` to interaction class `QueryCapabilitySupported` and rename to `FederateApplication` 
+* Removed interaction class `Activate` 
+* Removed interaction class `Deactivate`
+* Moved attribute `Activity` to NETN-ETR `BaseEntity` object class.</semantics>
         </note>
     </notes>
 </objectModel>

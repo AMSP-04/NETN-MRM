@@ -291,15 +291,22 @@ After merging, all resources modelled in the previously divided entities are rep
 
 ## Object Classes
 
-Note that inherited and dependency parameters are not explicitly listed for each interaction class below. Only parameters defined in this FOM Module are listed. 
+Note that inherited and dependency attributes are not included in the description of object classes.
 
-<img src="./images/objectclasses.png">
-
+```mermaid
+graph RL
+BaseEntity-->HLAobjectRoot
+AggregateEntity-->BaseEntity
+PhysicalEntity-->BaseEntity
+NETN_Aggregate-->AggregateEntity
+Lifeform-->PhysicalEntity
+Platform-->PhysicalEntity
+```
 
 ### AggregateEntity
 
 A group of one or more separate objects that operate together as part of an organization. These objects may be discrete, may be other aggregate objects, or may be a mixture of both.
-    
+
 |Attribute|Datatype|Semantics|
 |---|---|---|
 |Callsign|HLAunicodeString|Required. A name for the entity. Callsigns should be unique in the context in which they are used but not required to be globally unique.|
@@ -325,99 +332,120 @@ A group of one or more separate objects that operate together as part of an orga
 |WeaponsControlOrder|WeaponControlOrderEnum8|Optional. Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.|
 |HigherHeadquarters|UUID|Optional. A reference to an entity representing the superior or headquarters from which orders can be given and to which reports are sent. The referenced entity is a NETN-ORG `Unit` object. The default value is all zeros (no higher headquarters).|
 |Echelon|EchelonEnum32|Optional. The size of the AggregateEntity (level of command).|
+|Mission|MissionStruct|Optional. The operational task the aggregate has been ordered to perform.|
+
 ### NETN_Aggregate
 
 Aggregate extensions for NETN
+
+
 ### Lifeform
 
 A living military platform (human or not).
-    
+
 |Attribute|Datatype|Semantics|
 |---|---|---|
 |SourceAggregate|UUID|Optional. Reference to an active `AggregateEntity` instance from which this physical entity was divided. The default value is all zeros representing no source entity.|
-|MountedOn|MountStruct|Optional. Mounting progress and reference to the host entity.|
+
 ### Platform
 
 A physical object under the control of armed forces upon which sensor, communication, or weapon systems may be mounted.
-    
+
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|MountedOn|MountStruct|Optional. Mounting progress and reference to the host entity.|
 |EquipmentItem|UUID|Optional: Reference to a NETN-ORG EquipmentItem that is represented by this Platform. Default value is all zeros.|
 |ParentAggregate|UUID|Optional. If this Platform is the result of a disaggregation, this attribute references back to the AggregateEntity that was disaggregated. The default value is all zeros.|
 |SourceAggregate|UUID|Optional. Reference to an active Aggregate instance from which this physical entity was divided. If not published, merging is not supported. The default value is all zeros representing no source entity.|
-|MountedEntities|ArrayOfUuid|Optional. Reference to platforms or lifeforms mounted on this platform.|
 
 ## Interaction Classes
 
-Note that inherited and dependency parameters are not explicitly listed for each interaction class below. Only parameters defined in this FOM Module are listed. 
+Note that inherited and dependency parameters are not included in the description of interaction classes.
 
-<img src="./images/interactionclasses.png">
-
-
+```mermaid
+graph RL
+MRM_Interaction-->HLAinteractionRoot
+Request-->MRM_Interaction
+Response-->MRM_Interaction
+CapabilitiesSupported-->MRM_Interaction
+QuerySupportedCapabilities-->MRM_Interaction
+Aggregate-->Request
+Disaggregate-->Request
+Divide-->Request
+Merge-->Request
+```
 
 ### MRM_Interaction
 
 Base class for all MRM interactions.
-    
+
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |EventId|UUID|Unique identifier for all MRM interactions belonging to the same request/respons event.|
+
 ### Request
 
 A base class for all MRM  Request events to be performed on the specified AggregateEntity.
-    
+
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |AggregateEntity|UUID|Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.|
+
 ### Aggregate
 
 Instruction to the AggregateFederate to perform aggregation of the specified AggregateEntity's parts.
-    
+
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |RemoveDisaggregatedEntities|HLAboolean|Optional. Indicates if the disaggregated entities of the referenced AggregateEntity should be deleted after aggregation or not. Default is TRUE - all disaggregated entities shall be deleted and the DisaggregatedEntities attribute is set to empty . If FALSE, the status of all disaggregated entities shall be set to inactive and the DisaggregatedEntities attribute of the AggregateEntity shall keep reference to all disaggregated entities.|
+
 ### Disaggregate
 
 Instruction to perform a full disaggregation of an AggregatedEntity.
+
+
 ### Divide
 
 Instruction to divide the simulated AggregateEntity into multiple simulated object.
-    
+
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |Equipment|ArrayOfResourceStatus|Optional. Amount of equipment of different type and health status to be divided.|
 |Personnel|ArrayOfResourceStatus|Optional. Amount of personnel of different type and health status to be divided.|
 |Supplies|SupplyStructArray|Optional. Amount of supplies to divide.|
 |RegisterPhysicalEntities|HLAboolean|Optional. If true all Equipment of type Platform and Lifeform are published as individual objects in the federation.|
+
 ### Merge
 
 Instruction to merge the simulated AggregateEntity with specified divided entities.
-    
+
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |DividedEntities|ArrayOfUuid|Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicate which divided entities are to be merged back with the AggregateEntity.|
+
 ### Response
 
 A response from the receiving federate indicating ability to comply with request.
-    
+
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |Status|HLAboolean|Required. Specifies the result of the request action. TRUE indicates success.|
+
 ### CapabilitiesSupported
 
 An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the AggregateEntity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".
-    
+
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |CapabilityNames|ArrayOfStringType|Required. A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".|
+
 ### QuerySupportedCapabilities
 
 A request to query the capabilities of a specified federate to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.
-    
+
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |FederateApplication|UUID|Required: The federate to be queried.|
+
 ## Datatypes
 
 Note that only datatypes defined in this FOM Module are listed below. Please refer to FOM Modules on which this module depends for other referenced datatypes.
@@ -475,3 +503,4 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 |ResourceStatusNumberStruct|NumberHealthyOrIntact, NumberSlightlyDamaged, NumberModeratelyDamaged, NumberSignificantlyDamaged, NumberDestroyed, ResourceName, ResourceType|The name of a resource and the number of instances of that resource by health status.|
 |SensorStruct|SensorStateEnum, SensorDamageState, SensorCoverage, SensorID|Defines a sensor,operational status, damage status, coverage and ID|
 |VisualSignatureStruct|DVOSignaturePercent, I2SignaturePercent, ThermalSignaturePercent|Specifies the visual structure|
+    
