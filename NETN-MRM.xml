@@ -417,7 +417,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <parameter>
                     <name>EventId</name>
                     <dataType>UUID</dataType>
-                    <semantics>Unique identifier for all MRM interactions belonging to the same request/respons event.</semantics>
+                    <semantics>Unique identifier for all MRM interactions belonging to the same request/respons event. A request uses this parameter to transfer the Id to receivers. A response uses this parameter as a reference to the original request.</semantics>
                 </parameter>
                 <interactionClass>
                     <name>Request</name>
