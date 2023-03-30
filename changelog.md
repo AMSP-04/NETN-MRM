@@ -85,7 +85,6 @@ NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.
 * Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32`
 * Replaced all use of `PercentFloat64` with `PercentFloat32`
 * Moved attribute `SourceUnit`from NETN-Physical Platform and Lifeform object classes to the same classes in NETN-MRM and renamed to `SourceAggregate`
-* Moved attribute `EmbeddedUnitList`from NETN-Physical Platform object class to the same classes in NETN-MRM and rename to `MountedEntities`.
 * Changed datatype of `NETN_Aggregate` attribute `Route` to `ArrayOfWorldLocationStruct`
 * Changed datatype of `NETN_Aggregate` attribute `Destination` to `WorldLocationStruct`
 * Renamed `NETN_Aggregate` attribute `ParentUnit` to `ParentAggregate`
@@ -99,8 +98,6 @@ NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.
 * Added attribute `Unit` to RPR-Physical `Aggregate` object class
 * Added attribute `ParentAggregate` to RPR-Physical `Platform` object class
 * Added attribute `EquipmentItem` to RPR-Physical `Platform` object class
-* Added attribute `MountedOn` to RPR-Physical `Platform` object class
-* Added attribute `MountedOn` to RPR-Physical `Lifeform` object class
 * Renamed parameter `RemoveSubunits` of interaction class `Aggregate` to `RemoveDisaggregatedEntities`
 * Renamed parameter `Subunits` of interaction class `Merge` to `DividedEntities`
 * Renamed parameter `RemoveUnit` of interaction class `Deactivate` to `RemoveEntity`
@@ -109,4 +106,6 @@ NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.
 * Moved attribute `Federate` from interaction class `Request` to interaction class `QueryCapabilitySupported` and rename to `FederateApplication`
 * Removed interaction class `Activate`
 * Removed interaction class `Deactivate`
+
+
 
