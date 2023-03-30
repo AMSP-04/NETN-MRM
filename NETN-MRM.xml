@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelIdentification>
-        <name>NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module</name>
+        <name>NETN-MRM</name>
         <type>FOM</type>
-        <version>2.0</version>
-        <modificationDate>2020-09-02</modificationDate>
+        <version>3.0</version>
+        <modificationDate>2023-03-23</modificationDate>
         <securityClassification>Not Classified</securityClassification>
         <purpose>The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. </purpose>
         <applicationDomain></applicationDomain>
-        <description>The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modeling.</description>
-        <useLimitation>NETN-MRM covers the following cases:  * Aggregation of subunits and/or physical entities * Disaggregation of unit into subunits and/or physical entities * Division of simulated unit into specific parts - resources divided and all entities simulated * Merge of previously divided parts with simulated unit. * Activate and Inactivate aggregate units' representation in the simulation</useLimitation>
-        <useHistory>v1.1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
-        <useHistory>v2.0.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
+        <description>Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of broader combined concepts.
+
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation.
+
+The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. The NETN-MRM FOM module is available as an XML file for use in HLA-based federations.</description>
+        <useLimitation>NETN-MRM covers the following cases:  
+* Aggregation of entities representing subunits and/or physical entities 
+* Disaggregation of entities representing a unit into entities representing subunits and/or physical entities 
+* Division of simulated entities into parts - resources divided and all entities simulated 
+* Merge of previously divided entities.</useLimitation>
+        <useHistory notes="netn-mrm_1">v1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
+        <useHistory notes="netn-mrm_2">v2.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
+        <useHistory notes="netn-mrm_3">v3.0 - Updated version by MSG-191 to be part of NATO-FOM v4.0</useHistory>
         <poc>
             <pocType>Release authority</pocType>
             <pocName>NATO Modelling and Simulation Group</pocName>
@@ -20,7 +29,7 @@
         </poc>
         <poc>
             <pocType>Primary author</pocType>
-            <pocName>MSG-163 Evolution of NATO Standards for Federated Simulation</pocName>
+            <pocName>MSG-106 Enhanced CAX Architecture, Desing and Methodology</pocName>
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
         </poc>
@@ -32,7 +41,13 @@
         </poc>
         <poc>
             <pocType>Primary author</pocType>
-            <pocName>MSG-106 Enhanced CAX Architecture, Desing and Methodology</pocName>
+            <pocName>MSG-163 Evolution of NATO Standards for Federated Simulation</pocName>
+            <pocOrg>NATO Modelling and Simulation Group</pocOrg>
+            <pocEmail>msg@cso.nato.int</pocEmail>
+        </poc>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>MSG-191 NATO Standards for Federated Simulation and Services for Integration, Verification and Certification</pocName>
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
         </poc>
@@ -61,83 +76,6 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <sharing>PublishSubscribe</sharing>
                     <semantics>A group of one or more separate objects that operate together as part of an organization. These objects may be discrete, may be other aggregate objects, or may be a mixture of both.</semantics>
                     <attribute>
-                        <name>SubunitList</name>
-                        <dataType>ArrayOfUuid</dataType>
-                        <updateType>NA</updateType>
-                        <updateCondition>NA</updateCondition>
-                        <ownership>DivestAcquire</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Optional. Reference to disaggregated representations of subsets of the aggregate unit when registered in the federation. Each element should refer to an existing NETN_Aggregate object in the federation. If not published, disaggregation is not supported.</semantics>
-                    </attribute>
-                    <attribute>
-                        <name>ParentUnit</name>
-                        <dataType>UUID</dataType>
-                        <updateType>NA</updateType>
-                        <updateCondition>NA</updateCondition>
-                        <ownership>DivestAcquire</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Optional. Reference to parent aggregate entity. If not published, aggregation is not supported. The default value is 0000000000000000 (no parent unit).</semantics>
-                    </attribute>
-                    <attribute>
-                        <name>DividedUnitList</name>
-                        <dataType>ArrayOfUuid</dataType>
-                        <updateType>NA</updateType>
-                        <updateCondition>NA</updateCondition>
-                        <ownership>DivestAcquire</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Optional. Reference to other aggregate or physical entities divided from the aggregate unit to represent specific subsets of holdings. If not published, a division is not supported.</semantics>
-                    </attribute>
-                    <attribute>
-                        <name>SourceUnit</name>
-                        <dataType>UUID</dataType>
-                        <updateType>Conditional</updateType>
-                        <updateCondition>On change</updateCondition>
-                        <ownership>DivestAcquire</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAbestEffort</transportation>
-                        <order>Receive</order>
-                        <semantics>Optional. Reference to an active NETN_Aggregate instance, the source of a NETN-MRM division. If not published, merging is not supported. The default value is 0000000000000000 representing no source unit.</semantics>
-                    </attribute>
-                    <attribute>
-                        <name>EmbeddedUnitList</name>
-                        <dataType>ArrayOfUuid</dataType>
-                        <updateType>Conditional</updateType>
-                        <updateCondition>On change</updateCondition>
-                        <ownership>DivestAcquire</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAbestEffort</transportation>
-                        <order>Receive</order>
-                        <semantics>Optional. Reference to units or platforms embarked on and transported by this unit. If not published, transport of embedded units not supported.</semantics>
-                    </attribute>
-                    <attribute>
-                        <name>HigherHeadquarters</name>
-                        <dataType>UUID</dataType>
-                        <updateType>Conditional</updateType>
-                        <updateCondition>On change</updateCondition>
-                        <ownership>DivestAcquire</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAbestEffort</transportation>
-                        <order>Receive</order>
-                        <semantics>Optional. A reference to an entity representing the aggregate unit's superior or headquarters from which orders are given and to which reports are sent. The highest level unit or headquarters will publish 0000000000000000 as its HigherHeadquarters value. The referenced entity may or may not be registered in the federation as a NETN_Aggregate and/or NETN-ORG unit. If not published, the aggregate does not have a superior unit or headquarter. The default value is 0000000000000000 (no higher headquarters).</semantics>
-                    </attribute>
-                    <attribute>
-                        <name>Mounted</name>
-                        <dataType>PercentFloat64</dataType>
-                        <updateType>Conditional</updateType>
-                        <updateCondition>On change</updateCondition>
-                        <ownership>DivestAcquire</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAbestEffort</transportation>
-                        <order>Receive</order>
-                        <semantics>Optional. The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.</semantics>
-                    </attribute>
-                    <attribute>
                         <name>Callsign</name>
                         <dataType>HLAunicodeString</dataType>
                         <updateType>Static</updateType>
@@ -146,18 +84,84 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Required. A callsign used to address the unit. Callsigns should be unique in the context in which they are used but not required to be globally unique.</semantics>
+                        <semantics>Required. A name for the entity. Callsigns should be unique in the context in which they are used but not required to be globally unique.</semantics>
                     </attribute>
                     <attribute>
-                        <name>Echelon</name>
-                        <dataType>EchelonEnum32</dataType>
-                        <updateType>Static</updateType>
-                        <updateCondition>N/A</updateCondition>
+                        <name>Unit</name>
+                        <dataType>UUID</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>on change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional: Reference to an existing NETN-ORG `Unit` object that is represented by this `AggregateEntity`. Default value is all zeros.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>ParentAggregate</name>
+                        <dataType>UUID</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>NA</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. If this AggregateEntity is the result of a disaggregation, this attribute references back to the AggregateEntity that was disaggregated. The default value is all zeros.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>DisaggregatedEntities</name>
+                        <dataType>ArrayOfUuid</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>NA</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to the disaggregated entities after this AggregateEntity has been disaggregated. Each element should refer to an existing entity in the federation. Status of this AggregateEntity shall be inactive if disaggregated entities exist.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>SourceAggregate</name>
+                        <dataType>UUID</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
                         <ownership>DivestAcquire</ownership>
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Optional. The size of the unit (level of command).</semantics>
+                        <semantics>Optional. Reference to an active NETN_Aggregate instance, the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>DividedEntities</name>
+                        <dataType>ArrayOfUuid</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>NA</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to other aggregate or physical entities divided from the AggregateEntity to represent specific subsets of holdings.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>MountedOn</name>
+                        <dataType>MountStruct</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Mounting progress and reference to the host entity.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>MountedEntities</name>
+                        <dataType>ArrayOfUuid</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to entities mounted on and transported by this AggregateEntity.</semantics>
                     </attribute>
                     <attribute>
                         <name>EntityList</name>
@@ -168,7 +172,29 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Optional. This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.</semantics>
+                        <semantics>Optional. This attribute provides data on all equipment, and lifeforms associated with this AggregateEntity, e.g. platforms, weapons, sensors and personnel.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>Destination</name>
+                        <dataType>WorldLocationStruct</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>When Changed</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. The current destination of movement.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>Route</name>
+                        <dataType>ArrayOfWorldLocationStruct</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>When Changed</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. The current path of movement.</semantics>
                     </attribute>
                     <attribute>
                         <name>SuppliesStatus</name>
@@ -179,7 +205,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Optional. The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.</semantics>
+                        <semantics>Optional. The type and quantities of supplies available (on hand) to the entity. If not provided, the amount of available supplies is undefined.</semantics>
                     </attribute>
                     <attribute>
                         <name>EquipmentStatus</name>
@@ -212,7 +238,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Describes the unit's susceptibility to electro-optical detection.</semantics>
+                        <semantics>Optional: Describes the susceptibility to electro-optical detection.</semantics>
                     </attribute>
                     <attribute>
                         <name>HUMINTSignature</name>
@@ -223,7 +249,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
+                        <semantics>Optional: Describes the susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
                     </attribute>
                     <attribute>
                         <name>ElectronicSignature</name>
@@ -234,29 +260,29 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.</semantics>
+                        <semantics>Optional: Describes the susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.</semantics>
                     </attribute>
                     <attribute>
                         <name>CombatValue</name>
-                        <dataType>PercentFloat64</dataType>
+                        <dataType>PercentFloat32</dataType>
                         <updateType>Conditional</updateType>
                         <updateCondition>On change</updateCondition>
                         <ownership>DivestAcquire</ownership>
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Optional. A summary value (in per cent) of unit effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.</semantics>
+                        <semantics>Optional. A summary value (in percent) of the effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.</semantics>
                     </attribute>
                     <attribute>
                         <name>CoverStatus</name>
-                        <dataType>PercentFloat64</dataType>
+                        <dataType>PercentFloat32</dataType>
                         <updateType>Conditional</updateType>
                         <updateCondition>On change</updateCondition>
                         <ownership>DivestAcquire</ownership>
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>Optional. Describes the unit's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.</semantics>
+                        <semantics>Optional. Describes the entity's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.</semantics>
                     </attribute>
                     <attribute>
                         <name>CaptureStatus</name>
@@ -267,7 +293,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAbestEffort</transportation>
                         <order>Receive</order>
-                        <semantics>The status of an aggregate with respect to its control or influence over its own activities.</semantics>
+                        <semantics>Optional: The status of with respect to its control or influence over its own activities.</semantics>
                     </attribute>
                     <attribute>
                         <name>WeaponsControlOrder</name>
@@ -280,10 +306,91 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <order>Receive</order>
                         <semantics>Optional. Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.</semantics>
                     </attribute>
+                    <attribute>
+                        <name>HigherHeadquarters</name>
+                        <dataType>UUID</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. A reference to an entity representing the superior or headquarters from which orders can be given and to which reports are sent. The referenced entity is a NETN-ORG `Unit` object. The default value is all zeros (no higher headquarters).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>Echelon</name>
+                        <dataType>EchelonEnum32</dataType>
+                        <updateType>Static</updateType>
+                        <updateCondition>N/A</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAbestEffort</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. The size of the AggregateEntity (level of command).</semantics>
+                    </attribute>
                     <objectClass>
                         <name>NETN_Aggregate</name>
                         <sharing>PublishSubscribe</sharing>
                         <semantics>Aggregate extensions for NETN</semantics>
+                    </objectClass>
+                </objectClass>
+                <objectClass>
+                    <name>PhysicalEntity</name>
+                    <objectClass>
+                        <name>Lifeform</name>
+                        <sharing>Subscribe</sharing>
+                        <semantics>A living military platform (human or not).</semantics>
+                        <attribute>
+                            <name>SourceAggregate</name>
+                            <dataType>UUID</dataType>
+                            <updateType>NA</updateType>
+                            <updateCondition>On change</updateCondition>
+                            <ownership>DivestAcquire</ownership>
+                            <sharing>PublishSubscribe</sharing>
+                            <transportation>HLAbestEffort</transportation>
+                            <order>Receive</order>
+                            <semantics>Optional. Reference to an active `AggregateEntity` instance from which this physical entity was divided. The default value is all zeros representing no source entity.</semantics>
+                        </attribute>
+                        
+                    </objectClass>
+                    <objectClass>
+                        <name>Platform</name>
+                        <sharing>Subscribe</sharing>
+                        <semantics>A physical object under the control of armed forces upon which sensor, communication, or weapon systems may be mounted.</semantics>
+                        <attribute>
+                            <name>EquipmentItem</name>
+                            <dataType>UUID</dataType>
+                            <updateType>NA</updateType>
+                            <updateCondition></updateCondition>
+                            <ownership>DivestAcquire</ownership>
+                            <sharing>PublishSubscribe</sharing>
+                            <transportation>HLAreliable</transportation>
+                            <order>Receive</order>
+                            <semantics>Optional: Reference to a NETN-ORG EquipmentItem that is represented by this Platform. Default value is all zeros.</semantics>
+                        </attribute>
+                        <attribute>
+                            <name>ParentAggregate</name>
+                            <dataType>UUID</dataType>
+                            <updateType>Conditional</updateType>
+                            <updateCondition>on change</updateCondition>
+                            <ownership>DivestAcquire</ownership>
+                            <sharing>PublishSubscribe</sharing>
+                            <transportation>HLAreliable</transportation>
+                            <order>Receive</order>
+                            <semantics>Optional. If this Platform is the result of a disaggregation, this attribute references back to the AggregateEntity that was disaggregated. The default value is all zeros.</semantics>
+                        </attribute>
+                        <attribute>
+                            <name>SourceAggregate</name>
+                            <dataType>UUID</dataType>
+                            <updateType>NA</updateType>
+                            <updateCondition>On change</updateCondition>
+                            <ownership>DivestAcquire</ownership>
+                            <sharing>PublishSubscribe</sharing>
+                            <transportation>HLAbestEffort</transportation>
+                            <order>Receive</order>
+                            <semantics>Optional. Reference to an active Aggregate instance from which this physical entity was divided. If not published, merging is not supported. The default value is all zeros representing no source entity.</semantics>
+                        </attribute>
+                        
                     </objectClass>
                 </objectClass>
             </objectClass>
@@ -308,14 +415,9 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <sharing>Neither</sharing>
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
-                    <semantics>A base class for all MRM  Request events.</semantics>
+                    <semantics>A base class for all MRM  Request events to be performed on the specified AggregateEntity.</semantics>
                     <parameter>
-                        <name>Federate</name>
-                        <dataType>FederateName</dataType>
-                        <semantics>Required. Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned.</semantics>
-                    </parameter>
-                    <parameter>
-                        <name>AggregateUnit</name>
+                        <name>AggregateEntity</name>
                         <dataType>UUID</dataType>
                         <semantics>Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.</semantics>
                     </parameter>
@@ -324,11 +426,11 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Instruction to the AggregateFederate to perform aggregation of the specified AggregateUnit's parts.</semantics>
+                        <semantics>Instruction to the AggregateFederate to perform aggregation of the specified AggregateEntity's parts.</semantics>
                         <parameter>
-                            <name>RemoveSubunits</name>
+                            <name>RemoveDisaggregatedEntities</name>
                             <dataType>HLAboolean</dataType>
-                            <semantics>Optional. Indicates if the disaggregate subunits (represented as aggregates in the federation) should be deleted from the federation execution. Default is TRUE - all subunits should be deleted. If FALSE all disaggregate subunits shall be set to inactive.</semantics>
+                            <semantics>Optional. Indicates if the disaggregated entities of the referenced AggregateEntity should be deleted after aggregation or not. Default is TRUE - all disaggregated entities shall be deleted and the DisaggregatedEntities attribute is set to empty . If FALSE, the status of all disaggregated entities shall be set to inactive and the DisaggregatedEntities attribute of the AggregateEntity shall keep reference to all disaggregated entities.</semantics>
                         </parameter>
                     </interactionClass>
                     <interactionClass>
@@ -336,14 +438,14 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Instruction to perform a full disaggregation of a AggregatedUnit. All subunits and platforms will be registered in the federation.</semantics>
+                        <semantics>Instruction to perform a full disaggregation of an AggregatedEntity.</semantics>
                     </interactionClass>
                     <interactionClass>
                         <name>Divide</name>
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Instruction to divide the simulated AggregateUnit into multiple simulated object. The resouces are divided among the simulated entities. After successful division two simulated entities represent the entire Unit. 1) The original AggregateUnit and 2) the divided unit or platform. Both these entities are simulated until merged.</semantics>
+                        <semantics>Instruction to divide the simulated AggregateEntity into multiple simulated object.</semantics>
                         <parameter>
                             <name>Equipment</name>
                             <dataType>ArrayOfResourceStatus</dataType>
@@ -370,37 +472,11 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <sharing>PublishSubscribe</sharing>
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
-                        <semantics>Instruction to merg the simulated AggregateUnit with the selected divided parts. After successful merge the divided parts are removed from the federation and their resources are combined with the AggregatedUnit.</semantics>
+                        <semantics>Instruction to merge the simulated AggregateEntity with specified divided entities.</semantics>
                         <parameter>
-                            <name>Subunits</name>
+                            <name>DividedEntities</name>
                             <dataType>ArrayOfUuid</dataType>
-                            <semantics>Required. A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.</semantics>
-                        </parameter>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>QuerySupportedCapabilities</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>A request to query the capabilities of a specified federation to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.</semantics>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>Activate</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Request federate to change of status of AggregateUnit to Active. If required the unit will be registered in the federation.</semantics>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>Deactivate</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Request change of status of AggregateUnit to Inactive and if indicated remove it from the federation.</semantics>
-                        <parameter>
-                            <name>RemoveUnit</name>
-                            <dataType>HLAboolean</dataType>
-                            <semantics>Optional. Indicates if the Aggregate Unit shall be removed as an object instance in the federation. Default = FALSE - keep object instance in federation.</semantics>
+                            <semantics>Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicate which divided entities are to be merged back with the AggregateEntity.</semantics>
                         </parameter>
                     </interactionClass>
                 </interactionClass>
@@ -421,11 +497,23 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <sharing>PublishSubscribe</sharing>
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
-                    <semantics>An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the Aggregate unit specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
+                    <semantics>An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the AggregateEntity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
                     <parameter>
                         <name>CapabilityNames</name>
                         <dataType>ArrayOfStringType</dataType>
                         <semantics>Required. A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
+                    </parameter>
+                </interactionClass>
+                <interactionClass>
+                    <name>QuerySupportedCapabilities</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>A request to query the capabilities of a specified federate to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.</semantics>
+                    <parameter>
+                        <name>FederateApplication</name>
+                        <dataType>UUID</dataType>
+                        <semantics>Required: The federate to be queried.</semantics>
                     </parameter>
                 </interactionClass>
             </interactionClass>
@@ -469,7 +557,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
             <enumeratedData>
                 <name>CaptureStatusEnum8</name>
                 <representation>HLAoctet</representation>
-                <semantics>The status of a person or unit with respect to their control or influence over their own activities. Default: 1 - Not Captured.</semantics>
+                <semantics>The status of a simulated entity with respect to their control or influence over their own activities. Default: 1 - Not Captured.</semantics>
                 <enumerator>
                     <name>Not-Captured</name>
                     <value>1</value>
@@ -606,17 +694,17 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <field>
                     <name>DVOSignaturePercent</name>
                     <dataType>PercentFloat32</dataType>
-                    <semantics>A summary percentage of an aggregates susceptibility to detection by direct view optics, i.e. the human eye, binoculars, or telescopes. A unit with zero percent signature would be concealed from DVO detection.</semantics>
+                    <semantics>A summary percentage of entity susceptibility to detection by direct view optics, i.e. the human eye, binoculars, or telescopes. An entity with zero percent signature would be concealed from DVO detection.</semantics>
                 </field>
                 <field>
                     <name>I2SignaturePercent</name>
                     <dataType>PercentFloat32</dataType>
-                    <semantics>A summary percentage of an aggregates susceptibility to detection by Image Intensifying sensors. A unit with zero percent signature would be invisible to image intensifiers (I2).</semantics>
+                    <semantics>A summary percentage of entity susceptibility to detection by Image Intensifying sensors. An entity with zero percent signature would be invisible to image intensifiers (I2).</semantics>
                 </field>
                 <field>
                     <name>ThermalSignaturePercent</name>
                     <dataType>PercentFloat32</dataType>
-                    <semantics>A summary percentage of an aggregates susceptibility to detection by thermal sensors. A unit with zero percent signature would be invisible to thermal sensors.</semantics>
+                    <semantics>A summary percentage of entity susceptibility to detection by thermal sensors. An entity  with zero percent signature would be invisible to thermal sensors.</semantics>
                 </field>
             </fixedRecordData>
             <fixedRecordData>
@@ -642,7 +730,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
             <fixedRecordData>
                 <name>HUMINTSignatureStruct</name>
                 <encoding>HLAfixedRecord</encoding>
-                <semantics>Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
+                <semantics>Describes the entity susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
                 <field>
                     <name>HUMINTSignaturePercent</name>
                     <dataType>PercentFloat32</dataType>
@@ -711,7 +799,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <field>
                     <name>Callsign</name>
                     <dataType>HLAunicodeString</dataType>
-                    <semantics>The unique identifier of the object.</semantics>
+                    <semantics>The callsign of the entity if available.</semantics>
                 </field>
                 <field>
                     <name>EntityCategory</name>
@@ -736,7 +824,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <field>
                     <name>Facing</name>
                     <dataType>DirectionDegreesFloat32</dataType>
-                    <semantics>Direction is measured in degrees clockwise from orientation of unit. Default is 0.</semantics>
+                    <semantics>Direction is measured in degrees clockwise from orientation of the entity. Default is 0.</semantics>
                 </field>
                 <field>
                     <name>Concealment</name>
@@ -746,12 +834,12 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <field>
                     <name>OffsetLocation</name>
                     <dataType>RelativePositionStruct</dataType>
-                    <semantics>The entity location given as an offset from the location of the aggregate unit in meters.</semantics>
+                    <semantics>The entity location given as an offset from the location of the aggregate entity in meters.</semantics>
                 </field>
                 <field>
-                    <name>UnitAllocation</name>
+                    <name>Allocation</name>
                     <dataType>UUID</dataType>
-                    <semantics>Reference to unit by UUID to which this entity is allocated as a resource. Unit may or may not be represented in the federation as a NETN_Aggregate and/or NETN-ORG Unit object.</semantics>
+                    <semantics>Reference to an entity by UUID to which this entity is allocated as a resource. The referenced entity may or may not be represented in the federation.</semantics>
                 </field>
             </fixedRecordData>
             <fixedRecordData>
@@ -775,12 +863,132 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 </field>
                 <field>
                     <name>SensorID</name>
-                    <dataType>HLAunicodeString</dataType>
+                    <dataType>UUID</dataType>
                     <semantics>A sensor owned by the aggregate</semantics>
                 </field>
             </fixedRecordData>
+            <fixedRecordData>
+                <name>MountStruct</name>
+                <encoding>HLAfixedRecord</encoding>
+                <semantics>The current progress of the mounting of an entity.</semantics>
+                <field>
+                    <name>Entity</name>
+                    <dataType>UUID</dataType>
+                    <semantics>Required: The entity on which the mounting takes place.</semantics>
+                </field>
+                <field>
+                    <name>Progress</name>
+                    <dataType>PercentFloat32</dataType>
+                    <semantics>Required: The progress of a mounting operation. 100% = mounting completed.</semantics>
+                </field>
+            </fixedRecordData>
         </fixedRecordDataTypes>
-        <variantRecordDataTypes/>
     </dataTypes>
-    <notes/>
+    <notes>
+        <note>
+            <label>netn-mrm_1</label>
+            <semantics>NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.</semantics>
+        </note>
+        <note>
+            <label>netn-mrm_2</label>
+            <semantics>* Changed Filename to NETN-MRM.xml 
+* Changed `modelIdentification` `securityClassification` from `unclassified` to `Not Classified` 
+* Changed `modelIdentification` `other` to include license information 
+* Changed `modelIdentification` `reference` to only refer to directly dependent FOM Modules 
+* Added `modelIdentification` `useLimitation` to reflect Scope of FOM Module 
+* Added `modelIdentification` `glyph` 
+* Updated `modelIdentification` `purpose` to reflect Purpose of FOM Module 
+* Updated `modelIdentification` `description` to reflect Introduction of FOM Module 
+* Updated `modelIdentification` `name` to NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module 
+* Updated `modelIdentification` `poc` to include Release authority, Primary authors and Contributors 
+* Updated `modelIdentification` `applicationDomain` to empty. 
+* Removed NETN-MRM dependency on NETN-TMR. 
+* Merged NETN-Aggregate to NETN-MRM. 
+* Removed InteractionClass `MRM_Object` 
+* Removed InteractionClass `MRM_TriggerResponse` 
+* Removed InteractionClass `MRM_Trigger` 
+* Renamed InteractionClass `MRM_DisaggregationRequest` 
+* Renamed InteractionClass `MRM_AggregationRequest` 
+* Removed InteractionClass `MRM_DisaggregationResponse` 
+* Removed InteractionClass `MRM_AggregationResponse` 
+* Removed InteractionClass `MRM_CancelRequest` 
+* Removed InteractionClass `MRM_ActionComplete` 
+* Added InteractionClass `MRM_Interaction` 
+* Added InteractionClass `Request` 
+* Added InteractionClass `Aggregate` 
+* Added InteractionClass `Disaggregate` 
+* Added InteractionClass `Divide` 
+* Added InteractionClass `Merge` 
+* Added InteractionClass `Inactivate` 
+* Added InteractionClass `Activate` 
+* Added InteractionClass `QuerySupportedCapabilities` 
+* Added InteractionClass `CapabilitiesSupported` 
+* Added InteractionClass `Response` 
+* Removed datatype `AggregateStateEnum32` 
+* Removed datatype `EntityListVariableLengthStruct` 
+* Removed datatype `UpdateTypeEnum32` 
+* Removed datatype `SupportRelationshipStruct` 
+* Removed datatype `FacingDegreesFloat32` 
+* Removed datatype `CoverStatusStruct` 
+* Removed datatype `CoverEnum8` 
+* Removed datatype `CombatValueFloat64` 
+* Removed datatype `SupportRelationshipEnum8` 
+* Removed datatype `EchelonEnum8` 
+* Removed datatype `PercentageUint32` 
+* Renamed datatype `NonComplianceReasonEnum` to `MRM_ResponseStatusEnumType` 
+* Replaced datatype `PercentageUint32` with `PercentUnsignedInteger32` 
+* Replaced datatype `FacingDegreesFloat32` with `DirectionDegreesFloat32` 
+* Replaced datatype `TimeSecInt64` with `EpochTimeSecInt64` 
+* Moved datatype `QuantityFloat64` to NETN-BASE 
+* Changed datatype of `NETN_Aggregate.Mounted` to `PercentFloat64` 
+* Changed datatype of `NETN_Aggregate.SourceUnit` to `UuidArrayOfHLAbyte16` 
+* Changed datatype of `NETN_Aggregate.Symbol` to `SymbolIdentifier` 
+* Changed datatype of `NETN_Aggregate.Footprint` to `GeocentricPolygon ` 
+* Added attribute `Route` for  object class `NETN_Aggregate` 
+* Added attribute `Destination` for  object class `NETN_Aggregate` 
+* Updated semantics of attribute `NETN_Aggregate.UniqueId` 
+* Renamed attribute `NETN_Aggregate.UniqueID` to `NETN_Aggregate.UniqueId` 
+* Renamed attribute `Symbol` of `NETN_Aggregate` to `SymbolId` 
+* Renamed attribute `UnitEquipment`  of `NETN_Aggregate` to `EquipmentStatus` 
+* Renamed attribute `UnitPersonnel`  of `NETN_Aggregate` to `PersonnelStatus` 
+* Renamed attribute `UnitSupplies`  of `NETN_Aggregate` to `Supplies` 
+* Removed attribute `Footprint`of `NETN_Aggregate` object class 
+* Removed attribute `SupportUnit` of `NETN_Aggregate` object class 
+* Added field `ResourceType` to datatype `ResourceStatusNumberStruct` 
+* Changed datatype of attribute `CoverStatus` of `NETN_Aggregate` to `PercentFloat64` 
+* Changed datatype of attribute `CombatValue` of `NETN_Aggregate` to `PercentFloat64` 
+* Changed datatype of attribute `EntityList` of `NETN_Aggregate` to `ArrayOfEntityStruct` 
+* Changed datatype of attribute `Echelon` of `NETN_Aggregate` to `EchelonEnum32` 
+* Added field `UnitAllocation` to datatype `EntityStruct`</semantics>
+        </note>
+        <note>
+            <label>netn-mrm_3</label>
+            <semantics>* Changed datatype `TransactionId` to `UUID`
+* Replaced all use of Array datatype `NETN_ArrayOfSupplyStruct` with `SupplyStructArray`
+* Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32`
+* Replaced all use of `PercentFloat64` with `PercentFloat32`
+* Moved attribute `SourceUnit`from NETN-Physical Platform and Lifeform object classes to the same classes in NETN-MRM and renamed to `SourceAggregate`
+* Changed datatype of `NETN_Aggregate` attribute `Route` to `ArrayOfWorldLocationStruct`
+* Changed datatype of `NETN_Aggregate` attribute `Destination` to `WorldLocationStruct`
+* Renamed `NETN_Aggregate` attribute `ParentUnit` to `ParentAggregate`
+* Renamed `NETN_Aggregate` attribute `SourceUnit` to `SourceAggregate`
+* Renamed `NETN_Aggregate` attribute `DividedUnitList` to `DividedEntities`
+* Renamed `NETN_Aggregate` attribute `EmbeddedUnitList` to `MountedEntities`
+* Renamed `NETN_Aggregate` attribute `SubunitList` to `DisaggregatedEntities`
+* Changed datatype of `NETN_Aggregate` attribute `Mounted` to `MountStruct`
+* Renamed `NETN_Aggregate` attribute `Mounted` to `MountedOn`
+* Moved all attributes from `NETN_Aggregate` to extend RPR-Aggregate object class `AggregateEntity`
+* Added attribute `Unit` to RPR-Physical `Aggregate` object class
+* Added attribute `ParentAggregate` to RPR-Physical `Platform` object class
+* Added attribute `EquipmentItem` to RPR-Physical `Platform` object class
+* Renamed parameter `RemoveSubunits` of interaction class `Aggregate` to `RemoveDisaggregatedEntities`
+* Renamed parameter `Subunits` of interaction class `Merge` to `DividedEntities`
+* Renamed parameter `RemoveUnit` of interaction class `Deactivate` to `RemoveEntity`
+* Renamed parameter `AggregateUnit` of interaction class `Request` to `AggregateEntity`
+* Moved interaction class `QueryCapabilitySupported` from subclass of `Request` to subclass of `MRM_Interaction`
+* Moved attribute `Federate` from interaction class `Request` to interaction class `QueryCapabilitySupported` and rename to `FederateApplication`
+* Removed interaction class `Activate`
+* Removed interaction class `Deactivate`</semantics>
+        </note>
+    </notes>
 </objectModel>
