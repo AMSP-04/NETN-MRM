@@ -176,7 +176,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     </attribute>
                     <attribute>
                         <name>Destination</name>
-                        <dataType>WorldLocationStruct</dataType>
+                        <dataType>LocationStruct</dataType>
                         <updateType>Conditional</updateType>
                         <updateCondition>When Changed</updateCondition>
                         <ownership>DivestAcquire</ownership>
@@ -187,7 +187,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     </attribute>
                     <attribute>
                         <name>Route</name>
-                        <dataType>ArrayOfWorldLocationStruct</dataType>
+                        <dataType>LocationStructArray</dataType>
                         <updateType>Conditional</updateType>
                         <updateCondition>When Changed</updateCondition>
                         <ownership>DivestAcquire</ownership>
@@ -338,6 +338,17 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <transportation>HLAreliable</transportation>
                         <order>Receive</order>
                         <semantics>Optional. The operational task the aggregate has been ordered to perform.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>Side</name>
+                        <dataType>UUID</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional: The side in the scenario this entity belongs to.</semantics>
                     </attribute>
                     <objectClass>
                         <name>NETN_Aggregate</name>
@@ -674,6 +685,13 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
         </enumeratedDataTypes>
         <arrayDataTypes>
             <arrayData>
+                <name>ArrayOfStringType</name>
+                <dataType>HLAunicodeString</dataType>
+                <cardinality>Dynamic</cardinality>
+                <encoding>HLAvariableArray</encoding>
+                <semantics>A generic representation of a set of strings.</semantics>
+            </arrayData>
+            <arrayData>
                 <name>ArrayOfResourceStatus</name>
                 <dataType>ResourceStatusNumberStruct</dataType>
                 <cardinality>[1..2147483647]</cardinality>
@@ -722,12 +740,12 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                 <semantics>The operational task the aggregate has been ordered to perform, the time the mission was assigned, and the estimated completion time.</semantics>
                 <field>
                     <name>StartTime</name>
-                    <dataType>EpochTimeSecInt64</dataType>
+                    <dataType>ScenarioTime</dataType>
                     <semantics>An optional field providing the mission start time</semantics>
                 </field>
                 <field>
                     <name>EndTime</name>
-                    <dataType>EpochTimeSecInt64</dataType>
+                    <dataType>ScenarioTime</dataType>
                     <semantics>An optional field providing the mission estimated end time</semantics>
                 </field>
                 <field>
@@ -876,21 +894,6 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <semantics>A sensor owned by the aggregate</semantics>
                 </field>
             </fixedRecordData>
-            <fixedRecordData>
-                <name>MountStruct</name>
-                <encoding>HLAfixedRecord</encoding>
-                <semantics>The current progress of the mounting of an entity.</semantics>
-                <field>
-                    <name>Entity</name>
-                    <dataType>UUID</dataType>
-                    <semantics>Required: The entity on which the mounting takes place.</semantics>
-                </field>
-                <field>
-                    <name>Progress</name>
-                    <dataType>PercentFloat32</dataType>
-                    <semantics>Required: The progress of a mounting operation. 100% = mounting completed.</semantics>
-                </field>
-            </fixedRecordData>
         </fixedRecordDataTypes>
     </dataTypes>
     <notes>
@@ -977,8 +980,8 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
 * Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32` 
 * Replaced all use of `PercentFloat64` with `PercentFloat32` 
 * Moved attribute `SourceUnit`from NETN-Physical Platform and Lifeform object classes to the same classes in NETN-MRM and renamed to `SourceAggregate` 
-* Changed datatype of `NETN_Aggregate` attribute `Route` to `ArrayOfWorldLocationStruct` 
-* Changed datatype of `NETN_Aggregate` attribute `Destination` to `WorldLocationStruct` 
+* Changed datatype of `NETN_Aggregate` attribute `Route` to `LocationStructArrray` 
+* Changed datatype of `NETN_Aggregate` attribute `Destination` to `LocationStruct` 
 * Renamed `NETN_Aggregate` attribute `ParentUnit` to `ParentAggregate` 
 * Renamed `NETN_Aggregate` attribute `SourceUnit` to `SourceAggregate` 
 * Renamed `NETN_Aggregate` attribute `DividedUnitList` to `DividedEntities` 
@@ -997,7 +1000,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
 * Moved interaction class `QueryCapabilitySupported` from subclass of `Request` to subclass of `MRM_Interaction` 
 * Moved attribute `Federate` from interaction class `Request` to interaction class `QueryCapabilitySupported` and rename to `FederateApplication` 
 * Removed interaction class `Activate` 
-* Removed interaction class `Deactivate`
+* Removed interaction class `Deactivate` 
 * Moved attribute `Activity` to NETN-ETR `BaseEntity` object class.</semantics>
         </note>
     </notes>
