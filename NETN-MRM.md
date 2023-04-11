@@ -1,8 +1,8 @@
-# NETN-FOM
 
+# NETN-MRM
 |Version| Date| Dependencies|
 |---|---|---|
-|3.0|2023-03-23|NETN-BASE, RPR-Aggregate|
+|3.0|2023-04-09|NETN-ETR, RPR-Aggregate|
 
 The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. 
 
@@ -12,12 +12,7 @@ The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FO
 
 The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and is primarily intended to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. The NETN-MRM FOM module is available as an XML file for use in HLA-based federations.
 
-NETN-MRM covers the following cases:  
-* Aggregation of entities representing subunits and/or physical entities 
-* Disaggregation of entities representing a unit into entities representing subunits and/or physical entities 
-* Division of simulated entities into parts - resources divided and all entities simulated 
-* Merge of previously divided entities.
-
+NETN-MRM covers the following cases:   * Aggregation of entities representing subunits and/or physical entities  * Disaggregation of entities representing a unit into entities representing subunits and/or physical entities  * Division of simulated entities into parts - resources divided and all entities simulated  * Merge of previously divided entities.
 
 ## Overview
 
@@ -35,22 +30,22 @@ The attribute extensions provided in NETN-MRM are defined on RPR-FOM object clas
 
 All MRM actions use the same pattern of interaction. 
 
+Before sending a specific MRM request, the requesting federate may use the `AggregateEntity` attribute `SupportedAggregationActions` to check if the action is currently supported by the federate application responsible for modelling the entity.
+
 ```mermaid
 sequenceDiagram
 autonumber
-Request->>Federate: QueryCapabilitiesSupported
-Federate->>Request: CapabilitiesSupported
+
 Request->>Federate: Request
 note over Federate: Perform Action
 Federate->>Federation: registerObjectInstance, <br>updateAttributeValues, <br>deleteObjectInstance
 Federate->>Request: Response
 ```
 
-1. Before sending a more specific MRM request, the MRM capabilities supported by a federate can be queried. To query which MRM actions are supported, send a `QueryCapabilitiesSupported` request interaction. 
-2. All federates implementing NETN-MRM must implement support for `QueryCapabilitiesSupported` and provide a `CapabilitiesSupported` response interaction. If a federate is not responding to `QueryCapabilitiesSupported` it should be assumed it does not support any MRM action. Once a federate respond to this query, additional queries are not required before each MRM action.
-3. A federate requests an action on a specified `AggregateEntity` using subclasses of the interaction class `Request`
-4. The federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for aggregation and disaggregation actions.  The federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for division and merging actions. Performing the action may include registering, deleting and updating objects in the federation.
-5. The federate then reports the success of the action using the interaction `Response`.
+
+1. A federate requests an action on a specified `AggregateEntity` using subclasses of the interaction class `Request`
+2. The federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for aggregation and disaggregation actions.  The federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for division and merging actions. Performing the action may include registering, deleting and updating objects in the federation.
+3. The federate then reports the success of the action using the interaction `Response`.
 
 
 ### Disaggregation
@@ -297,11 +292,17 @@ Note that inherited and dependency attributes are not included in the descriptio
 graph RL
 BaseEntity-->HLAobjectRoot
 AggregateEntity-->BaseEntity
-PhysicalEntity-->BaseEntity
-NETN_Aggregate-->AggregateEntity
-Lifeform-->PhysicalEntity
-Platform-->PhysicalEntity
 ```
+
+### BaseEntity
+
+A base class of aggregate and discrete scenario domain participants. The BaseEntity class is characterized by being located at a particular location in space and independently movable, if capable of movement at all. It specifically excludes elements normally considered to be a component of another element. The BaseEntity class is intended to be a container for common attributes for entities of this type. Since it lacks sufficient class specific attributes that are required for simulation purposes, federates cannot publish objects of this class. Certain simulation management federates, e.g. viewers, may subscribe to this class. Simulation federates will normally subscribe to one of the subclasses, to gain the extra information required to properly simulate the entity.
+
+|Attribute|Datatype|Semantics|
+|---|---|---|
+|Status|ActiveStatusEnum8|Optional. Indicates if this entity currently is being simulated or not. E.g. an entity mounted or embarked on transports can be set to Inactive. During an inactive state, the attribute values may not reflect accurate or current values. All attributes must be updated to represent the current status of the object instance before setting the state to Active. The default is `Active`.|
+|SourceAggregate|UUID|Optional. Reference to an active `AggregateEnity` instance which is the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.|
+|ParentAggregate|UUID|Optional. If this simulation entity is the result of a disaggregation, this attribute references back to the `AggregateEntity` that was disaggregated. The default value is all zeros.|
 
 ### AggregateEntity
 
@@ -309,53 +310,9 @@ A group of one or more separate objects that operate together as part of an orga
 
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|Callsign|HLAunicodeString|Required. A name for the entity. Callsigns should be unique in the context in which they are used but not required to be globally unique.|
-|Unit|UUID|Optional: Reference to an existing NETN-ORG `Unit` object that is represented by this `AggregateEntity`. Default value is all zeros.|
-|ParentAggregate|UUID|Optional. If this AggregateEntity is the result of a disaggregation, this attribute references back to the AggregateEntity that was disaggregated. The default value is all zeros.|
-|DisaggregatedEntities|ArrayOfUuid|Optional. Reference to the disaggregated entities after this AggregateEntity has been disaggregated. Each element should refer to an existing entity in the federation. Status of this AggregateEntity shall be inactive if disaggregated entities exist.|
-|SourceAggregate|UUID|Optional. Reference to an active NETN_Aggregate instance, the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.|
 |DividedEntities|ArrayOfUuid|Optional. Reference to other aggregate or physical entities divided from the AggregateEntity to represent specific subsets of holdings.|
-|MountedOn|MountStruct|Optional. Mounting progress and reference to the host entity.|
-|MountedEntities|ArrayOfUuid|Optional. Reference to entities mounted on and transported by this AggregateEntity.|
-|EntityList|ArrayOfEntityStruct|Optional. This attribute provides data on all equipment, and lifeforms associated with this AggregateEntity, e.g. platforms, weapons, sensors and personnel.|
-|Destination|WorldLocationStruct|Optional. The current destination of movement.|
-|Route|ArrayOfWorldLocationStruct|Optional. The current path of movement.|
-|SuppliesStatus|SupplyStructArray|Optional. The type and quantities of supplies available (on hand) to the entity. If not provided, the amount of available supplies is undefined.|
-|EquipmentStatus|ArrayOfResourceStatus|Optional. This summarizes the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.|
-|PersonnelStatus|ArrayOfResourceStatus|Optional. This summarizes the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.|
-|VisualSignature|VisualSignatureStruct|Optional: Describes the susceptibility to electro-optical detection.|
-|HUMINTSignature|HUMINTSignatureStruct|Optional: Describes the susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
-|ElectronicSignature|ElectronicSignatureStruct|Optional: Describes the susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.|
-|CombatValue|PercentFloat32|Optional. A summary value (in percent) of the effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.|
-|CoverStatus|PercentFloat32|Optional. Describes the entity's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.|
-|CaptureStatus|CaptureStatusEnum8|Optional: The status of with respect to its control or influence over its own activities.|
-|WeaponsControlOrder|WeaponControlOrderEnum8|Optional. Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.|
-|HigherHeadquarters|UUID|Optional. A reference to an entity representing the superior or headquarters from which orders can be given and to which reports are sent. The referenced entity is a NETN-ORG `Unit` object. The default value is all zeros (no higher headquarters).|
-|Echelon|EchelonEnum32|Optional. The size of the AggregateEntity (level of command).|
-|Mission|MissionStruct|Optional. The operational task the aggregate has been ordered to perform.|
-
-### NETN_Aggregate
-
-Aggregate extensions for NETN
-
-
-### Lifeform
-
-A living military platform (human or not).
-
-|Attribute|Datatype|Semantics|
-|---|---|---|
-|SourceAggregate|UUID|Optional. Reference to an active `AggregateEntity` instance from which this physical entity was divided. The default value is all zeros representing no source entity.|
-
-### Platform
-
-A physical object under the control of armed forces upon which sensor, communication, or weapon systems may be mounted.
-
-|Attribute|Datatype|Semantics|
-|---|---|---|
-|EquipmentItem|UUID|Optional: Reference to a NETN-ORG EquipmentItem that is represented by this Platform. Default value is all zeros.|
-|ParentAggregate|UUID|Optional. If this Platform is the result of a disaggregation, this attribute references back to the AggregateEntity that was disaggregated. The default value is all zeros.|
-|SourceAggregate|UUID|Optional. Reference to an active Aggregate instance from which this physical entity was divided. If not published, merging is not supported. The default value is all zeros representing no source entity.|
+|DisaggregatedEntities|ArrayOfUuid|Optional. Reference to the disaggregated entities after this AggregateEntity has been disaggregated. Each element should refer to an existing entity in the federation. Status of this AggregateEntity shall be inactive if disaggregated entities exist.|
+|SupportedAggregationActions|AggregationActions|Optional: The aggregation actions supported by this aggregated entity.|
 
 ## Interaction Classes
 
@@ -363,32 +320,13 @@ Note that inherited and dependency parameters are not included in the descriptio
 
 ```mermaid
 graph RL
-MRM_Interaction-->HLAinteractionRoot
-Request-->MRM_Interaction
-Response-->MRM_Interaction
-CapabilitiesSupported-->MRM_Interaction
-QuerySupportedCapabilities-->MRM_Interaction
-Aggregate-->Request
-Disaggregate-->Request
-Divide-->Request
-Merge-->Request
+ETR_SimCon-->HLAinteractionRoot
+Aggregate-->ETR_SimCon
+Disaggregate-->ETR_SimCon
+Divide-->ETR_SimCon
+Merge-->ETR_SimCon
+Response-->ETR_SimCon
 ```
-
-### MRM_Interaction
-
-Base class for all MRM interactions.
-
-|Parameter|Datatype|Semantics|
-|---|---|---|
-|EventId|UUID|Unique identifier for all MRM interactions belonging to the same request/respons event.|
-
-### Request
-
-A base class for all MRM  Request events to be performed on the specified AggregateEntity.
-
-|Parameter|Datatype|Semantics|
-|---|---|---|
-|AggregateEntity|UUID|Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.|
 
 ### Aggregate
 
@@ -426,25 +364,6 @@ Instruction to merge the simulated AggregateEntity with specified divided entiti
 
 A response from the receiving federate indicating ability to comply with request.
 
-|Parameter|Datatype|Semantics|
-|---|---|---|
-|Status|HLAboolean|Required. Specifies the result of the request action. TRUE indicates success.|
-
-### CapabilitiesSupported
-
-An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the AggregateEntity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".
-
-|Parameter|Datatype|Semantics|
-|---|---|---|
-|CapabilityNames|ArrayOfStringType|Required. A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".|
-
-### QuerySupportedCapabilities
-
-A request to query the capabilities of a specified federate to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.
-
-|Parameter|Datatype|Semantics|
-|---|---|---|
-|FederateApplication|UUID|Required: The federate to be queried.|
 
 ## Datatypes
 
@@ -453,54 +372,16 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 ### Overview
 |Name|Semantics|
 |---|---|
-|ArrayOfEntityStruct|Data for one or more entities that comprise an entity list.|
-|ArrayOfResourceStatus|The array of health states for a named resource.|
-|ArrayOfSensorStruct|Array with definitio0ns of sensors, 1+ cardinality|
-|CaptureStatusEnum8|The status of a simulated entity with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
-|ConcealmentEnum32|The reason for the objects concealment|
-|ElectronicSignatureStruct|A summary percentage of an aggregates susceptibility to detection of its electronic emissions. Zero percent means that the aggregate has no electronic emissions.|
-|EntityCategoryEnum32|Category of entity|
-|EntityStruct|An entity represented to the federation as part of the aggregate object which owns it.|
-|HUMINTSignatureStruct|Describes the entity susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
-|MissionStruct|The operational task the aggregate has been ordered to perform, the time the mission was assigned, and the estimated completion time.|
-|MountStruct|The current progress of the mounting of an entity.|
-|RangeFloat32|Range of sensor|
-|ResourceStatusNumberStruct|The name of a resource and the number of instances of that resource by health status.|
-|SensorStateEnum32|The emission states of aggregate sensors|
-|SensorStruct|Defines a sensor,operational status, damage status, coverage and ID|
-|VisualSignatureStruct|Specifies the visual structure|
-|WeaponControlOrderEnum8|The enumerations for weapon control|
-        
-### Simple Datatypes
-|Name|Units|Semantics|
-|---|---|---|
-|RangeFloat32|meters|Range of sensor|
+|AggregationActions|A list of aggregation actions.|
+|AggregationActionsEnum|The types of MRM aggregation actions.|
         
 ### Enumerated Datatypes
 |Name|Representation|Semantics|
 |---|---|---|
-|CaptureStatusEnum8|HLAoctet|The status of a simulated entity with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
-|ConcealmentEnum32|RPRunsignedInteger32BE|The reason for the objects concealment|
-|EntityCategoryEnum32|RPRunsignedInteger32BE|Category of entity|
-|SensorStateEnum32|RPRunsignedInteger32BE|The emission states of aggregate sensors|
-|WeaponControlOrderEnum8|HLAoctet|The enumerations for weapon control|
+|AggregationActionsEnum|HLAinteger32BE|The types of MRM aggregation actions.|
         
 ### Array Datatypes
 |Name|Element Datatype|Semantics|
 |---|---|---|
-|ArrayOfEntityStruct|EntityStruct|Data for one or more entities that comprise an entity list.|
-|ArrayOfResourceStatus|ResourceStatusNumberStruct|The array of health states for a named resource.|
-|ArrayOfSensorStruct|SensorStruct|Array with definitio0ns of sensors, 1+ cardinality|
-        
-### Fixed Record Datatypes
-|Name|Fields|Semantics|
-|---|---|---|
-|ElectronicSignatureStruct|ElectronicSignaturePercent, SensorArray|A summary percentage of an aggregates susceptibility to detection of its electronic emissions. Zero percent means that the aggregate has no electronic emissions.|
-|EntityStruct|Callsign, EntityCategory, EntityStatus, IsDistinctObject, IsUnavailable, Facing, Concealment, OffsetLocation, Allocation|An entity represented to the federation as part of the aggregate object which owns it.|
-|HUMINTSignatureStruct|HUMINTSignaturePercent|Describes the entity susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
-|MissionStruct|StartTime, EndTime, MissionEnum|The operational task the aggregate has been ordered to perform, the time the mission was assigned, and the estimated completion time.|
-|MountStruct|Entity, Progress|The current progress of the mounting of an entity.|
-|ResourceStatusNumberStruct|NumberHealthyOrIntact, NumberSlightlyDamaged, NumberModeratelyDamaged, NumberSignificantlyDamaged, NumberDestroyed, ResourceName, ResourceType|The name of a resource and the number of instances of that resource by health status.|
-|SensorStruct|SensorStateEnum, SensorDamageState, SensorCoverage, SensorID|Defines a sensor,operational status, damage status, coverage and ID|
-|VisualSignatureStruct|DVOSignaturePercent, I2SignaturePercent, ThermalSignaturePercent|Specifies the visual structure|
+|AggregationActions|AggregationActionsEnum|A list of aggregation actions.|
     
