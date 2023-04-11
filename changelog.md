@@ -80,31 +80,55 @@ NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.
 
 ### v3.0 - Updated version by MSG-191 to be part of NATO-FOM v4.0
 
-* Changed datatype `TransactionId` to `UUID` 
+* Removed `NETN_Aggregate` object class
+* Replaced `NETN_Aggregate` attribute `UniqueId` with NETN-BASE `HLAobjectRoot` attribute `UniqueId`
+* Replaced `NETN_Aggregate` attribute `Status` with NETN-MRM `BaseEntity` attribute `Status`
+* Replaced `NETN_Aggregate` attribute `SubunitList` with NETN-MRM `AggregateEntity` attribute `DisaggregatedEntities`
+* Replaced `NETN_Aggregate` attribute `ParentUnit` with NETN-MRM `BaseEntity` attribute `ParentAggregate`
+* Replaced `NETN_Aggregate` attribute `DividedUnitList` with NETN-MRM `AggregateEntity` attribute `DividedEntities`
+* Replaced `NETN_Aggregate` attribute `SourceUnit` with NETN-MRM `BaseEntity` attribute `SourceAggregate`
+* Replaced `NETN_Aggregate` attribute `EmbeddedUnitList` with NETN-Physical `BaseEntity` attribute `HostedEntities`
+* Replaced `NETN_Aggregate` attribute `HigherHeadquarters` with NETN-Physical `AggregateEntity` attribute `HigherHeadquarters`
+* Replaced `NETN_Aggregate` attribute `Mounted` with NETN-Physical `BaseEntity` attribute `HostEntitiy` and NETN-Physical `AggregateEntity` attribute `MountProgress`
+* Replaced `NETN_Aggregate` attribute `SymbolId` with NETN-Physical `BaseEntity` attribute `SymbolId`
+* Replaced `NETN_Aggregate` attribute `Callsign` with NETN-Physical `BaseEntity` attribute `Callsign`
+* Replaced `NETN_Aggregate` attribute `Echelon` with NETN-Physical `AggregateEntity` attribute `Echelon`
+* Replaced `NETN_Aggregate` attribute `EntityList` with NETN-Physical `AggregateEntity` attribute `EntityList`
+* Replaced `NETN_Aggregate` attribute `SuppliesStatus` with NETN-Physical `AggregateEntity` attribute `SuppliesStatus`
+* Replaced `NETN_Aggregate` attribute `EquipmentStatus` with NETN-Physical `AggregateEntity` attribute `EquipmentStatus`
+* Replaced `NETN_Aggregate` attribute `PersonnelStatus` with NETN-Physical `AggregateEntity` attribute `PersonnelStatus`
+* Replaced `NETN_Aggregate` attribute `VisualSignature` with NETN-Physical `AggregateEntity` attribute `VisualSignature`
+* Replaced `NETN_Aggregate` attribute `HUMINTSignature` with NETN-Physical `AggregateEntity` attribute `HUMINTSignature`
+* Replaced `NETN_Aggregate` attribute `ElectronicSignature` with NETN-Physical `AggregateEntity` attribute `ElectronicSignature`
+* Replaced `NETN_Aggregate` attribute `CombatValue` with NETN-Physical `AggregateEntity` attribute `CombatValue`
+* Replaced `NETN_Aggregate` attribute `CoverStatus` with NETN-Physical `AggregateEntity` attribute `CoverStatus`
+* Replaced `NETN_Aggregate` attribute `CaptureStatus` with NETN-Physical `AggregateEntity` attribute `CaptureStatus`
+* Removed `NETN_Aggregate` attribute `Mission`
+* Replaced `NETN_Aggregate` attribute `Activity` with NETN-ETR `BaseEntity` attribute `Activity`
+* Replaced `NETN_Aggregate` attribute `Route` with NETN-ETR `BaseEntity` attribute `Route`
+* Replaced `NETN_Aggregate` attribute `Destination` with NETN-ETR `BaseEntity` attribute `Destination`
+* Replaced `NETN_Aggregate` attribute `WeaponsControlOrder` with NETN-Physical `AggregateEntity` attribute `WeaponsControlOrder`
+* Removed `MRM_Interaction` interaction class
+* Replaced `MRM_Interaction` parameter `EventId` with NETN-BASE `HLAinteractionRoot` attribute `UniqueId`
+* Removed `CapabilitiesSupported` interaction class
+* Replaced `CapabilitiesSupported` parameter `CapabilityNames` with `AggregateEntity` attribute `SupportedAggregationActions`
+* Removed `Request` interaction class
+* Removed `Request` parameter `Federate`
+* Replaced `Request` parameter `AggregateUnit` with NETN-ETR `ETR_SimCon` parameter `SimulatedEntity`
+* Replaced `Response` interaction class with NETN-ETR `Response` interaction class
+* Removed `Activate` interaction class
+* Removed `Deactivate` interaction class
+* Removed `QuerySupportedCapabilities` interaction class
+* Removed `Aggregate` parameter `RemoveSubunits`
+* Renamed `Merge` parameter `Subunits` to `DividedEntities` 
+
+
+* Removed datatype `MissionStruct`
+* Moved all the rest of datatype to NETN-Physical
+* Added datatype `AggregationActionEnum`
+* Added datatype `AggregationActionArray`
+
 * Replaced all use of Array datatype `NETN_ArrayOfSupplyStruct` with `SupplyStructArray` 
 * Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32` 
 * Replaced all use of `PercentFloat64` with `PercentFloat32` 
-* Moved attribute `SourceUnit`from NETN-Physical Platform and Lifeform object classes to the same classes in NETN-MRM and renamed to `SourceAggregate` 
-* Changed datatype of `NETN_Aggregate` attribute `Route` to `ArrayOfWorldLocationStruct` 
-* Changed datatype of `NETN_Aggregate` attribute `Destination` to `WorldLocationStruct` 
-* Renamed `NETN_Aggregate` attribute `ParentUnit` to `ParentAggregate` 
-* Renamed `NETN_Aggregate` attribute `SourceUnit` to `SourceAggregate` 
-* Renamed `NETN_Aggregate` attribute `DividedUnitList` to `DividedEntities` 
-* Renamed `NETN_Aggregate` attribute `EmbeddedUnitList` to `MountedEntities` 
-* Renamed `NETN_Aggregate` attribute `SubunitList` to `DisaggregatedEntities` 
-* Changed datatype of `NETN_Aggregate` attribute `Mounted` to `MountStruct` 
-* Renamed `NETN_Aggregate` attribute `Mounted` to `MountedOn` 
-* Moved all attributes from `NETN_Aggregate` to extend RPR-Aggregate object class `AggregateEntity` 
-* Added attribute `Unit` to RPR-Physical `Aggregate` object class 
-* Added attribute `ParentAggregate` to RPR-Physical `Platform` object class 
-* Added attribute `EquipmentItem` to RPR-Physical `Platform` object class 
-* Renamed parameter `RemoveSubunits` of interaction class `Aggregate` to `RemoveDisaggregatedEntities` 
-* Renamed parameter `Subunits` of interaction class `Merge` to `DividedEntities` 
-* Renamed parameter `RemoveUnit` of interaction class `Deactivate` to `RemoveEntity` 
-* Renamed parameter `AggregateUnit` of interaction class `Request` to `AggregateEntity` 
-* Moved interaction class `QueryCapabilitySupported` from subclass of `Request` to subclass of `MRM_Interaction` 
-* Moved attribute `Federate` from interaction class `Request` to interaction class `QueryCapabilitySupported` and rename to `FederateApplication` 
-* Removed interaction class `Activate` 
-* Removed interaction class `Deactivate`
-* Moved attribute `Activity` to NETN-ETR `BaseEntity` object class.
 
