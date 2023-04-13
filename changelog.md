@@ -88,7 +88,7 @@ NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.
 * Replaced `NETN_Aggregate` attribute `DividedUnitList` with NETN-MRM `AggregateEntity` attribute `DividedEntities`
 * Replaced `NETN_Aggregate` attribute `SourceUnit` with NETN-MRM `BaseEntity` attribute `SourceAggregate`
 * Replaced `NETN_Aggregate` attribute `EmbeddedUnitList` with NETN-Physical `BaseEntity` attribute `HostedEntities`
-* Replaced `NETN_Aggregate` attribute `HigherHeadquarters` with NETN-Physical `AggregateEntity` attribute `HigherHeadquarters`
+* Replaced `NETN_Aggregate` attribute `HigherHeadquarters` with NETN-ORG `Unit` attribute `HigherHeadquarters`
 * Replaced `NETN_Aggregate` attribute `Mounted` with NETN-Physical `BaseEntity` attribute `HostEntitiy` and NETN-Physical `AggregateEntity` attribute `MountProgress`
 * Replaced `NETN_Aggregate` attribute `SymbolId` with NETN-Physical `BaseEntity` attribute `SymbolId`
 * Replaced `NETN_Aggregate` attribute `Callsign` with NETN-Physical `BaseEntity` attribute `Callsign`
