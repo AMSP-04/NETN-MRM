@@ -36,8 +36,8 @@ All MRM actions use the same pattern of interaction.
 Use the `AggregateEntity` attribute `SupportedAggregationActions` to check the simulation entity's support for an MRM action. 
  
 ```mermaid 
-sequenceDiagram 
-autonumber 
+sequenceDiagram
+autonumber
  
 Trigger->>AggregateEntity: Request 
 note over AggregateEntity: Execute action 
@@ -80,8 +80,8 @@ end
  
  
 ```mermaid 
-sequenceDiagram 
-autonumber 
+sequenceDiagram
+autonumber
  
 Trigger->>AggregateEntity: Disaggregate(aggregate) 
 AggregateEntity->>Federation: aggregate.updateAttributeValues(Status) 
@@ -104,8 +104,8 @@ AggregateEntity->>Trigger: Response
 After performing disaggregation, the following is true: 
  
 ```mermaid 
-flowchart BT 
-AggregateEntity[/AggregateEntity/] 
+flowchart BT
+AggregateEntity[/AggregateEntity/]
 Unit1 --SuperiorUnit--> Unit 
 Unit2 --SuperiorUnit--> Unit 
  
@@ -182,8 +182,8 @@ A federate application can perform aggregation of an `AggregateEntity` under the
  
  
 ```mermaid 
-sequenceDiagram 
-autonumber 
+sequenceDiagram
+autonumber
  
 Trigger->>AggregateEntity: Aggregate(aggregate) 
 loop entity=aggregate.DisaggregatedEntities 
@@ -213,8 +213,8 @@ A federate application can perform the division of an `AggregateEntity` under th
  
  
 ```mermaid 
-sequenceDiagram 
-autonumber 
+sequenceDiagram
+autonumber
  
 Trigger->>Federate: Divide(Resources, aggregate/physical) 
  
@@ -237,7 +237,7 @@ Federate->>Trigger: Response
 After division, the following is true: 
  
 ```mermaid 
-flowchart BT 
+flowchart BT
  
 subgraph NETN-ORG 
 Equipment --holding--> Unit 
@@ -267,8 +267,8 @@ Merging of an `AggregateEntity` with one of its divided entities can be performe
  
  
 ```mermaid 
-sequenceDiagram 
-autonumber 
+sequenceDiagram
+autonumber
  
 Trigger->>Federate: Merge(aggregate, dividedEntities) 
 loop entity=dividedEntities 
