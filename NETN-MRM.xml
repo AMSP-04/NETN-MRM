@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelIdentification>
-        <name>NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module</name>
+    <modelIdentification notes="netn-mrm_4">
+        <name>NETN-MRM</name>
         <type>FOM</type>
-        <version>2.0</version>
-        <modificationDate>2020-09-02</modificationDate>
+        <version>3.0</version>
+        <modificationDate>2023-04-09</modificationDate>
         <securityClassification>Not Classified</securityClassification>
-        <purpose>The purpose of NETN-MRM is to support federations where models are represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. </purpose>
+        <purpose>The purpose of NETN-MRM is to support federations using multiple levels of resolution and aggregation and where the level of resolution changes during a simulation.</purpose>
         <applicationDomain></applicationDomain>
-        <description>The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modeling.</description>
-        <useLimitation>NETN-MRM covers the following cases:  * Aggregation of subunits and/or physical entities * Disaggregation of unit into subunits and/or physical entities * Division of simulated unit into specific parts - resources divided and all entities simulated * Merge of previously divided parts with simulated unit. * Activate and Inactivate aggregate units' representation in the simulation</useLimitation>
-        <useHistory>v1.1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
-        <useHistory>v2.0.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
+        <description>Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Individual entities represent distinct objects in the scenario, while aggregated models represent a group of associated physical entities.
+
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module specifies how to perform aggregation and disaggregation of aggregated entities, e.g. units, to other levels of aggregation or physical entities.
+
+
+The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and intends to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. </description>
+        <useLimitation>NETN-MRM covers the following cases: 
+* Aggregation of entities representing subunits or physical entities
+* Disaggregation of entities representing a unit into entities representing subunits or physical entities
+* Division of simulated entities into parts - resources divided and all entities simulated
+* Merge of previously divided entities.</useLimitation>
+        <useHistory notes="netn-mrm_1">v1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
+        <useHistory notes="netn-mrm_2">v2.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
+        <useHistory notes="netn-mrm_3">v3.0 - Updated version by MSG-191 to be part of NATO-FOM v4.0</useHistory>
         <poc>
             <pocType>Release authority</pocType>
             <pocName>NATO Modelling and Simulation Group</pocName>
@@ -20,7 +30,7 @@
         </poc>
         <poc>
             <pocType>Primary author</pocType>
-            <pocName>MSG-163 Evolution of NATO Standards for Federated Simulation</pocName>
+            <pocName>MSG-106 Enhanced CAX Architecture, Desing and Methodology</pocName>
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
         </poc>
@@ -32,17 +42,23 @@
         </poc>
         <poc>
             <pocType>Primary author</pocType>
-            <pocName>MSG-106 Enhanced CAX Architecture, Desing and Methodology</pocName>
+            <pocName>MSG-163 Evolution of NATO Standards for Federated Simulation</pocName>
+            <pocOrg>NATO Modelling and Simulation Group</pocOrg>
+            <pocEmail>msg@cso.nato.int</pocEmail>
+        </poc>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>MSG-191 NATO Standards for Federated Simulation and Services for Integration, Verification and Certification</pocName>
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
         </poc>
         <reference>
             <type>Dependency</type>
-            <identification>NETN-BASE</identification>
+            <identification>NETN-ETR</identification>
         </reference>
         <reference>
             <type>Dependency</type>
-            <identification>RPR-Aggregate</identification>
+            <identification>NETN-Physical</identification>
         </reference>
         <other>
 Copyright © 2020 by NATO/OTAN. All rights reserved.
@@ -56,310 +72,89 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
             <name>HLAobjectRoot</name>
             <objectClass>
                 <name>BaseEntity</name>
+                <sharing>Subscribe</sharing>
+                <semantics>A base class of aggregate and discrete scenario domain participants. The BaseEntity class is characterized by being located at a particular location in space and independently movable, if capable of movement at all. It specifically excludes elements normally considered to be a component of another element. The BaseEntity class is intended to be a container for common attributes for entities of this type. Since it lacks sufficient class specific attributes that are required for simulation purposes, federates cannot publish objects of this class. Certain simulation management federates, e.g. viewers, may subscribe to this class. Simulation federates will normally subscribe to one of the subclasses, to gain the extra information required to properly simulate the entity.</semantics>
+                <attribute>
+                    <name>Status</name>
+                    <dataType>ActiveStatusEnum8</dataType>
+                    <updateType>Conditional</updateType>
+                    <updateCondition>On change</updateCondition>
+                    <ownership>DivestAcquire</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Optional. Indicates if this entity is currently being simulated or not. During an inactive state, the attribute values may not reflect accurate or current values. All attributes are updated to represent the current status of the object instance before setting the state to Active. The default is `Active`.</semantics>
+                </attribute>
+                <attribute>
+                    <name>SourceAggregate</name>
+                    <dataType>UUID</dataType>
+                    <updateType>Conditional</updateType>
+                    <updateCondition>On change</updateCondition>
+                    <ownership>DivestAcquire</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Optional. Reference to an active `AggregateEnity` instance which is the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.</semantics>
+                </attribute>
+                <attribute>
+                    <name>ParentAggregate</name>
+                    <dataType>UUID</dataType>
+                    <updateType>Conditional</updateType>
+                    <updateCondition>On change</updateCondition>
+                    <ownership>DivestAcquire</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Optional. If this simulation entity results from a disaggregation, this attribute refers to the disaggregated `AggregateEntity`. The default value is no reference, i.e. all zeros.</semantics>
+                </attribute>
+                <attribute>
+                    <name>OrganizationElement</name>
+                    <dataType>UUID</dataType>
+                    <updateType>Conditional</updateType>
+                    <updateCondition>On change</updateCondition>
+                    <ownership>DivestAcquire</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Optional: Reference to an existing NETN-ORG  organization element, e.g. a `Unit` or `Equipment` represented by this simulation entity. The default value is no related organization element, i.e. all zeros.</semantics>
+                </attribute>
                 <objectClass>
                     <name>AggregateEntity</name>
-                    <objectClass>
-                        <name>NETN_Aggregate</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <semantics>A group of one or more separate objects that operate together as part of an organization. These objects may be discrete, may be other aggregate objects, or may be a mixture of both.</semantics>
+                    <attribute>
+                        <name>DividedEntities</name>
+                        <dataType>ArrayOfUuid</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>NA</updateCondition>
+                        <ownership>DivestAcquire</ownership>
                         <sharing>PublishSubscribe</sharing>
-                        <semantics>Aggregate extensions for NETN</semantics>
-                        <attribute>
-                            <name>UniqueId</name>
-                            <dataType>UuidArrayOfHLAbyte16</dataType>
-                            <updateType>Static</updateType>
-                            <updateCondition>NA</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Required. A unique identifier for the object. The Universally Unique Identifier (UUID) is either generated or defined as part of scenario initialization, e.g. using NETN-ORG MSDL data. The unique identifier can serve dual purposes. It is a unique identification of the NETN_Aggregate object instance but can also be a reference to a NETN-ORG unit element with the same unique identifier.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Status</name>
-                            <dataType>ActiveStatusEnum8</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Required. Indicate if this aggregate unit currently is being simulated or not. E.g. units mounted or embarked on transports can be set to inactive. During an inactive state, the attribute values may not reflect an accurate, current value. Therefore, any subscribing federate can ignore inactive units. An inactive instance may have its instance attributes updated by a federate but reflected updates shall be ignored by receiving federates. All attributes must be updated to represent the current status of the instance before setting the status to active.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>SubunitList</name>
-                            <dataType>ArrayOfUuid</dataType>
-                            <updateType>NA</updateType>
-                            <updateCondition>NA</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAreliable</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to disaggregated representations of subsets of the aggregate unit when registered in the federation. Each element should refer to an existing NETN_Aggregate object in the federation. If not published, disaggregation is not supported.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>ParentUnit</name>
-                            <dataType>UuidArrayOfHLAbyte16</dataType>
-                            <updateType>NA</updateType>
-                            <updateCondition>NA</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAreliable</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to parent aggregate entity. If not published, aggregation is not supported. The default value is 0000000000000000 (no parent unit).</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>DividedUnitList</name>
-                            <dataType>ArrayOfUuid</dataType>
-                            <updateType>NA</updateType>
-                            <updateCondition>NA</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAreliable</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to other aggregate or physical entities divided from the aggregate unit to represent specific subsets of holdings. If not published, a division is not supported.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>SourceUnit</name>
-                            <dataType>UuidArrayOfHLAbyte16</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to an active NETN_Aggregate instance, the source of a NETN-MRM division. If not published, merging is not supported. The default value is 0000000000000000 representing no source unit.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>EmbeddedUnitList</name>
-                            <dataType>ArrayOfUuid</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Reference to units or platforms embarked on and transported by this unit. If not published, transport of embedded units not supported.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>HigherHeadquarters</name>
-                            <dataType>UuidArrayOfHLAbyte16</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. A reference to an entity representing the aggregate unit's superior or headquarters from which orders are given and to which reports are sent. The highest level unit or headquarters will publish 0000000000000000 as its HigherHeadquarters value. The referenced entity may or may not be registered in the federation as a NETN_Aggregate and/or NETN-ORG unit. If not published, the aggregate does not have a superior unit or headquarter. The default value is 0000000000000000 (no higher headquarters).</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Mounted</name>
-                            <dataType>PercentFloat64</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>SymbolId</name>
-                            <dataType>SymbolIdentifier</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On Change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. A symbol identifier represented as a string.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Callsign</name>
-                            <dataType>HLAunicodeString</dataType>
-                            <updateType>Static</updateType>
-                            <updateCondition>N/A</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Required. A callsign used to address the unit. Callsigns should be unique in the context in which they are used but not required to be globally unique.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Echelon</name>
-                            <dataType>EchelonEnum32</dataType>
-                            <updateType>Static</updateType>
-                            <updateCondition>N/A</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The size of the unit (level of command).</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>EntityList</name>
-                            <dataType>ArrayOfEntityStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>SuppliesStatus</name>
-                            <dataType>NETN_ArrayOfSupplyStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>EquipmentStatus</name>
-                            <dataType>ArrayOfResourceStatus</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. This summarizes the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>PersonnelStatus</name>
-                            <dataType>ArrayOfResourceStatus</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. This summarizes the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>VisualSignature</name>
-                            <dataType>VisualSignatureStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Describes the unit's susceptibility to electro-optical detection.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>HUMINTSignature</name>
-                            <dataType>HUMINTSignatureStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>ElectronicSignature</name>
-                            <dataType>ElectronicSignatureStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>CombatValue</name>
-                            <dataType>PercentFloat64</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. A summary value (in per cent) of unit effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>CoverStatus</name>
-                            <dataType>PercentFloat64</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Describes the unit's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>CaptureStatus</name>
-                            <dataType>CaptureStatusEnum8</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>The status of an aggregate with respect to its control or influence over its own activities.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Mission</name>
-                            <dataType>MissionStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>The operational task the aggregate has been ordered to perform.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Activity</name>
-                            <dataType>AggregateMissionEnum16</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The current activity of the platform. The value is based on the Joint Consultation, Command and Control Information Exchange Data Model (JC3IEDM) action-event-category-code. The JC3IEDM is a fully documented standard [NATO STANAG 5525] for an information exchange data model for the sharing of C2 information. Default is 0 (Other activity).</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Route</name>
-                            <dataType>PathVariantStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>When Changed</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAreliable</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The current path of movement.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>Destination</name>
-                            <dataType>PointVariantStruct</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>When Changed</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAreliable</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. The current destination of movement.</semantics>
-                        </attribute>
-                        <attribute>
-                            <name>WeaponsControlOrder</name>
-                            <dataType>WeaponControlOrderEnum8</dataType>
-                            <updateType>Conditional</updateType>
-                            <updateCondition>On change</updateCondition>
-                            <ownership>DivestAcquire</ownership>
-                            <sharing>PublishSubscribe</sharing>
-                            <transportation>HLAbestEffort</transportation>
-                            <order>Receive</order>
-                            <semantics>Optional. Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.</semantics>
-                        </attribute>
-                    </objectClass>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to other aggregate or physical entities divided from the `AggregateEntity` to represent specific subsets of holdings.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>DisaggregatedEntities</name>
+                        <dataType>ArrayOfUuid</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>NA</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional. Reference to the disaggregated entities after disaggregation of this `AggregateEntity`. Each element should refer to an existing entity in the federation. The `Status` of this `AggregateEntity` shall be inactive if disaggregated entities exist.|</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>SupportedAggregationActions</name>
+                        <dataType>AggregationActionArray</dataType>
+                        <updateType>Conditional</updateType>
+                        <updateCondition>On change</updateCondition>
+                        <ownership>DivestAcquire</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Optional: This aggregated entity supports the listed aggregation actions.</semantics>
+                    </attribute>
                 </objectClass>
             </objectClass>
         </objectClass>
@@ -368,494 +163,509 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
         <interactionClass>
             <name>HLAinteractionRoot</name>
             <interactionClass>
-                <name>MRM_Interaction</name>
-                <sharing>Neither</sharing>
-                <transportation>HLAreliable</transportation>
-                <order>Receive</order>
-                <semantics>Base class for all MRM interactions.</semantics>
-                <parameter>
-                    <name>EventId</name>
-                    <dataType>TransactionId</dataType>
-                    <semantics>Unique identifier for all MRM interactions belonging to the same request/respons event.</semantics>
-                </parameter>
+                <name>ETR_SimCon</name>
                 <interactionClass>
-                    <name>Request</name>
-                    <sharing>Neither</sharing>
+                    <name>Aggregate</name>
+                    <sharing>PublishSubscribe</sharing>
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
-                    <semantics>A base class for all MRM  Request events.</semantics>
+                    <semantics>Instructs a federate application modelling the `AggregateEntity` to perform aggregation of the `DisaggregatedEntities`.</semantics>
+                </interactionClass>
+                <interactionClass>
+                    <name>Disaggregate</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Instructs a federate application to disaggregate the indicated `AggregateEntity`.</semantics>
+                </interactionClass>
+                <interactionClass>
+                    <name>Divide</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Instructs a federate application to divide the `AggregateEntity` into multiple simulated entities.</semantics>
                     <parameter>
-                        <name>Federate</name>
-                        <dataType>FederateName</dataType>
-                        <semantics>Required. Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned.</semantics>
+                        <name>Equipment</name>
+                        <dataType>ArrayOfResourceStatus</dataType>
+                        <semantics>Optional. Amount of equipment of different type and health status to be divided.</semantics>
                     </parameter>
                     <parameter>
-                        <name>AggregateUnit</name>
-                        <dataType>UuidArrayOfHLAbyte16</dataType>
-                        <semantics>Required for all requests except QuerySupportedCapabilities. Unique identifier for the NETN_Aggregate for which this request is related to.</semantics>
+                        <name>Personnel</name>
+                        <dataType>ArrayOfResourceStatus</dataType>
+                        <semantics>Optional. Amount of personnel of different type and health status to be divided.</semantics>
                     </parameter>
-                    <interactionClass>
-                        <name>Aggregate</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Instruction to the AggregateFederate to perform aggregation of the specified AggregateUnit's parts.</semantics>
-                        <parameter>
-                            <name>RemoveSubunits</name>
-                            <dataType>HLAboolean</dataType>
-                            <semantics>Optional. Indicates if the disaggregate subunits (represented as aggregates in the federation) should be deleted from the federation execution. Default is TRUE - all subunits should be deleted. If FALSE all disaggregate subunits shall be set to inactive.</semantics>
-                        </parameter>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>Disaggregate</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Instruction to perform a full disaggregation of a AggregatedUnit. All subunits and platforms will be registered in the federation.</semantics>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>Divide</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Instruction to divide the simulated AggregateUnit into multiple simulated object. The resouces are divided among the simulated entities. After successful division two simulated entities represent the entire Unit. 1) The original AggregateUnit and 2) the divided unit or platform. Both these entities are simulated until merged.</semantics>
-                        <parameter>
-                            <name>Equipment</name>
-                            <dataType>ArrayOfResourceStatus</dataType>
-                            <semantics>Optional. Amount of equipment of different type and health status to be divided.</semantics>
-                        </parameter>
-                        <parameter>
-                            <name>Personnel</name>
-                            <dataType>ArrayOfResourceStatus</dataType>
-                            <semantics>Optional. Amount of personnel of different type and health status to be divided.</semantics>
-                        </parameter>
-                        <parameter>
-                            <name>Supplies</name>
-                            <dataType>NETN_ArrayOfSupplyStruct</dataType>
-                            <semantics>Optional. Amount of supplies to divide.</semantics>
-                        </parameter>
-                        <parameter>
-                            <name>RegisterPhysicalEntities</name>
-                            <dataType>HLAboolean</dataType>
-                            <semantics>Optional. If true all Equipment of type Platform and Lifeform are published as individual objects in the federation.</semantics>
-                        </parameter>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>Merge</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Instruction to merg the simulated AggregateUnit with the selected divided parts. After successful merge the divided parts are removed from the federation and their resources are combined with the AggregatedUnit.</semantics>
-                        <parameter>
-                            <name>Subunits</name>
-                            <dataType>ArrayOfUuid</dataType>
-                            <semantics>Required. A set of unique identifiers of subelements of the AggregateUnit. These can be any subunit and/or equipment defined at a subunit on any level.</semantics>
-                        </parameter>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>QuerySupportedCapabilities</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>A request to query the capabilities of a specified federation to provide support for MRM events. The queried federate shall respond with a CapabilitiesSupported interaction.</semantics>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>Activate</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Request federate to change of status of AggregateUnit to Active. If required the unit will be registered in the federation.</semantics>
-                    </interactionClass>
-                    <interactionClass>
-                        <name>Deactivate</name>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Request change of status of AggregateUnit to Inactive and if indicated remove it from the federation.</semantics>
-                        <parameter>
-                            <name>RemoveUnit</name>
-                            <dataType>HLAboolean</dataType>
-                            <semantics>Optional. Indicates if the Aggregate Unit shall be removed as an object instance in the federation. Default = FALSE - keep object instance in federation.</semantics>
-                        </parameter>
-                    </interactionClass>
+                    <parameter>
+                        <name>Supplies</name>
+                        <dataType>SupplyStructArray</dataType>
+                        <semantics>Optional. Amount of supplies to divide.</semantics>
+                    </parameter>
+                    <parameter>
+                        <name>RegisterPhysicalEntities</name>
+                        <dataType>HLAboolean</dataType>
+                        <semantics>Optional. If true, all Equipment of type Platform and Lifeform are published as individual objects in the federation.</semantics>
+                    </parameter>
+                </interactionClass>
+                <interactionClass>
+                    <name>Merge</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Instructs a federate application to merge an `AggregateEntity` with divided entities.</semantics>
+                    <parameter>
+                        <name>DividedEntities</name>
+                        <dataType>ArrayOfUuid</dataType>
+                        <semantics>Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicates which divided entities to merge with the AggregateEntity.</semantics>
+                    </parameter>
                 </interactionClass>
                 <interactionClass>
                     <name>Response</name>
                     <sharing>PublishSubscribe</sharing>
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
-                    <semantics>A response from the receiving federate indicating ability to comply with request.</semantics>
-                    <parameter>
-                        <name>Status</name>
-                        <dataType>HLAboolean</dataType>
-                        <semantics>Required. Specifies the result of the request action. TRUE indicates success.</semantics>
-                    </parameter>
-                </interactionClass>
-                <interactionClass>
-                    <name>CapabilitiesSupported</name>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>An interaction sent in respons to a QuerySupportedCapabilities request. The respons include a list of names of the supported capabilities for the Aggregate unit specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
-                    <parameter>
-                        <name>CapabilityNames</name>
-                        <dataType>ArrayOfStringType</dataType>
-                        <semantics>Required. A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Inactivate".</semantics>
-                    </parameter>
+                    <semantics>A response from the receiving federate indicating ability to comply with a request.</semantics>
                 </interactionClass>
             </interactionClass>
         </interactionClass>
     </interactions>
-    <dimensions/>
-    <transportations/>
     <dataTypes>
-        <simpleDataTypes>
-            <simpleData>
-                <name>RangeFloat32</name>
-                <representation>HLAfloat32BE</representation>
-                <units>meters</units>
-                <resolution>NA</resolution>
-                <accuracy>perfect</accuracy>
-                <semantics>Range of sensor</semantics>
-            </simpleData>
-        </simpleDataTypes>
         <enumeratedDataTypes>
             <enumeratedData>
-                <name>WeaponControlOrderEnum8</name>
-                <representation>HLAoctet</representation>
-                <semantics>The enumerations for weapon control</semantics>
+                <name>AggregationActionsEnum</name>
+                <representation>HLAinteger32BE</representation>
+                <semantics>The types of MRM aggregation actions.</semantics>
                 <enumerator>
-                    <name>WeaponsFree</name>
+                    <name>Aggregation</name>
                     <value>1</value>
                 </enumerator>
                 <enumerator>
-                    <name>WeaponsHold</name>
-                    <value>3</value>
-                </enumerator>
-                <enumerator>
-                    <name>Other</name>
-                    <value>0</value>
-                </enumerator>
-                <enumerator>
-                    <name>WeaponsTight</name>
-                    <value>2</value>
-                </enumerator>
-            </enumeratedData>
-            <enumeratedData>
-                <name>CaptureStatusEnum8</name>
-                <representation>HLAoctet</representation>
-                <semantics>The status of a person or unit with respect to their control or influence over their own activities. Default: 1 - Not Captured.</semantics>
-                <enumerator>
-                    <name>Not-Captured</name>
-                    <value>1</value>
-                </enumerator>
-                <enumerator>
-                    <name>Captured</name>
+                    <name>Disaggregation</name>
                     <value>2</value>
                 </enumerator>
                 <enumerator>
-                    <name>AttemptingSurrender</name>
+                    <name>Divide</name>
                     <value>3</value>
                 </enumerator>
                 <enumerator>
-                    <name>Other</name>
-                    <value>0</value>
-                </enumerator>
-            </enumeratedData>
-            <enumeratedData>
-                <name>EntityCategoryEnum32</name>
-                <representation>RPRunsignedInteger32BE</representation>
-                <semantics>Category of entity</semantics>
-                <enumerator>
-                    <name>Invalid</name>
-                    <value>0</value>
-                </enumerator>
-                <enumerator>
-                    <name>EquipmentEntity</name>
-                    <value>1</value>
-                </enumerator>
-                <enumerator>
-                    <name>PersonnelEntity</name>
-                    <value>2</value>
-                </enumerator>
-                <enumerator>
-                    <name>EmitterEntity</name>
-                    <value>3</value>
-                </enumerator>
-                <enumerator>
-                    <name>RadioEntity</name>
+                    <name>Merge</name>
                     <value>4</value>
-                </enumerator>
-            </enumeratedData>
-            <enumeratedData>
-                <name>ConcealmentEnum32</name>
-                <representation>RPRunsignedInteger32BE</representation>
-                <semantics>The reason for the objects concealment</semantics>
-                <enumerator>
-                    <name>Invalid</name>
-                    <value>0</value>
-                </enumerator>
-                <enumerator>
-                    <name>InOpen</name>
-                    <value>1</value>
-                </enumerator>
-                <enumerator>
-                    <name>MountedInternally</name>
-                    <value>2</value>
-                </enumerator>
-                <enumerator>
-                    <name>MountedExternally</name>
-                    <value>3</value>
-                </enumerator>
-                <enumerator>
-                    <name>UnderNet</name>
-                    <value>4</value>
-                </enumerator>
-                <enumerator>
-                    <name>UnderGround</name>
-                    <value>5</value>
-                </enumerator>
-                <enumerator>
-                    <name>InsideStructure</name>
-                    <value>6</value>
-                </enumerator>
-                <enumerator>
-                    <name>FightingPositionCovered</name>
-                    <value>7</value>
-                </enumerator>
-                <enumerator>
-                    <name>FightingPositionUncovered</name>
-                    <value>8</value>
-                </enumerator>
-            </enumeratedData>
-            <enumeratedData>
-                <name>SensorStateEnum32</name>
-                <representation>RPRunsignedInteger32BE</representation>
-                <semantics>The emission states of aggregate sensors</semantics>
-                <enumerator>
-                    <name>OnButNotEmitting</name>
-                    <value>2</value>
-                </enumerator>
-                <enumerator>
-                    <name>Off</name>
-                    <value>1</value>
-                </enumerator>
-                <enumerator>
-                    <name>Other</name>
-                    <value>0</value>
-                </enumerator>
-                <enumerator>
-                    <name>OnAndEmitting</name>
-                    <value>3</value>
                 </enumerator>
             </enumeratedData>
         </enumeratedDataTypes>
         <arrayDataTypes>
             <arrayData>
-                <name>ArrayOfResourceStatus</name>
-                <dataType>ResourceStatusNumberStruct</dataType>
-                <cardinality>[1..2147483647]</cardinality>
+                <name>AggregationActionArray</name>
+                <dataType>AggregationActionsEnum</dataType>
+                <cardinality>Dynamic</cardinality>
                 <encoding>HLAvariableArray</encoding>
-                <semantics>The array of health states for a named resource.</semantics>
-            </arrayData>
-            <arrayData>
-                <name>ArrayOfEntityStruct</name>
-                <dataType>EntityStruct</dataType>
-                <cardinality>[1..2147483647]</cardinality>
-                <encoding>HLAvariableArray</encoding>
-                <semantics>Data for one or more entities that comprise an entity list.</semantics>
-            </arrayData>
-            <arrayData>
-                <name>ArrayOfSensorStruct</name>
-                <dataType>SensorStruct</dataType>
-                <cardinality>[1..2147483647]</cardinality>
-                <encoding>HLAvariableArray</encoding>
-                <semantics>Array with definitio0ns of sensors, 1+ cardinality</semantics>
+                <semantics>A list of aggregation actions.</semantics>
             </arrayData>
         </arrayDataTypes>
-        <fixedRecordDataTypes>
-            <fixedRecordData>
-                <name>VisualSignatureStruct</name>
-                <encoding>HLAfixedRecord</encoding>
-                <semantics>Specifies the visual structure</semantics>
-                <field>
-                    <name>DVOSignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
-                    <semantics>A summary percentage of an aggregates susceptibility to detection by direct view optics, i.e. the human eye, binoculars, or telescopes. A unit with zero percent signature would be concealed from DVO detection.</semantics>
-                </field>
-                <field>
-                    <name>I2SignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
-                    <semantics>A summary percentage of an aggregates susceptibility to detection by Image Intensifying sensors. A unit with zero percent signature would be invisible to image intensifiers (I2).</semantics>
-                </field>
-                <field>
-                    <name>ThermalSignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
-                    <semantics>A summary percentage of an aggregates susceptibility to detection by thermal sensors. A unit with zero percent signature would be invisible to thermal sensors.</semantics>
-                </field>
-            </fixedRecordData>
-            <fixedRecordData>
-                <name>MissionStruct</name>
-                <encoding>HLAfixedRecord</encoding>
-                <semantics>The operational task the aggregate has been ordered to perform, the time the mission was assigned, and the estimated completion time.</semantics>
-                <field>
-                    <name>StartTime</name>
-                    <dataType>EpochTimeSecInt64</dataType>
-                    <semantics>An optional field providing the mission start time</semantics>
-                </field>
-                <field>
-                    <name>EndTime</name>
-                    <dataType>EpochTimeSecInt64</dataType>
-                    <semantics>An optional field providing the mission estimated end time</semantics>
-                </field>
-                <field>
-                    <name>MissionEnum</name>
-                    <dataType>AggregateMissionEnum16</dataType>
-                    <semantics>The mission assigned to the aggregate</semantics>
-                </field>
-            </fixedRecordData>
-            <fixedRecordData>
-                <name>HUMINTSignatureStruct</name>
-                <encoding>HLAfixedRecord</encoding>
-                <semantics>Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.</semantics>
-                <field>
-                    <name>HUMINTSignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
-                    <semantics>A summary percentage of an aggregates susceptibility to detection by human intelligence collectors. Zero percent signature means an aggregate is impervious to HUMINT.</semantics>
-                </field>
-            </fixedRecordData>
-            <fixedRecordData>
-                <name>ElectronicSignatureStruct</name>
-                <encoding>HLAfixedRecord</encoding>
-                <semantics>A summary percentage of an aggregates susceptibility to detection of its electronic emissions. Zero percent means that the aggregate has no electronic emissions.</semantics>
-                <field>
-                    <name>ElectronicSignaturePercent</name>
-                    <dataType>PercentUnsignedInteger32</dataType>
-                    <semantics>A summary percentage of an aggregates susceptibility to detection of its electronic emissions. Zero percent means that the aggregate has no electronic emissions.</semantics>
-                </field>
-                <field>
-                    <name>SensorArray</name>
-                    <dataType>ArrayOfSensorStruct</dataType>
-                    <semantics>A list of sensors owned by the aggregate together with their respective operational status and range</semantics>
-                </field>
-            </fixedRecordData>
-            <fixedRecordData>
-                <name>ResourceStatusNumberStruct</name>
-                <encoding>HLAfixedRecord</encoding>
-                <semantics>The name of a resource and the number of instances of that resource by health status.</semantics>
-                <field>
-                    <name>NumberHealthyOrIntact</name>
-                    <dataType>QuantityFloat64</dataType>
-                    <semantics>The number of healthy or intact resources</semantics>
-                </field>
-                <field>
-                    <name>NumberSlightlyDamaged</name>
-                    <dataType>QuantityFloat64</dataType>
-                    <semantics>The number of slightly damaged resources</semantics>
-                </field>
-                <field>
-                    <name>NumberModeratelyDamaged</name>
-                    <dataType>QuantityFloat64</dataType>
-                    <semantics>The number of moderately damaged resources</semantics>
-                </field>
-                <field>
-                    <name>NumberSignificantlyDamaged</name>
-                    <dataType>QuantityFloat64</dataType>
-                    <semantics>The number of significantly damaged resources</semantics>
-                </field>
-                <field>
-                    <name>NumberDestroyed</name>
-                    <dataType>QuantityFloat64</dataType>
-                    <semantics>The number of destroyed or consumed resources</semantics>
-                </field>
-                <field>
-                    <name>ResourceName</name>
-                    <dataType>HLAunicodeString</dataType>
-                    <semantics>The name of the resource</semantics>
-                </field>
-                <field>
-                    <name>ResourceType</name>
-                    <dataType>EntityTypeStruct</dataType>
-                    <semantics>The type of the resource (as described in the Bit Encoded Values for Use with Protocols for Distributed Interactive Simulation Applications)</semantics>
-                </field>
-            </fixedRecordData>
-            <fixedRecordData>
-                <name>EntityStruct</name>
-                <encoding>HLAfixedRecord</encoding>
-                <semantics>An entity represented to the federation as part of the aggregate object which owns it.</semantics>
-                <field>
-                    <name>Callsign</name>
-                    <dataType>HLAunicodeString</dataType>
-                    <semantics>The unique identifier of the object.</semantics>
-                </field>
-                <field>
-                    <name>EntityCategory</name>
-                    <dataType>EntityCategoryEnum32</dataType>
-                    <semantics>Indicates whether the entity is equipment, person, emitter, etc.</semantics>
-                </field>
-                <field>
-                    <name>EntityStatus</name>
-                    <dataType>DamageStatusEnhancedEnum32</dataType>
-                    <semantics>The damage state of the entity.</semantics>
-                </field>
-                <field>
-                    <name>IsDistinctObject</name>
-                    <dataType>RPRboolean</dataType>
-                    <semantics>A BaseEntity object has been created to represent this entity (true) or not (false). Default is false.</semantics>
-                </field>
-                <field>
-                    <name>IsUnavailable</name>
-                    <dataType>RPRboolean</dataType>
-                    <semantics>This entity is in use by another object (true) or not (false). Default is false.</semantics>
-                </field>
-                <field>
-                    <name>Facing</name>
-                    <dataType>DirectionDegreesFloat32</dataType>
-                    <semantics>Direction is measured in degrees clockwise from orientation of unit. Default is 0.</semantics>
-                </field>
-                <field>
-                    <name>Concealment</name>
-                    <dataType>ConcealmentEnum32</dataType>
-                    <semantics>Indicates whether the entity is concealed and, if so, how</semantics>
-                </field>
-                <field>
-                    <name>OffsetLocation</name>
-                    <dataType>RelativePositionStruct</dataType>
-                    <semantics>The entity location given as an offset from the location of the aggregate unit in meters.</semantics>
-                </field>
-                <field>
-                    <name>UnitAllocation</name>
-                    <dataType>UuidArrayOfHLAbyte16</dataType>
-                    <semantics>Reference to unit by UUID to which this entity is allocated as a resource. Unit may or may not be represented in the federation as a NETN_Aggregate and/or NETN-ORG Unit object.</semantics>
-                </field>
-            </fixedRecordData>
-            <fixedRecordData>
-                <name>SensorStruct</name>
-                <encoding>HLAfixedRecord</encoding>
-                <semantics>Defines a sensor,operational status, damage status, coverage and ID</semantics>
-                <field>
-                    <name>SensorStateEnum</name>
-                    <dataType>SensorStateEnum32</dataType>
-                    <semantics>The operational status of the sensor</semantics>
-                </field>
-                <field>
-                    <name>SensorDamageState</name>
-                    <dataType>DamageStatusEnum32</dataType>
-                    <semantics>The damage status of the sensor</semantics>
-                </field>
-                <field>
-                    <name>SensorCoverage</name>
-                    <dataType>RangeFloat32</dataType>
-                    <semantics>The maximum range of the sensor</semantics>
-                </field>
-                <field>
-                    <name>SensorID</name>
-                    <dataType>HLAunicodeString</dataType>
-                    <semantics>A sensor owned by the aggregate</semantics>
-                </field>
-            </fixedRecordData>
-        </fixedRecordDataTypes>
-        <variantRecordDataTypes/>
     </dataTypes>
-    <notes/>
+    <notes>
+        <note>
+            <label>netn-mrm_1</label>
+            <semantics>NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.</semantics>
+        </note>
+        <note>
+            <label>netn-mrm_2</label>
+            <semantics>* Changed Filename to NETN-MRM.xml 
+* Changed `modelIdentification` `securityClassification` from `unclassified` to `Not Classified` 
+* Changed `modelIdentification` `other` to include license information 
+* Changed `modelIdentification` `reference` to only refer to directly dependent FOM Modules 
+* Added `modelIdentification` `useLimitation` to reflect Scope of FOM Module 
+* Added `modelIdentification` `glyph` 
+* Updated `modelIdentification` `purpose` to reflect Purpose of FOM Module 
+* Updated `modelIdentification` `description` to reflect Introduction of FOM Module 
+* Updated `modelIdentification` `name` to NATO Education and Training Network (NETN) Multi-Resolution Modelling (MRM) Module 
+* Updated `modelIdentification` `poc` to include Release authority, Primary authors and Contributors 
+* Updated `modelIdentification` `applicationDomain` to empty. 
+* Removed NETN-MRM dependency on NETN-TMR. 
+* Merged NETN-Aggregate to NETN-MRM. 
+* Removed InteractionClass `MRM_Object` 
+* Removed InteractionClass `MRM_TriggerResponse` 
+* Removed InteractionClass `MRM_Trigger` 
+* Renamed InteractionClass `MRM_DisaggregationRequest` 
+* Renamed InteractionClass `MRM_AggregationRequest` 
+* Removed InteractionClass `MRM_DisaggregationResponse` 
+* Removed InteractionClass `MRM_AggregationResponse` 
+* Removed InteractionClass `MRM_CancelRequest` 
+* Removed InteractionClass `MRM_ActionComplete` 
+* Added InteractionClass `MRM_Interaction` 
+* Added InteractionClass `Request` 
+* Added InteractionClass `Aggregate` 
+* Added InteractionClass `Disaggregate` 
+* Added InteractionClass `Divide` 
+* Added InteractionClass `Merge` 
+* Added InteractionClass `Inactivate` 
+* Added InteractionClass `Activate` 
+* Added InteractionClass `QuerySupportedCapabilities` 
+* Added InteractionClass `CapabilitiesSupported` 
+* Added InteractionClass `Response` 
+* Removed datatype `AggregateStateEnum32` 
+* Removed datatype `EntityListVariableLengthStruct` 
+* Removed datatype `UpdateTypeEnum32` 
+* Removed datatype `SupportRelationshipStruct` 
+* Removed datatype `FacingDegreesFloat32` 
+* Removed datatype `CoverStatusStruct` 
+* Removed datatype `CoverEnum8` 
+* Removed datatype `CombatValueFloat64` 
+* Removed datatype `SupportRelationshipEnum8` 
+* Removed datatype `EchelonEnum8` 
+* Removed datatype `PercentageUint32` 
+* Renamed datatype `NonComplianceReasonEnum` to `MRM_ResponseStatusEnumType` 
+* Replaced datatype `PercentageUint32` with `PercentUnsignedInteger32` 
+* Replaced datatype `FacingDegreesFloat32` with `DirectionDegreesFloat32` 
+* Replaced datatype `TimeSecInt64` with `EpochTimeSecInt64` 
+* Moved datatype `QuantityFloat64` to NETN-BASE 
+* Changed datatype of `NETN_Aggregate.Mounted` to `PercentFloat64` 
+* Changed datatype of `NETN_Aggregate.SourceUnit` to `UuidArrayOfHLAbyte16` 
+* Changed datatype of `NETN_Aggregate.Symbol` to `SymbolIdentifier` 
+* Changed datatype of `NETN_Aggregate.Footprint` to `GeocentricPolygon ` 
+* Added attribute `Route` for  object class `NETN_Aggregate` 
+* Added attribute `Destination` for  object class `NETN_Aggregate` 
+* Updated semantics of attribute `NETN_Aggregate.UniqueId` 
+* Renamed attribute `NETN_Aggregate.UniqueID` to `NETN_Aggregate.UniqueId` 
+* Renamed attribute `Symbol` of `NETN_Aggregate` to `SymbolId` 
+* Renamed attribute `UnitEquipment`  of `NETN_Aggregate` to `EquipmentStatus` 
+* Renamed attribute `UnitPersonnel`  of `NETN_Aggregate` to `PersonnelStatus` 
+* Renamed attribute `UnitSupplies`  of `NETN_Aggregate` to `Supplies` 
+* Removed attribute `Footprint`of `NETN_Aggregate` object class 
+* Removed attribute `SupportUnit` of `NETN_Aggregate` object class 
+* Added field `ResourceType` to datatype `ResourceStatusNumberStruct` 
+* Changed datatype of attribute `CoverStatus` of `NETN_Aggregate` to `PercentFloat64` 
+* Changed datatype of attribute `CombatValue` of `NETN_Aggregate` to `PercentFloat64` 
+* Changed datatype of attribute `EntityList` of `NETN_Aggregate` to `ArrayOfEntityStruct` 
+* Changed datatype of attribute `Echelon` of `NETN_Aggregate` to `EchelonEnum32` 
+* Added field `UnitAllocation` to datatype `EntityStruct`</semantics>
+        </note>
+        <note>
+            <label>netn-mrm_3</label>
+            <semantics>* Removed `NETN_Aggregate` object class 
+* Replaced `NETN_Aggregate` attribute `UniqueId` with NETN-BASE `HLAobjectRoot` attribute `UniqueId` 
+* Replaced `NETN_Aggregate` attribute `Status` with NETN-MRM `BaseEntity` attribute `Status` 
+* Replaced `NETN_Aggregate` attribute `SubunitList` with NETN-MRM `AggregateEntity` attribute `DisaggregatedEntities` 
+* Replaced `NETN_Aggregate` attribute `ParentUnit` with NETN-MRM `BaseEntity` attribute `ParentAggregate` 
+* Replaced `NETN_Aggregate` attribute `DividedUnitList` with NETN-MRM `AggregateEntity` attribute `DividedEntities` 
+* Replaced `NETN_Aggregate` attribute `SourceUnit` with NETN-MRM `BaseEntity` attribute `SourceAggregate` 
+* Replaced `NETN_Aggregate` attribute `EmbeddedUnitList` with NETN-Physical `BaseEntity` attribute `HostedEntities` 
+* Replaced `NETN_Aggregate` attribute `HigherHeadquarters` with NETN-ORG `Unit` attribute `HigherHeadquarters` 
+* Replaced `NETN_Aggregate` attribute `Mounted` with NETN-Physical `BaseEntity` attribute `HostEntitiy` and NETN-Physical `AggregateEntity` attribute `MountProgress` 
+* Replaced `NETN_Aggregate` attribute `SymbolId` with NETN-Physical `BaseEntity` attribute `SymbolId` 
+* Replaced `NETN_Aggregate` attribute `Callsign` with NETN-Physical `BaseEntity` attribute `Callsign` 
+* Replaced `NETN_Aggregate` attribute `Echelon` with NETN-Physical `AggregateEntity` attribute `Echelon` 
+* Removed `NETN_Aggregate` attribute `EntityList` 
+* Replaced `NETN_Aggregate` attribute `SuppliesStatus` with NETN-Physical `AggregateEntity` attribute `SuppliesStatus` 
+* Replaced `NETN_Aggregate` attribute `EquipmentStatus` with NETN-Physical `AggregateEntity` attribute `EquipmentStatus` 
+* Replaced `NETN_Aggregate` attribute `PersonnelStatus` with NETN-Physical `AggregateEntity` attribute `PersonnelStatus` 
+* Replaced `NETN_Aggregate` attribute `VisualSignature` with NETN-Physical `AggregateEntity` attribute `VisualSignature` 
+* Replaced `NETN_Aggregate` attribute `HUMINTSignature` with NETN-Physical `AggregateEntity` attribute `HUMINTSignature` 
+* Replaced `NETN_Aggregate` attribute `ElectronicSignature` with NETN-Physical `AggregateEntity` attribute `ElectronicSignature` 
+* Replaced `NETN_Aggregate` attribute `CombatValue` with NETN-Physical `AggregateEntity` attribute `CombatValue` 
+* Replaced `NETN_Aggregate` attribute `CoverStatus` with NETN-Physical `AggregateEntity` attribute `CoverStatus` 
+* Replaced `NETN_Aggregate` attribute `CaptureStatus` with NETN-Physical `AggregateEntity` attribute `CaptureStatus` 
+* Removed `NETN_Aggregate` attribute `Mission` 
+* Replaced `NETN_Aggregate` attribute `Activity` with NETN-ETR `BaseEntity` attribute `Activity` 
+* Replaced `NETN_Aggregate` attribute `Route` with NETN-ETR `BaseEntity` attribute `Route` 
+* Replaced `NETN_Aggregate` attribute `Destination` with NETN-ETR `BaseEntity` attribute `Destination` 
+* Replaced `NETN_Aggregate` attribute `WeaponsControlOrder` with NETN-Physical `AggregateEntity` attribute `WeaponsControlOrder` 
+* Removed `MRM_Interaction` interaction class 
+* Replaced `MRM_Interaction` parameter `EventId` with NETN-BASE `HLAinteractionRoot` attribute `UniqueId` 
+* Removed `CapabilitiesSupported` interaction class 
+* Replaced `CapabilitiesSupported` parameter `CapabilityNames` with `AggregateEntity` attribute `SupportedAggregationActions` 
+* Removed `Request` interaction class 
+* Removed `Request` parameter `Federate` 
+* Replaced `Request` parameter `AggregateUnit` with NETN-ETR `ETR_SimCon` parameter `SimulatedEntity` 
+* Replaced `Response` interaction class with NETN-ETR `Response` interaction class 
+* Removed `Activate` interaction class 
+* Removed `Deactivate` interaction class 
+* Removed `QuerySupportedCapabilities` interaction class 
+* Removed `Aggregate` parameter `RemoveSubunits` 
+* Renamed `Merge` parameter `Subunits` to `DividedEntities` 
+ 
+ 
+* Removed datatype `MissionStruct` 
+* Removed datatype `EntityStruct` 
+* Removed datatype `ArrayOfEntityStruct` 
+* Removed datatype `ConcealmentEnum32` 
+* Removed datatype `EntityCategoryEnum32` 
+* Moved all the rest of datatype to NETN-Physical 
+* Added datatype `AggregationActionEnum` 
+* Added datatype `AggregationActionArray` 
+ 
+* Replaced all use of Array datatype `NETN_ArrayOfSupplyStruct` with `SupplyStructArray` 
+* Replaced all use of `PercentUnsignedInteger32` with `PercentFloat32` 
+* Replaced all use of `PercentFloat64` with `PercentFloat32`</semantics>
+        </note>
+        <note>
+            <label>netn-mrm_4</label>
+            <semantics>## Overview 
+ 
+NETN-MRM extends the RPR-FOM `BaseEntity` and `AggregateEntity` object classes and defines `ETR_SimCon` interactions classes to trigger aggregation, disaggregation, division, and merge actions for aggregated entities. 
+ 
+Implementing these MRM actions relies on knowledge of units' structure, organization, and equipment as defined in NETN-ORG. 
+ 
+A NETN-ORG `Unit` can be represented in the federation as a single `AggregateEntity` object or as a collection of multiple `AggregateEntity` or `PhysicalEntity` objects. E.g. a `Unit` with associated `Equipment` in NETN-ORG can be represented as a combination of an `AggregateEntity` representing most of the unit and `Platform` entities to represent each platform equipment associated with the unit. 
+ 
+The initial representation of units in the federation can change during runtime. For example, use the MRM actions to request aggregation and disaggregation or to split the entity by dividing holdings among multiple aggregate and physical entity objects. 
+ 
+### Pattern 
+ 
+All MRM actions use the same pattern of interaction. 
+ 
+Use the `AggregateEntity` attribute `SupportedAggregationActions` to check the simulation entity's support for an MRM action. 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger-&gt;&gt;AggregateEntity: Request 
+note over AggregateEntity: Execute action 
+AggregateEntity-&gt;&gt;Federation: registerObjectInstance, &lt;br&gt;updateAttributeValues, &lt;br&gt;deleteObjectInstance 
+AggregateEntity-&gt;&gt;Trigger: Response 
+``` 
+ 
+ 
+1. A federate triggers an MRM action for a specified `AggregateEntity` using `ETR_SimCon` interaction subclasses 
+2. The federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for aggregation and disaggregation actions. The federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for division and merging actions. Executing the action may include registering, deleting and updating objects in the federation. 
+3. The federate then reports the success of the action using the `Response` interaction. 
+ 
+ 
+### Disaggregation 
+ 
+A federate application can perform disaggregation of an `AggregateEntity` under the following conditions: 
+ 
+```mermaid 
+flowchart BT
+Unit1 --SuperiorUnit--&gt; Unit 
+Unit2 --SuperiorUnit--&gt; Unit 
+AggregateEntity --Unit--&gt; Unit 
+ 
+subgraph NETN-MRM 
+AggregateEntity 
+end 
+ 
+subgraph NETN-ORG 
+Unit 
+Unit1 
+Unit2 
+end 
+``` 
+ 
+* The federate application owning the `DisaggregatedEntities` attribute of the `AggregateEntity` can perform disaggregation. 
+* The `Status` of the `AggregateEntity` is `Active`. 
+* The `AggregateEntity` has not been divided, i.e. the `DividedEntities` attribute must be empty. 
+* The `AggregateEntity` attribute `OrganizationElement` refers to an existing NETN-ORG `Unit` object. 
+* The NETN-ORG `Unit` object has one or more subunits. 
+ 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger-&gt;&gt;AggregateEntity: Disaggregate(aggregate) 
+AggregateEntity-&gt;&gt;Federation: aggregate.updateAttributeValues(Status) 
+loop 
+AggregateEntity-&gt;&gt;Federation: registerObjectInstance(entity) 
+AggregateEntity-&gt;&gt;Federation: entity.updateAttributeValues 
+end 
+AggregateEntity-&gt;&gt;Federation: aggregate.updateAttributeValues(DisaggregatedEntities) 
+AggregateEntity-&gt;&gt;Trigger: Response 
+ 
+``` 
+ 
+1. A Request federate sends a `Disaggregate` request indicating which `AggregateEntity` to disaggregate. The Federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for disaggregation. 
+2. The Federate updates the `Status` of the `AggregateEntity` to `Inactive`. 
+3. The Federate registers new `AggregateEntity` objects to represent the disaggregated entities. One instance for each of the subunits of the referenced `Unit`. 
+4. The federate updates the initial attribute values for the new disaggregated entities, including the `ParentUnit` attribute to refer to the `AggregateEntity` and the `Status` to `Active`. 
+5. The federate updates the `DisaggregatedEntities` attribute of the `AggregateEntity` object to reference the new disaggregated entities. 
+6. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate the successful completion of the request. 
+ 
+After performing disaggregation, the following is true: 
+ 
+```mermaid 
+flowchart BT
+AggregateEntity[/AggregateEntity/] 
+Unit1 --SuperiorUnit--&gt; Unit 
+Unit2 --SuperiorUnit--&gt; Unit 
+ 
+AggregateEntity1 --Unit--&gt; Unit1 
+AggregateEntity2 --Unit--&gt; Unit2 
+AggregateEntity1 --ParentAggregate--&gt; AggregateEntity 
+AggregateEntity2 --ParentAggregate--&gt; AggregateEntity 
+AggregateEntity--Unit--&gt;Unit 
+ 
+subgraph NETN-MRM 
+AggregateEntity 
+AggregateEntity1 
+AggregateEntity2 
+end 
+ 
+subgraph NETN-ORG 
+Unit 
+Unit1 
+Unit2 
+end 
+ 
+``` 
+ 
+* The `Status` of the `AggregateEntity` is `Inactive`. 
+* New `AggregateEntity` objects exist for all subunits of the referenced NETN-ORG `Unit`. 
+* Each new `AggregateEntity` refers to the corresponding subunit by its `OrganizationElement` attribute. 
+* The `Status` of each new `AggregateEntity` is `Active`. 
+* The `ParentAggregate` of each new `AggregateEntity` refers to the original disaggregated `AggregateEntity` 
+* The `DisaggregsatedEntities` attribute of the disaggregated `AggregateEntity` reference all the new `AggregateEntity` objects 
+ 
+If a subunit has one or more associated `Equipment` objects, then these are represented in the federation as `PhysicalEntity` objects. Each `PhysicalEntity` refers to the associated `Equipment` using the `OrganizationElement` attribute. In addition, the status of the `PhysicalEntity` is `Active`, and the `ParentAggregate` refers to the now disaggregated `AggregateEntity`. 
+ 
+```mermaid 
+flowchart BT
+AggregateEntity[/AggregateEntity/] 
+Unit1 --SuperiorUnit--&gt; Unit 
+Equipment --HoldingUnit--&gt; Unit1 
+AggregateEntity1 --Unit--&gt; Unit1 
+AggregateEntity1 --ParentAggregate--&gt; AggregateEntity 
+ 
+AggregateEntity--Unit--&gt;Unit 
+PhysicalEntity --Equipment--&gt;Equipment 
+PhysicalEntity --ParentAggregate--&gt; AggregateEntity 
+ 
+subgraph NETN-MRM 
+AggregateEntity 
+AggregateEntity1 
+ 
+PhysicalEntity 
+ 
+end 
+ 
+subgraph NETN-ORG 
+Unit 
+Unit1 
+Equipment 
+end 
+ 
+``` 
+ 
+Disaggregation always constitutes a complete disaggregation of all subunits and associated equipment into active `AggregateEntity` or `PhysicalEntity` objects. The disaggregated `AggregateEntity` remains registered as `Inactive` in the federation. 
+ 
+ 
+### Aggregation 
+ 
+Aggregation of an `AggregateEntity` always constitutes a complete aggregation of all entities referenced by the `DisaggregatedEnties` attribute. 
+ 
+A federate application can perform aggregation of an `AggregateEntity` under the following conditions: 
+ 
+* The federate application owning the `DisaggregatedEntities` attribute of the `AggregateEntity` can perform aggregation. 
+* The `Status` of the `AggregateEntity` is `Inctive`. 
+* The `DividedEntities` attribute must be empty in all `AggregateEntity` objects referenced by the `DisaggregatedEntities` attribute, i.e. entities referencing the `AggregateEntity` using the `ParentAggregate` attribute are not divided. 
+* The `DisaggregatedEntities` attribute must be empty in all `AggregateEntity` objects referenced by the `DisaggregatedEntities` attribute, i.e. entities referencing the `AggregateEntity` using the `ParentAggregate` attribute are not disaggregated. 
+ 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger-&gt;&gt;AggregateEntity: Aggregate(aggregate) 
+loop entity=aggregate.DisaggregatedEntities 
+AggregateEntity-&gt;&gt;Federation: entity.deleteObjectInstance 
+end 
+AggregateEntity-&gt;&gt;Federation: aggregate.updateAttributeValues 
+AggregateEntity-&gt;&gt;Trigger: Response 
+ 
+``` 
+ 
+1. A federate sends an `Aggregate` trigger indicating which `AggregateEntity` to aggregate. Then, the Federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` performs the aggregation. 
+2. The `AggregateEntity` federate deletes all entities referenced by the `DisaggregatedEntities` attribute 
+3. The `AggregateEntity` federate updates all `AggregateEntity` attributes to reflect the current state, including the `Status` set to `Active`. 
+4. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate the successful completion of the request. 
+ 
+ 
+### Division 
+ 
+ 
+Division of an `AggregateEntity` is a temporary allocation of some specific resources to another `AggregateEntity` or into one or more `Platform` and `Lifeform` objects. 
+ 
+A federate application can perform the division of an `AggregateEntity` under the following conditions: 
+ 
+* The federate application owning the `DividedEntities` attribute of the `AggregateEntity` can perform division. 
+* The `Status` of the `AggregateEntity` is `Active`. 
+* The `AggregateEntity` has not been disaggregated, i.e. the `DisaggregatedEntities` attribute must be empty. 
+ 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger-&gt;&gt;Federate: Divide(Resources, aggregate/physical) 
+ 
+Federate-&gt;&gt;Federation: registerObjectInstance(s) 
+Federate-&gt;&gt;Federation: updateAttributeValues 
+Federate-&gt;&gt;Federation: updateAttributeValues(DividedEntities) 
+Federate-&gt;&gt;Federation: updateAttributeValues(SourceAggregate) 
+ 
+Federate-&gt;&gt;Trigger: Response 
+ 
+``` 
+ 
+1. A Request federate sends a `Divide` interaction indicating the `AggregateEntity` to divide and the list of resources to reallocate to new entities. The request also indicates if resources should be allocated to a new `AggregateEntity` or as one or more physical `Platform` or `Lifeform` objects. The Federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for performing the division. 
+2. The federate registers either a new `AggregateEntity` or one or more `Platform` or `Lifeform` objects. 
+3. The `AggregateEntity` and new entity are updated with the current status of allocated resources. 
+4. The `AggregateEntity` is updated with the attribute `DividedEntities` referencing all newly created entities. 
+5. All newly created entities are updated with the attribute `SourceAggregate` to refer to the `AggregateEntity`. 
+6. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate the successful completion of the request. 
+ 
+After division, the following is true: 
+ 
+```mermaid 
+flowchart BT
+ 
+subgraph NETN-ORG 
+Equipment --holding--&gt; Unit 
+end 
+ 
+AggregateEntity --Unit--&gt; Unit 
+ 
+subgraph NETN-MRM 
+AggregateEntity1--SourceAggregate--&gt;AggregateEntity 
+Platform1--SourceAggregate--&gt;AggregateEntity 
+Lifeform1--SourceAggregate--&gt;AggregateEntity 
+end 
+``` 
+ 
+* A new `AggregateEntity` object exists with a `SourceAggregate` attribute referencing the divided `AggregateEntity`, OR 
+* One or more new `Platform` and `Lifeform` objects exist with the `SourceAggregate` attribute referencing the divided `AggregateEntity 
+* The divided `AggregateEntity` references all new divided entities in the `DividedEntities` attribute. 
+ 
+ 
+### Merging 
+ 
+Merging of an `AggregateEntity` with one of its divided entities can be performed under the following conditions: 
+ 
+* The federate application owning the `DividedEntities` attribute of the `AggregateEntity` can perform a merge. 
+* The `Status` of the `AggregateEntity` is `Active`. 
+* The `AggregateEntity` has been divided, i.e. the `DividedEntities` attribute must contain at least one element. 
+ 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger-&gt;&gt;Federate: Merge(aggregate, dividedEntities) 
+loop entity=dividedEntities 
+Federate-&gt;&gt;Federation: entity.deleteObjectInstance 
+end 
+Federate-&gt;&gt;Federation: aggregate.updateAttributeValues(DividedEntities) 
+Federate-&gt;&gt;Federation: aggregate.updateAttributeValues 
+Federate-&gt;&gt;Trigger: Response 
+ 
+``` 
+ 
+1. A Request federate sends a `Merge` interaction indicating the `AggregateEntity` and the divided entities to merge. The Federate owning the `DividedEntities` attribute of the `AggregateEntity` performs the merge. 
+2. The federate deletes all merged entities. 
+3. Update the `AggregateEntity` attribute `DividedEntities` to exclude the divided entities now merged. 
+4. Update the `AggregateEntity` attributes to reflect the merged status. 
+5. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate success or failure. 
+ 
+After merging, the `AggregateEntity` representation includes all previously divided entities.</semantics>
+        </note>
+    </notes>
 </objectModel>

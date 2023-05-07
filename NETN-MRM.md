@@ -1,469 +1,390 @@
+
 # NETN-MRM
+|Version| Date| Dependencies|
+|---|---|---|
+|3.0|2023-04-09|NETN-ETR, NETN-BASE|
 
-The NATO Education and Training Network (NETN) Multi-Resolution Modelling FOM Module.
+The purpose of NETN-MRM is to support federations using multiple levels of resolution and aggregation and where the level of resolution changes during a simulation.
 
-Copyright (C) 2020 NATO/OTAN.
-This work is licensed under a [Creative Commons Attribution-NoDerivatives 4.0 International License](LICENCE.md).
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Individual entities represent distinct objects in the scenario, while aggregated models represent a group of associated physical entities.
 
-## Introduction
-
-Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for simulation. Depending on the purpose and requirements of the simulation, the models can have different levels of resolution and aggregation can be used to create representations of broader combined concepts. 
-
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module is a specification of how to perform aggregation and disaggregation of aggregated representation of entities, e.g. units, into other levels of aggregation or individual entities, e.g. platforms, in a federated distributed simulation. 
-
-The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and primarily intended to support interoperability in a federated simulation (federation) based on HLA. A Federation Object Model (FOM) Module specifies how data is represented and exchanged in the federation. The NETN-MRM FOM module is available as an XML file for use in HLA based federations.
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module specifies how to perform aggregation and disaggregation of aggregated entities, e.g. units, to other levels of aggregation or physical entities.
 
 
-### Purpose
+The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and intends to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. 
 
-The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution and where the level of resolution can change dynamically during a simulation. It supports patterns for aggregation and disaggregation of units and division and merging of unit resources. The module provides a common standard interface for the aggregated representation of equipment, personnel and supplies in a federated distributed simulation. The aggregated representation can be used to model the state of organisations, such as military units, without the need to represent each resource as individual simulated entities. The module extends the existing RPR-FOM v2.0 `AggregateEntity` object class with attributes to allow additional information to be associated with simulated aggregate entities.
+NETN-MRM covers the following cases: 
+* Aggregation of entities representing subunits or physical entities
+* Disaggregation of entities representing a unit into entities representing subunits or physical entities
+* Division of simulated entities into parts - resources divided and all entities simulated
+* Merge of previously divided entities.
 
-For example:
-* Disaggregation of a Battalion represented as a `NETN_Aggregate` object into Company level `NETN_Aggregate` objects.
-* Disaggregation of a Company level unit, represented as a `NETN_Aggregate` object, to individual platforms, e.g. `NETN_GroundVehicle` objects.
-* Aggregation of platforms represented as, e.g. `NETN_GroundVehicle` objects, to an attribute of a unit, e.g. a Platoon, represented as a `NETN_Aggregate` object.
-* Dividing individual pieces of equipment, e.g. UAV, from a Company unit to simulate some reconnaissance operation in more detail.
-* Merging of a Recce platoon, represented as a `NETN_Aggregate` object, on its return from a mission with its source Company unit. 
-
-### Scope
-
-NETN-MRM covers the following cases:
-
-* Aggregate level modelling and simulation of units
-* Aggregation of simulated subunits or physical entities.
-* Disaggregation of a unit into subunits or physical entities.
-* Division of simulated unit with re-allocation of resources between source unit and divided unit.
-* Division of simulated unit where equipment resources are removed from source unit and instead represented as physical entities.
-* Merging of previously divided entities with source unit.
-* Activation or Inactivation of entities represented in the simulation.
-
-
-### Dependencies
-
-The NETN-MRM refers to simulated entities by UUID. Implementation of Aggregation, Disaggregation and Divide also requires a knowledge of the structure and organisation of units and allocation of equipment as defined in NETN-ORG.
-
-In the MRM patterns, the acquisition of modelling responsibility of simulated entities may use NETN-TMR.
-
-## Overview
-
-NETN-MRM requires the use of NETN-Aggregate and NETN-Physical Object Classes for the aggregate representation units and physical entities in the simulation.
-
-The model resolution of a unit can vary in a simulation.
-
-* Not explicitly registered in the federation as a simulated object but represented in scenario data such as NETN-ORG `Unit` objects or similar.
-
-* Registered as an actively simulated `NETN_Aggregate` object. The state of the unit is explicitly simulated by federates in the distributed federated simulation.
-
-* Registered as an inactive `NETN_Aggregate` object. The simulation does not explicitly model the state. The simulation can derive the status from the simulation of its subunits and physical entities. 
-
-* Registered as divided with a reduced source `NETN_Aggregate` object and subsets of the divided resources modelled as `NETN_Aggregate` or NETN-Physical objects. The resources of the source unit are split between the simulated entities when divided.
-
-<img src="./images/NETN-Aggregate Object Class Tree.png" />
-
-Figure: NETN_Aggregate object class as an extension of RPR-FOM
-
-
-A `NETN_Aggregate` object is a representation of an organisational unit including all equipment, personnel and supplies allocated to subunits. It is possible to disaggregate a `NETN_Aggregate` object into subunits each represented as a `NETN_Aggregate` object. It is possible to divide an aggregate representation of a unit and represent divided parts as a `NETN_Aggregate` objects or physical entities.
-
-Disaggregation of a unit always constitutes a full disaggregation of all subunits into active `NETN_Aggregate` objects. The aggregated unit itself can remain registered in the federation as an inactive `NETN_Aggregate` object, and its state can be updated based on the simulation of its disaggregated subunits.
-
-Aggregation of a unit always constitutes a full aggregation of all subunits into an active `NETN_Aggregate` object. The disaggregated units can remain registered in the federation as an inactive `NETN_Aggregate` object, and its state can be updated based on the simulation of its aggregated parent.
-
-Division of a unit is a temporary allocation of specific resources from a source (original unit) represented as an active `NETN_Aggregate` object. It reallocates modelling responsibility of specific resources from the source to an additional active `NETN_Aggregate` object or individual physical entities representing specific equipment. 
-
-Merging of a previously divided unit incorporate `NETN_Aggregate` object(s) and physical entities back to its source `NETN_Aggregate` object.
-
-MRM events can be requested and triggered using HLA interactions defined in the NETN-MRM FOM Module. The result of an MRM event is reported to the requesting/triggering federate using a `Response` interaction.
-
-<img src="./images/NETN-MRM Interaction Class Tree.png"/>
-
-Figure: MRM interactions and events
-
-The capability of a federate to support MRM events for a specific aggregate unit can be queried using the `QuerySupportedCapabilities` interaction. The response is provided using `CapabilitiesSupported` interaction and includes a list of names of available MRM events.
-
-## NETN_Aggregate
-
-The `NETN_Aggregate` object class is a specialization/subclass of the RPR-FOM object class `BaseEntity.AggregateEntity` and defines additional attributes.
-
-
-<img src="./images/NETN_Aggregate.png"/>
-
-Figure: The NETN_Aggregate object class
-
-|Attribute|Description|
-|---|---|
-|UniqueId|**Required.** A unique identifier for the object. The Universally Unique Identifier (UUID) is either generated or defined as part of scenario initialisation, e.g. using NETN-ORG MSDL data. The unique identifier can serve dual purposes. It is a unique identification of the NETN_Aggregate object instance but can also be a reference to a NETN-ORG unit element with the same unique identifier.|
-|Status|**Required.** Indicate if this aggregate unit currently is being simulated or not. E.g. units mounted or embarked on transports can be set to inactive. During an inactive state, the attribute values may not reflect an accurate, current value. Therefore, any subscribing federate can ignore inactive units. All attributes must be updated to represent the current status of the instance before setting the status to active.|
-|SubunitList|**Optional.** Reference to disaggregated representations of subsets of the aggregate unit when registered in the federation. Each element should refer to an existing NETN_Aggregate object in the federation. If not published, disaggregation is not supported.|
-|ParentUnit|**Optional.** Reference to parent aggregate entity. If not published, aggregation is not supported. The default value is 0000000000000000 (no parent unit).|
-|DividedUnitList|**Optional.** Reference to other aggregate or physical entities divided from the aggregate unit to represent specific subsets of holdings. If not published, a division is not supported.|
-|SourceUnit|**Optional.** Reference to another active NETN_Aggregate instance from which this aggregate was divided. If not published, merging is not supported.|
-|EmbeddedUnitList|**Optional.** Reference to platforms or lifeforms embarked on this platform. If not published, transport of embedded units not supported.|
-|HigherHeadquarters|**Optional.** A reference to an entity representing the aggregate unit's superior or headquarters from which orders are given and to which reports are sent. The highest level unit or headquarters will publish 0000000000000000 as its HigherHeadquarters value. The referenced entity may or may not be registered in the federation as a NETN_Aggregate and/or NETN-ORG unit. If not published, the aggregate does not have a superior unit or headquarter. The default value is 0000000000000000 (no higher headquarters).|
-|Mounted|**Optional.** The percentage of aggregate personnel travelling on or in their organic transport. Default 100% - all personnel mounted.|
-|SymbolId|**Optional.** A symbol identifier represented as a string. |
-|Callsign|**Required.**  A callsign used to address the unit. Callsigns should be unique in the context in which they are used but not required to be globally unique.|
-|Echelon|**Optional.** The size of the unit (level of command).|
-|EntityList|**Optional.** This attribute provides data on all entities comprising the aggregate. Entities include equipment, e.g. platforms, weapons, sensors and lifeforms such as personnel. Each entity contains key status attributes and subunit allocation information. If not provided the status and allocation of entities is not modelled on an entity level.|
-|SuppliesStatus|**Optional.** The type and quantities of supplies available (on hand) to the unit. If not provided, the amount of available supplies is undefined.|
-|EquipmentStatus|**Optional.** This summarises the health status of the equipment comprising the aggregate. If not provided, the status of equipment is undefined.|
-|PersonnelStatus|**Optional.** This summarises the health status of personnel comprising the aggregate. If not provided, the status of personnel is undefined.|
-|VisualSignature|**Optional.** Describes the unit's susceptibility to electro-optical detection.|
-|HUMINTSignature|**Optional.** Describes the unit's susceptibility to human intelligence (HUMINT), i.e. information collected and provided by human sources.|
-|ElectronicSignature|**Optional.** Describes the aggregate's susceptibility to electronic detection both as a summary value and by identifying aggregate sensors together with their operational status.|
-|CombatValue|**Optional.** A summary value (in per cent) of unit effectiveness based on the level of training, leadership, morale, personnel and equipment operational status, etc. The default value is 100%.|
-|CoverStatus|**Optional.** Describes the unit's protection from the effects of weapons fire. Default is 0% - Fully affected by weapon fire.|
-|CaptureStatus|**Optional.** The status of a person or unit with respect to their control or influence over their own activities. Default: 1 - Not Captured.|
-|Mission|**Optional.** The operational task the aggregate has been ordered to perform.|
-|Activity|**Optional.** The current activity of the aggregate. This may differ from the mission due to casualties, readiness, etc.|
-|Route|**Optional.** The current path of movement. |
-|Destination|**Optional.** The current destination of movement. |
-|WeaponsControlOrder|**Optional.** Describes current Weapon Control Order Free, Tight, or Hold. Default is 0 - Other.|
-
-### Specific use of inherited attributes
-
-| Attribute| Note|
-|---|---|
-|AggregateState|**Required.** Only the following values are used: `Aggregated`, `Disaggregated`, or `Fully Disaggregated`. When `Fully Disaggregated` the `Status` should be set to `Inactive`.|
-|Dimensions|**Required.**|
-|IsPartOf|**Optional.** Used when mounted or transported by other Aggregate entity|
-|SubAggregatesIdentifiers|**Optional.** Reference to `NETN_Aggregate` object instances registered in the federation representing subunits.|
-
-
-## MRM actions
-
+## Overview 
+ 
+NETN-MRM extends the RPR-FOM `BaseEntity` and `AggregateEntity` object classes and defines `ETR_SimCon` interactions classes to trigger aggregation, disaggregation, division, and merge actions for aggregated entities. 
+ 
+Implementing these MRM actions relies on knowledge of units' structure, organization, and equipment as defined in NETN-ORG. 
+ 
+A NETN-ORG `Unit` can be represented in the federation as a single `AggregateEntity` object or as a collection of multiple `AggregateEntity` or `PhysicalEntity` objects. E.g. a `Unit` with associated `Equipment` in NETN-ORG can be represented as a combination of an `AggregateEntity` representing most of the unit and `Platform` entities to represent each platform equipment associated with the unit. 
+ 
+The initial representation of units in the federation can change during runtime. For example, use the MRM actions to request aggregation and disaggregation or to split the entity by dividing holdings among multiple aggregate and physical entity objects. 
+ 
+### Pattern 
+ 
 All MRM actions use the same pattern of interaction. 
-1. A triggering federate requests a federate to act on a specified aggregate entity using subclasses of the interaction `Request`.
-2. The receiving federate performs the actions if possible.
-3. The federate reports the success of the action using the interaction `Response`.
+ 
+Use the `AggregateEntity` attribute `SupportedAggregationActions` to check the simulation entity's support for an MRM action. 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger->>AggregateEntity: Request 
+note over AggregateEntity: Execute action 
+AggregateEntity->>Federation: registerObjectInstance, <br>updateAttributeValues, <br>deleteObjectInstance 
+AggregateEntity->>Trigger: Response 
+``` 
+ 
+ 
+1. A federate triggers an MRM action for a specified `AggregateEntity` using `ETR_SimCon` interaction subclasses 
+2. The federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for aggregation and disaggregation actions. The federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for division and merging actions. Executing the action may include registering, deleting and updating objects in the federation. 
+3. The federate then reports the success of the action using the `Response` interaction. 
+ 
+ 
+### Disaggregation 
+ 
+A federate application can perform disaggregation of an `AggregateEntity` under the following conditions: 
+ 
+```mermaid 
+flowchart BT 
+Unit1 --SuperiorUnit--> Unit 
+Unit2 --SuperiorUnit--> Unit 
+AggregateEntity --Unit--> Unit 
+ 
+subgraph NETN-MRM 
+AggregateEntity 
+end 
+ 
+subgraph NETN-ORG 
+Unit 
+Unit1 
+Unit2 
+end 
+``` 
+ 
+* The federate application owning the `DisaggregatedEntities` attribute of the `AggregateEntity` can perform disaggregation. 
+* The `Status` of the `AggregateEntity` is `Active`. 
+* The `AggregateEntity` has not been divided, i.e. the `DividedEntities` attribute must be empty. 
+* The `AggregateEntity` attribute `OrganizationElement` refers to an existing NETN-ORG `Unit` object. 
+* The NETN-ORG `Unit` object has one or more subunits. 
+ 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger->>AggregateEntity: Disaggregate(aggregate) 
+AggregateEntity->>Federation: aggregate.updateAttributeValues(Status) 
+loop 
+AggregateEntity->>Federation: registerObjectInstance(entity) 
+AggregateEntity->>Federation: entity.updateAttributeValues 
+end 
+AggregateEntity->>Federation: aggregate.updateAttributeValues(DisaggregatedEntities) 
+AggregateEntity->>Trigger: Response 
+ 
+``` 
+ 
+1. A Request federate sends a `Disaggregate` request indicating which `AggregateEntity` to disaggregate. The Federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` is responsible for disaggregation. 
+2. The Federate updates the `Status` of the `AggregateEntity` to `Inactive`. 
+3. The Federate registers new `AggregateEntity` objects to represent the disaggregated entities. One instance for each of the subunits of the referenced `Unit`. 
+4. The federate updates the initial attribute values for the new disaggregated entities, including the `ParentUnit` attribute to refer to the `AggregateEntity` and the `Status` to `Active`. 
+5. The federate updates the `DisaggregatedEntities` attribute of the `AggregateEntity` object to reference the new disaggregated entities. 
+6. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate the successful completion of the request. 
+ 
+After performing disaggregation, the following is true: 
+ 
+```mermaid 
+flowchart BT
+AggregateEntity[/AggregateEntity/]
+Unit1 --SuperiorUnit--> Unit 
+Unit2 --SuperiorUnit--> Unit 
+ 
+AggregateEntity1 --Unit--> Unit1 
+AggregateEntity2 --Unit--> Unit2 
+AggregateEntity1 --ParentAggregate--> AggregateEntity 
+AggregateEntity2 --ParentAggregate--> AggregateEntity 
+AggregateEntity--Unit-->Unit 
+ 
+subgraph NETN-MRM 
+AggregateEntity 
+AggregateEntity1 
+AggregateEntity2 
+end 
+ 
+subgraph NETN-ORG 
+Unit 
+Unit1 
+Unit2 
+end 
+ 
+``` 
+ 
+* The `Status` of the `AggregateEntity` is `Inactive`. 
+* New `AggregateEntity` objects exist for all subunits of the referenced NETN-ORG `Unit`. 
+* Each new `AggregateEntity` refers to the corresponding subunit by its `OrganizationElement` attribute. 
+* The `Status` of each new `AggregateEntity` is `Active`. 
+* The `ParentAggregate` of each new `AggregateEntity` refers to the original disaggregated `AggregateEntity` 
+* The `DisaggregsatedEntities` attribute of the disaggregated `AggregateEntity` reference all the new `AggregateEntity` objects 
+ 
+If a subunit has one or more associated `Equipment` objects, then these are represented in the federation as `PhysicalEntity` objects. Each `PhysicalEntity` refers to the associated `Equipment` using the `OrganizationElement` attribute. In addition, the status of the `PhysicalEntity` is `Active`, and the `ParentAggregate` refers to the now disaggregated `AggregateEntity`. 
+ 
+```mermaid 
+flowchart BT 
+AggregateEntity[/AggregateEntity/] 
+Unit1 --SuperiorUnit--> Unit 
+Equipment --HoldingUnit--> Unit1 
+AggregateEntity1 --Unit--> Unit1 
+AggregateEntity1 --ParentAggregate--> AggregateEntity 
+ 
+AggregateEntity--Unit-->Unit 
+PhysicalEntity --Equipment-->Equipment 
+PhysicalEntity --ParentAggregate--> AggregateEntity 
+ 
+subgraph NETN-MRM 
+AggregateEntity 
+AggregateEntity1 
+ 
+PhysicalEntity 
+ 
+end 
+ 
+subgraph NETN-ORG 
+Unit 
+Unit1 
+Equipment 
+end 
+ 
+``` 
+ 
+Disaggregation always constitutes a complete disaggregation of all subunits and associated equipment into active `AggregateEntity` or `PhysicalEntity` objects. The disaggregated `AggregateEntity` remains registered as `Inactive` in the federation. 
+ 
+ 
+### Aggregation 
+ 
+Aggregation of an `AggregateEntity` always constitutes a complete aggregation of all entities referenced by the `DisaggregatedEnties` attribute. 
+ 
+A federate application can perform aggregation of an `AggregateEntity` under the following conditions: 
+ 
+* The federate application owning the `DisaggregatedEntities` attribute of the `AggregateEntity` can perform aggregation. 
+* The `Status` of the `AggregateEntity` is `Inctive`. 
+* The `DividedEntities` attribute must be empty in all `AggregateEntity` objects referenced by the `DisaggregatedEntities` attribute, i.e. entities referencing the `AggregateEntity` using the `ParentAggregate` attribute are not divided. 
+* The `DisaggregatedEntities` attribute must be empty in all `AggregateEntity` objects referenced by the `DisaggregatedEntities` attribute, i.e. entities referencing the `AggregateEntity` using the `ParentAggregate` attribute are not disaggregated. 
+ 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger->>AggregateEntity: Aggregate(aggregate) 
+loop entity=aggregate.DisaggregatedEntities 
+AggregateEntity->>Federation: entity.deleteObjectInstance 
+end 
+AggregateEntity->>Federation: aggregate.updateAttributeValues 
+AggregateEntity->>Trigger: Response 
+ 
+``` 
+ 
+1. A federate sends an `Aggregate` trigger indicating which `AggregateEntity` to aggregate. Then, the Federate owning the `DisaggregatedEntities` attribute of the `AggregateEntity` performs the aggregation. 
+2. The `AggregateEntity` federate deletes all entities referenced by the `DisaggregatedEntities` attribute 
+3. The `AggregateEntity` federate updates all `AggregateEntity` attributes to reflect the current state, including the `Status` set to `Active`. 
+4. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate the successful completion of the request. 
+ 
+ 
+### Division 
+ 
+ 
+Division of an `AggregateEntity` is a temporary allocation of some specific resources to another `AggregateEntity` or into one or more `Platform` and `Lifeform` objects. 
+ 
+A federate application can perform the division of an `AggregateEntity` under the following conditions: 
+ 
+* The federate application owning the `DividedEntities` attribute of the `AggregateEntity` can perform division. 
+* The `Status` of the `AggregateEntity` is `Active`. 
+* The `AggregateEntity` has not been disaggregated, i.e. the `DisaggregatedEntities` attribute must be empty. 
+ 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger->>Federate: Divide(Resources, aggregate/physical) 
+ 
+Federate->>Federation: registerObjectInstance(s) 
+Federate->>Federation: updateAttributeValues 
+Federate->>Federation: updateAttributeValues(DividedEntities) 
+Federate->>Federation: updateAttributeValues(SourceAggregate) 
+ 
+Federate->>Trigger: Response 
+ 
+``` 
+ 
+1. A Request federate sends a `Divide` interaction indicating the `AggregateEntity` to divide and the list of resources to reallocate to new entities. The request also indicates if resources should be allocated to a new `AggregateEntity` or as one or more physical `Platform` or `Lifeform` objects. The Federate owning the `DividedEntities` attribute of the `AggregateEntity` is responsible for performing the division. 
+2. The federate registers either a new `AggregateEntity` or one or more `Platform` or `Lifeform` objects. 
+3. The `AggregateEntity` and new entity are updated with the current status of allocated resources. 
+4. The `AggregateEntity` is updated with the attribute `DividedEntities` referencing all newly created entities. 
+5. All newly created entities are updated with the attribute `SourceAggregate` to refer to the `AggregateEntity`. 
+6. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate the successful completion of the request. 
+ 
+After division, the following is true: 
+ 
+```mermaid 
+flowchart BT
+ 
+subgraph NETN-ORG 
+Equipment --holding--> Unit 
+end 
+ 
+AggregateEntity --Unit--> Unit 
+ 
+subgraph NETN-MRM 
+AggregateEntity1--SourceAggregate-->AggregateEntity 
+Platform1--SourceAggregate-->AggregateEntity 
+Lifeform1--SourceAggregate-->AggregateEntity 
+end 
+``` 
+ 
+* A new `AggregateEntity` object exists with a `SourceAggregate` attribute referencing the divided `AggregateEntity`, OR 
+* One or more new `Platform` and `Lifeform` objects exist with the `SourceAggregate` attribute referencing the divided `AggregateEntity 
+* The divided `AggregateEntity` references all new divided entities in the `DividedEntities` attribute. 
+ 
+ 
+### Merging 
+ 
+Merging of an `AggregateEntity` with one of its divided entities can be performed under the following conditions: 
+ 
+* The federate application owning the `DividedEntities` attribute of the `AggregateEntity` can perform a merge. 
+* The `Status` of the `AggregateEntity` is `Active`. 
+* The `AggregateEntity` has been divided, i.e. the `DividedEntities` attribute must contain at least one element. 
+ 
+ 
+```mermaid 
+sequenceDiagram
+autonumber
+ 
+Trigger->>Federate: Merge(aggregate, dividedEntities) 
+loop entity=dividedEntities 
+Federate->>Federation: entity.deleteObjectInstance 
+end 
+Federate->>Federation: aggregate.updateAttributeValues(DividedEntities) 
+Federate->>Federation: aggregate.updateAttributeValues 
+Federate->>Trigger: Response 
+ 
+``` 
+ 
+1. A Request federate sends a `Merge` interaction indicating the `AggregateEntity` and the divided entities to merge. The Federate owning the `DividedEntities` attribute of the `AggregateEntity` performs the merge. 
+2. The federate deletes all merged entities. 
+3. Update the `AggregateEntity` attribute `DividedEntities` to exclude the divided entities now merged. 
+4. Update the `AggregateEntity` attributes to reflect the merged status. 
+5. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate success or failure. 
+ 
+After merging, the `AggregateEntity` representation includes all previously divided entities.
 
-Before sending a more specific MRM request to a federate, the MRM capabilities supported by the federate can be queried. To query which MRM actions are supported, send a `QueryCapabilitiesSupported` request interaction. All federates implementing NETN-MRM must implement support for `QueryCapabilitiesSupported` and provide a `CapabilitiesSupported` response interaction. If a federates is not responding to `QueryCapabilitiesSupported` it should be assumed not to support any MRM action. A federate not supporting a specific MRM action should never be requested such action.
 
-<img src="./images/query.svg"/>
+## Object Classes
 
-<!--
-participant Trigger
-participant Federate
-autonumber 
-Trigger->Federate:QueryCapabilitiesSupported(Event#1, Federate)
+Note that inherited and dependency attributes are not included in the description of object classes.
 
-Federate->Trigger:CapabilitiesSupported (Event#1, CapabilityNames)
+```mermaid
+graph RL
+BaseEntity-->HLAobjectRoot
+AggregateEntity-->BaseEntity
+```
 
-space
+### BaseEntity
 
-Trigger->Federate:Request(Event#2, Federate, AggregateUnit)
+A base class of aggregate and discrete scenario domain participants. The BaseEntity class is characterized by being located at a particular location in space and independently movable, if capable of movement at all. It specifically excludes elements normally considered to be a component of another element. The BaseEntity class is intended to be a container for common attributes for entities of this type. Since it lacks sufficient class specific attributes that are required for simulation purposes, federates cannot publish objects of this class. Certain simulation management federates, e.g. viewers, may subscribe to this class. Simulation federates will normally subscribe to one of the subclasses, to gain the extra information required to properly simulate the entity.
 
-activate Federate
+|Attribute|Datatype|Semantics|
+|---|---|---|
+|Status|ActiveStatusEnum8|Optional. Indicates if this entity is currently being simulated or not. During an inactive state, the attribute values may not reflect accurate or current values. All attributes are updated to represent the current status of the object instance before setting the state to Active. The default is `Active`.|
+|SourceAggregate|UUID|Optional. Reference to an active `AggregateEnity` instance which is the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.|
+|ParentAggregate|UUID|Optional. If this simulation entity results from a disaggregation, this attribute refers to the disaggregated `AggregateEntity`. The default value is no reference, i.e. all zeros.|
+|OrganizationElement|UUID|Optional: Reference to an existing NETN-ORG  organization element, e.g. a `Unit` or `Equipment` represented by this simulation entity. The default value is no related organization element, i.e. all zeros.|
 
-box left of Federate:Perform MRM Action
-Trigger<-Federate:Response(Event#2, Status)
+### AggregateEntity
 
+A group of one or more separate objects that operate together as part of an organization. These objects may be discrete, may be other aggregate objects, or may be a mixture of both.
 
-deactivate Federate
+|Attribute|Datatype|Semantics|
+|---|---|---|
+|DividedEntities|ArrayOfUuid|Optional. Reference to other aggregate or physical entities divided from the `AggregateEntity` to represent specific subsets of holdings.|
+|DisaggregatedEntities|ArrayOfUuid|Optional. Reference to the disaggregated entities after disaggregation of this `AggregateEntity`. Each element should refer to an existing entity in the federation. The `Status` of this `AggregateEntity` shall be inactive if disaggregated entities exist.||
+|SupportedAggregationActions|AggregationActionArray|Optional: This aggregated entity supports the listed aggregation actions.|
 
-autonumber off
--->
+## Interaction Classes
 
-Figure: Query and Request of MRM actions
+Note that inherited and dependency parameters are not included in the description of interaction classes.
 
-**Request Interaction Class**
-|Parameter|Description|
-|---|---|
-|Federate|**Required.** Intended federate responsible for performing the requested action. Sending federate should ensure that receiving federate can perform requested action. If not able to perform, a response interaction indicating failure should be returned. |
-|AggregateUnit|**Required for all requests except QuerySupportedCapabilities.** Unique identifier for the AggregateUnit for which this request is related to. |
+```mermaid
+graph RL
+ETR_SimCon-->HLAinteractionRoot
+Aggregate-->ETR_SimCon
+Disaggregate-->ETR_SimCon
+Divide-->ETR_SimCon
+Merge-->ETR_SimCon
+Response-->ETR_SimCon
+```
 
-**Response Interaction Class**
-|Parameter|Description|
-|---|---|
-|Status|**Required.** Specifies the result of the request action. TRUE indicates success.|
+### Aggregate
 
-**CapabilitiesSupported Interaction Class**
-|Parameter|Description|
-|---|---|
-|CapabilityNames|**Required.** A list of names of the supported capabilities for the Aggregate entity specified in the query. The names are one or more of "Aggregate", "Disaggregate", "Divide", "Merge", "Activate" and "Deactivate".|
-
+Instructs a federate application modelling the `AggregateEntity` to perform aggregation of the `DisaggregatedEntities`.
 
 
 ### Disaggregate
 
-*Conditions*
+Instructs a federate application to disaggregate the indicated `AggregateEntity`.
 
-* Disaggregation is only allowed for an aggregate unit registered in the federation as a non-divided and active `NETN_Aggregate` object. 
-* The federate performing disaggregation must be able to acquire modelling responsibility of the `Status` attribute of the `NETN_Aggregate` object representing the aggregated unit. 
-* The federate performing disaggregation must be able to acquire modelling responsibility of the `Status` attribute of `NETN_Aggregate` objects representing the aggregated unit's subunits.  
-
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
-
-<img src="./images/disaggregate.svg"/>
-
-
-
-<!--
-participant Trigger
-participant Federate
-participant Federation
-autonumber 
-Trigger->Federate:Disaggregate(Event, Federate, \nAggregateUnit)
-
-Federate->Federation:Update Attribute Value (AggregateUnit, Status = Inactive)
-
-
-loop Activate Subunits
-
-alt Create new NETN_Aggregate
-Federate->Federation:Register Object Instance (NETN_Aggregate)
-else Reuse existing NETN_Aggregate
-aboxleft over Federate, Federation:Acquire Modelling Responsibility NETN_Aggregate
-end
-
-Federation<-Federate:Update Attribute Values (NETN_Aggregate, Attributes)
-Federation<-Federate:Update Attribute Values (NETN_Aggregate, ParentUnit=AggregateUnit)
-
-Federation<-Federate:Update Attribute Value (NETN_Aggregate, Status = Active)
-end
-Federation<-Federate:Update Attribute Values (AggregateUnit, SubunitList)
-Trigger<-Federate:Response(Event, Status)
-autonumber off
-
--->
-Figure: Disaggregation of a unit
-
-1. A trigger federate sends a `Disaggregate` request to a specified `Federate` with reference to the `AggregateUnit` object representing the unit to disaggregate.
-2. The receiving federate performs actions to acquire modelling responsibility of the `Status` attribute for the `NETN_Aggregate` object referenced by the `AggregateUnit` parameter. If successful, the federate updates the `Status` attribute of the object instance to `Inactive`.
-3. The federate registers subunits as `NETN_Aggregate` objects if not already registered in the federation. If registered, the modelling responsibility of the `Status` attribute is acquired. 
-4. The federate update initial attribute values for the new `NETN_Aggregate` objects.
-5. The federate updates the `ParentUnit` attribute of new `NETN_Aggregate` objects to refer to the `AggregateUnit`.
-6. The federate update the `Status` attribute of the `NETN_Aggregate` objects to `Active`.
-7. The federate update the `SubunitList` attribute of the `AggregateUnit` objects which include a reference to all aggregate entities representing the subunits.
-8. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate successful completion of the request.
-
-### Aggregate
-
-*Conditions*
-
-* Aggregation is only allowed for an aggregate unit registered in the federation as an inactive `NETN_Aggregate` object. 
-* The federate performing aggregation must be able to acquire modelling responsibility of the `Status` attribute of the `NETN_Aggregate` object representing the aggregated unit. 
-* The federate performing aggregation must be able to either remove `NETN_Aggregate` objects representing subunits from the federation or acquire modelling responsibility of the `Status` attribute of these objects. 
-
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
-
-<img src="./images/aggregation.svg"/>
-
-<!-- 
-participant Trigger
-participant Federate
-participant Federation
-autonumber 
-Trigger->Federate:Aggregate(Event, Federate, \nAggregateUnit, RemoveSubunits)
-
-loop for all Subunits as NETN_Aggregate
-alt RemoveSubunits = true
-Federate->Federation:Delete Object Instance (NETN_Aggregate)
-
-else RemoveSubunits = false
-Federation<-Federate:Update Attribute Value (NETN_Aggregate, Status = Inactive)
-Federation<-Federate:Update Attribute Value (NETN_Aggregate, ParentUnit = 0)
-end
-end
-
-Federate->Federation:Update Attribute Value (AggregateUnit, attributes)
-
-Federate->Federation:Update Attribute Value (AggregateUnit, Status = Active)
-
-Trigger<-Federate:Response(Event, Status)
-autonumber off
--->
-
-Figure: Aggregation of a unit
-
-1. A trigger federate sends an `Aggregate` request to a specified `Federate` with reference to the `AggregateUnit` object representing the unit to aggregate.
-2. If indicated in the request, the federate deletes all subunits and physical entities registered in the federation.
-3. The federates updates `Status` of all subunits, represented as `NETN_Aggregate` objects in the federation, to `Inactive` if indicated in the request that they should remain in the federation.
-4. The federate updates all status attributes of the unit to reflect the aggregate state.
-5. The federate updates the `Status` of the unit to `Active`.
-6. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate successful completion of the request.
- 
 
 ### Divide
-*Conditions*
-* The federate performing division must be able to acquire modelling responsibility of the attributes of the `NETN_Aggregate` object representing the aggregated unit. 
-* Division is only allowed for non-divided aggregate units registered in the federation as active `NETN_Aggregate` objects. 
 
+Instructs a federate application to divide the `AggregateEntity` into multiple simulated entities.
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
+|Parameter|Datatype|Semantics|
+|---|---|---|
+|Equipment|ArrayOfResourceStatus|Optional. Amount of equipment of different type and health status to be divided.|
+|Personnel|ArrayOfResourceStatus|Optional. Amount of personnel of different type and health status to be divided.|
+|Supplies|SupplyStructArray|Optional. Amount of supplies to divide.|
+|RegisterPhysicalEntities|HLAboolean|Optional. If true, all Equipment of type Platform and Lifeform are published as individual objects in the federation.|
 
-<img src="./images/divide.svg"/>
-
-Figure: Divide an aggregate unit
-
-<!--
-participant Trigger
-participant Federate
-participant Federation
-autonumber 
-Trigger->Federate:Divide(Event, Federate, \nSourceAggregateUnit, \nHoldings, \nRepresentPhysicalAsObject)
-
-
-alt RepresentPhysicalAsObject
-abox over Federate, Federation:Divide and represent as NETN-Physical.*
-
-else Represent as a single Aggregate
-
-abox over Federate, Federation:Divide and represent as  NETN_Aggregate
-end
-
-Trigger<-Federate:Response(Event, Status)
-autonumber off
--->
-
-The division of aggregate unit:
-
-1. A federate sends a `Divide` request to a specified `Federate` indicating the `SourceAggregateUnit` object to divide and a list of the divided holdings. In the request, a flag indicates if each physical entities in the holdings should be registered as individual objects or not.
-
-Divide by either acquiring or registering an additional `NETN_Aggregate` or instances of `NETN-Physical` entities for platforms and lifeforms. 
-
-2. On completion, the federate sends a `Response` interaction with the `Status` parameter set to indicate successful completion of the request.
-
-#### Dividing to Physical Entities
-If indicated, the federate registers specified platforms and lifeforms entities as individual objects in the federation. These objects are instances of `NETN-Physical` leaf object classes and can either be already existing or created based on the divided holdings information. 
-
-*Conditions*
-
-* Reuse of existing instances for representing divided holdings is only allowed if not already in use, i.e. the `SourceUnit` attribute is not published or set to all zeros.
-* Reuse of existing instances for representing divided holdings requires the Federate performing division must be able to acquire modelling responsibilities for attributes `SourceUnit` and `Status` of these instances.
-
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
-
-<img src="./images/dividephysical.svg"/>
-
-Figure: Divide an aggregate unit into physical entities.
-
-<!--
-participant Federate
-participant Federation
-autonumber 
-
-loop For Each Platform and Lifeform in Holdings
-alt Create new entity
-Federate->Federation:Register Object Instance (NETN-Physical.*)
-else Reuse entity
-aboxleft over Federate, Federation:Acquire Modelling Responsibility NETN-Physical.*
-end
-
-Federation<-Federate:Update Attribute Values (NETN-Physical.*, Attributes)
-Federation<-Federate:Update Attribute Values (NETN-Physical.*, SourceUnit=SourceAggregateUnit)
-Federation<-Federate:Update Attribute Values (SourceAggregateUnit, DividedUnitList)
-Federation<-Federate:Update Attribute Values (SourceAggregateUnit, Attributes)
-Federation<-Federate:Update Attribute Values (NETN-Physical.*, Status=Active)
-end
-
-autonumber off
-
--->
-The division into physical entity objects:
-1. If not reusing an existing object in the federation, the federate registers a physical entity in the federation as a corresponding `NETN-Physical` leaf class. Otherwise, acquire modelling responsibilities of the object to be reused as a representation for the physical entity.
-2. The federate updates the physical entity object with appropriate initial attribute values.
-3. The `SourceUnit` attribute of the registered physical entity is updated to reference the `SourceAggregateUnit`.
-4. The attribute `DividedUnitList` of the `SourceAggregateUnit` is updated to include a reference to the physical entity object.
-5. The `SourceAggregateUnit` attributes are updated to reflect the reduction of holdings.
-6. The federate update the `Status` attribute of the physical entity object to `Active`.
-
-#### Dividing to Aggregate Entity
-If indicated, the federate registers each specified resource as holdings of a new Aggregate entity object in the federation.
-
-<img src="./images/dividesub.svg"/>
-
-Figure: Subdivide an aggregate unit.
-
-<!--
-participant Federate
-participant Federation
-autonumber 
-
-alt Create new entity
-Federate->Federation:Register Object Instance (NETN_Aggregate)
-else Reuse entity
-aboxleft over Federate, Federation:Acquire Modelling Responsibility NETN_Aggregate
-end
-
-Federation<-Federate:Update Attribute Values (NETN_Aggregate, Attributes)
-
-Federation<-Federate:Update Attribute Values (NETN_Aggregate, SourceUnit=SourceAggregateUnit)
-Federation<-Federate:Update Attribute Values (SourceAggregateUnit, DividedUnitList)
-Federation<-Federate:Update Attribute Values (SourceAggregateUnit, Attributes)
-Federation<-Federate:Update Attribute Values (NETN_Aggregate, Status=Active)
-
--->
-Division of aggregate entities:
-
-1. If not reusing an existing object in the federation, then a single `NETN_Aggregate` object is registered in the federation. Otherwise, acquire modelling responsibilities of the `NETN_Aggregate` object to be reused as a representation for the divided holdings.
-2. The federate updates the `NETN_Aggregate` object with appropriate initial attribute values.
-3. The `SourceUnit` attribute of the `NETN_Aggregate` object is updated to reference the `SourceAggregateUnit`.
-4. The attribute `DividedUnitList` of the `SourceAggregateUnit` is updated to include a reference to the `NETN_Aggregate` object.
-5. The `SourceAggregateUnit` attributes are updated to reflect the reduction of holdings.
-6. The federate update the`Status` attribute of the `NETN_Aggregate` object to `Active`.
-
- 
 ### Merge
-*Conditions*
-* The federate performing merge must be able to acquire modelling responsibility of the attributes of the `NETN_Aggregate` object representing the source aggregated unit. 
-* The federate performing merge must be able to acquire modelling responsibility of the attributes of the divided object instances.
-* Merge is only allowed for divided aggregate units registered in the federation.
-* Merge is only allowed for an active `NETN_Aggregate` objects. 
+
+Instructs a federate application to merge an `AggregateEntity` with divided entities.
+
+|Parameter|Datatype|Semantics|
+|---|---|---|
+|DividedEntities|ArrayOfUuid|Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicates which divided entities to merge with the AggregateEntity.|
+
+### Response
+
+A response from the receiving federate indicating ability to comply with a request.
 
 
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false.
+## Datatypes
 
-<img src="./images/merge.svg"/>
+Note that only datatypes defined in this FOM Module are listed below. Please refer to FOM Modules on which this module depends for other referenced datatypes.
 
-Figure: Merge divided parts with their aggregate unit
-
-<!--
-participant Trigger
-participant Federate
-participant Federation
-autonumber 
-Trigger->Federate:Merge(Event, Federate, \nSourceAggregateUnit, \nDividedUnits, RemoveDivided)
-loop for all DividedUnits
-alt RemoveDivided = true
-Federate->Federation:Delete Object Instance (DividedUnit)
-else RemoveDivided = false
-Federation<-Federate:Update Attribute Value (DividedUnit, Status = Inactive)
-Federation<-Federate:Update Attribute Value (DividedUnit, SourceUnit = 0)
-end
-Federate->Federation: Update Attribute Values(SourceAggregateUnit, DividedUnitList)
-Federate->Federation: Update Attribute Values(SourceAggregateUnit)
-end
-Trigger<-Federate:Response(Event, Status)
-autonumber off
--->
-
-Trigger the merge:
-
-1. A trigger federate sends a `Merge` request to a specified `Federate` with reference to the `SourceAggregateUnit` object and a list of the divided units to merge. In the request, a flag indicates if the divided units should remain in the federation as inactive entities or if they should be removed. 
-
-For each divided unit:
-
-2. Delete from the federation if indicated.
-3. If the divided unit should remain, update the `Status` attribute to `Inactive`. 
-4. If the divided unit should remain, update the `SourceUnit` attribute to 0 (no source unit).
-5. Update the `SourceAggregateUnit` attribute `DividedUnitList` to exclude the divided units now merged. 
-6. Update the `SourceAggregateUnit` attributes to reflect the merged status.
-
-On completion:
-
-7.  The federate sends a `Response` interaction with the `Status` parameter set to indicate successful completion of the request.
-
-
-### Activate
-*Conditions*
-* An `AggregateUnit` can not be activated if any subunit is active.
-
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if any of these conditions are false. Otherwise, the `AggregateUnit` attribute is updated to `Active`.
-
-### Deactivate
-*Conditions*
-
-* An `AggregateUnit` can not be deactivated if a divided unit exists.
-
-The federate send a `Response` interaction with the `Status` parameter set to `FALSE` if this condition is false.
+### Overview
+|Name|Semantics|
+|---|---|
+|AggregationActionArray|A list of aggregation actions.|
+|AggregationActionsEnum|The types of MRM aggregation actions.|
+        
+### Enumerated Datatypes
+|Name|Representation|Semantics|
+|---|---|---|
+|AggregationActionsEnum|HLAinteger32BE|The types of MRM aggregation actions.|
+        
+### Array Datatypes
+|Name|Element Datatype|Semantics|
+|---|---|---|
+|AggregationActionArray|AggregationActionsEnum|A list of aggregation actions.|
+    
