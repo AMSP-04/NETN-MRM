@@ -58,7 +58,7 @@ The MRM FOM module specifies interaction classes necessary to enable federation 
         </reference>
         <reference>
             <type>Dependency</type>
-            <identification>NETN-Physical</identification>
+            <identification>NETN-BASE</identification>
         </reference>
         <other>
 Copyright © 2020 by NATO/OTAN. All rights reserved.
@@ -196,7 +196,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     </parameter>
                     <parameter>
                         <name>Supplies</name>
-                        <dataType>SupplyStructArray</dataType>
+                        <dataType>ArrayOfSupplyStruct</dataType>
                         <semantics>Optional. Amount of supplies to divide.</semantics>
                     </parameter>
                     <parameter>
@@ -415,8 +415,8 @@ All MRM actions use the same pattern of interaction.
 Use the `AggregateEntity` attribute `SupportedAggregationActions` to check the simulation entity's support for an MRM action. 
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger-&gt;&gt;AggregateEntity: Request 
 note over AggregateEntity: Execute action 
@@ -435,7 +435,7 @@ AggregateEntity-&gt;&gt;Trigger: Response
 A federate application can perform disaggregation of an `AggregateEntity` under the following conditions: 
  
 ```mermaid 
-flowchart BT
+flowchart BT 
 Unit1 --SuperiorUnit--&gt; Unit 
 Unit2 --SuperiorUnit--&gt; Unit 
 AggregateEntity --Unit--&gt; Unit 
@@ -459,8 +459,8 @@ end
  
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger-&gt;&gt;AggregateEntity: Disaggregate(aggregate) 
 AggregateEntity-&gt;&gt;Federation: aggregate.updateAttributeValues(Status) 
@@ -483,7 +483,7 @@ AggregateEntity-&gt;&gt;Trigger: Response
 After performing disaggregation, the following is true: 
  
 ```mermaid 
-flowchart BT
+flowchart BT 
 AggregateEntity[/AggregateEntity/] 
 Unit1 --SuperiorUnit--&gt; Unit 
 Unit2 --SuperiorUnit--&gt; Unit 
@@ -518,7 +518,7 @@ end
 If a subunit has one or more associated `Equipment` objects, then these are represented in the federation as `PhysicalEntity` objects. Each `PhysicalEntity` refers to the associated `Equipment` using the `OrganizationElement` attribute. In addition, the status of the `PhysicalEntity` is `Active`, and the `ParentAggregate` refers to the now disaggregated `AggregateEntity`. 
  
 ```mermaid 
-flowchart BT
+flowchart BT 
 AggregateEntity[/AggregateEntity/] 
 Unit1 --SuperiorUnit--&gt; Unit 
 Equipment --HoldingUnit--&gt; Unit1 
@@ -561,8 +561,8 @@ A federate application can perform aggregation of an `AggregateEntity` under the
  
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger-&gt;&gt;AggregateEntity: Aggregate(aggregate) 
 loop entity=aggregate.DisaggregatedEntities 
@@ -592,8 +592,8 @@ A federate application can perform the division of an `AggregateEntity` under th
  
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger-&gt;&gt;Federate: Divide(Resources, aggregate/physical) 
  
@@ -616,7 +616,7 @@ Federate-&gt;&gt;Trigger: Response
 After division, the following is true: 
  
 ```mermaid 
-flowchart BT
+flowchart BT 
  
 subgraph NETN-ORG 
 Equipment --holding--&gt; Unit 
@@ -646,8 +646,8 @@ Merging of an `AggregateEntity` with one of its divided entities can be performe
  
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger-&gt;&gt;Federate: Merge(aggregate, dividedEntities) 
 loop entity=dividedEntities 
