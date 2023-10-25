@@ -19,9 +19,9 @@ The MRM FOM module specifies interaction classes necessary to enable federation 
 * Disaggregation of entities representing a unit into entities representing subunits or physical entities
 * Division of simulated entities into parts - resources divided and all entities simulated
 * Merge of previously divided entities.</useLimitation>
-        <useHistory notes="netn-mrm_1">v1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
-        <useHistory notes="netn-mrm_2">v2.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
-        <useHistory notes="netn-mrm_3">v3.0 - Updated version by MSG-191 to be part of NATO-FOM v4.0</useHistory>
+        <useHistory notes="netn-mrm_1">v1.1 - Initial version of NETN-MRM FOM Module released as part of NETN FOM v2.0.</useHistory>
+        <useHistory notes="netn-mrm_2">v2.0 - Updated version by MSG-163 to be part of NETN FOM v3.0.</useHistory>
+        <useHistory notes="netn-mrm_3">v3.0 - Updated version by MSG-191 to be part of NETN FOM v4.0</useHistory>
         <poc>
             <pocType>Release authority</pocType>
             <pocName>NATO Modelling and Simulation Group</pocName>
@@ -216,13 +216,6 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <dataType>ArrayOfUuid</dataType>
                         <semantics>Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicates which divided entities to merge with the AggregateEntity.</semantics>
                     </parameter>
-                </interactionClass>
-                <interactionClass>
-                    <name>Response</name>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>A response from the receiving federate indicating ability to comply with a request.</semantics>
                 </interactionClass>
             </interactionClass>
         </interactionClass>
