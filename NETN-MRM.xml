@@ -60,6 +60,10 @@ The MRM FOM module specifies interaction classes necessary to enable federation 
             <type>Dependency</type>
             <identification>NETN-BASE</identification>
         </reference>
+        <reference>
+            <type>Dependency</type>
+            <identification>NETN-ORG</identification>
+        </reference>
         <other>
 Copyright © 2020 by NATO/OTAN. All rights reserved.
 This work is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License.
@@ -163,7 +167,16 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
         <interactionClass>
             <name>HLAinteractionRoot</name>
             <interactionClass>
-                <name>ETR_SimCon</name>
+                <name>MRM_Root</name>
+                <sharing>Neither</sharing>
+                <transportation>HLAreliable</transportation>
+                <order>Receive</order>
+                <semantics>Base Interaction Class for all MRM related interactions.</semantics>
+                <parameter>
+                    <name>Entity</name>
+                    <dataType>UUID</dataType>
+                    <semantics>Required: Simulated Entity to Aggregate, Disaggregate, Divide or Merge.</semantics>
+                </parameter>
                 <interactionClass>
                     <name>Aggregate</name>
                     <sharing>PublishSubscribe</sharing>
@@ -196,7 +209,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     </parameter>
                     <parameter>
                         <name>Supplies</name>
-                        <dataType>ArrayOfSupplyStruct</dataType>
+                        <dataType>ArrayOfSupplyStatus</dataType>
                         <semantics>Optional. Amount of supplies to divide.</semantics>
                     </parameter>
                     <parameter>
@@ -223,6 +236,16 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
                     <semantics>A response from the receiving federate indicating ability to comply with a request.</semantics>
+                    <parameter>
+                        <name>Request</name>
+                        <dataType>UUID</dataType>
+                        <semantics>Required: Reference to the request this interaction is a response to.</semantics>
+                    </parameter>
+                    <parameter>
+                        <name>Status</name>
+                        <dataType>HLAboolean</dataType>
+                        <semantics>Required. Specifies the result of the request action. TRUE indicates success.</semantics>
+                    </parameter>
                 </interactionClass>
             </interactionClass>
         </interactionClass>
@@ -347,27 +370,27 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
 * Replaced `NETN_Aggregate` attribute `ParentUnit` with NETN-MRM `BaseEntity` attribute `ParentAggregate` 
 * Replaced `NETN_Aggregate` attribute `DividedUnitList` with NETN-MRM `AggregateEntity` attribute `DividedEntities` 
 * Replaced `NETN_Aggregate` attribute `SourceUnit` with NETN-MRM `BaseEntity` attribute `SourceAggregate` 
-* Replaced `NETN_Aggregate` attribute `EmbeddedUnitList` with NETN-Physical `BaseEntity` attribute `HostedEntities` 
+* Removed `NETN_Aggregate` attribute `EmbeddedUnitList` 
 * Replaced `NETN_Aggregate` attribute `HigherHeadquarters` with NETN-ORG `Unit` attribute `HigherHeadquarters` 
-* Replaced `NETN_Aggregate` attribute `Mounted` with NETN-Physical `BaseEntity` attribute `HostEntitiy` and NETN-Physical `AggregateEntity` attribute `MountProgress` 
-* Replaced `NETN_Aggregate` attribute `SymbolId` with NETN-Physical `BaseEntity` attribute `SymbolId` 
-* Replaced `NETN_Aggregate` attribute `Callsign` with NETN-Physical `BaseEntity` attribute `Callsign` 
-* Replaced `NETN_Aggregate` attribute `Echelon` with NETN-Physical `AggregateEntity` attribute `Echelon` 
+* Replaced `NETN_Aggregate` attribute `Mounted` with NETN-ENTITY `BaseEntity` attribute `HostEntitiy` and NETN-Physical `AggregateEntity` attribute `MountProgress` 
+* Replaced `NETN_Aggregate` attribute `SymbolId` with NETN-ENTITY `BaseEntity` attribute `Symbol` 
+* Replaced `NETN_Aggregate` attribute `Callsign` with NETN-ENTITY `BaseEntity` attribute `Callsign` 
+* Replaced `NETN_Aggregate` attribute `Echelon` with NETN-ENTITY `AggregateEntity` attribute `Echelon` 
 * Removed `NETN_Aggregate` attribute `EntityList` 
-* Replaced `NETN_Aggregate` attribute `SuppliesStatus` with NETN-Physical `AggregateEntity` attribute `SuppliesStatus` 
-* Replaced `NETN_Aggregate` attribute `EquipmentStatus` with NETN-Physical `AggregateEntity` attribute `EquipmentStatus` 
-* Replaced `NETN_Aggregate` attribute `PersonnelStatus` with NETN-Physical `AggregateEntity` attribute `PersonnelStatus` 
-* Replaced `NETN_Aggregate` attribute `VisualSignature` with NETN-Physical `AggregateEntity` attribute `VisualSignature` 
-* Replaced `NETN_Aggregate` attribute `HUMINTSignature` with NETN-Physical `AggregateEntity` attribute `HUMINTSignature` 
-* Replaced `NETN_Aggregate` attribute `ElectronicSignature` with NETN-Physical `AggregateEntity` attribute `ElectronicSignature` 
-* Replaced `NETN_Aggregate` attribute `CombatValue` with NETN-Physical `AggregateEntity` attribute `CombatValue` 
-* Replaced `NETN_Aggregate` attribute `CoverStatus` with NETN-Physical `AggregateEntity` attribute `CoverStatus` 
-* Replaced `NETN_Aggregate` attribute `CaptureStatus` with NETN-Physical `AggregateEntity` attribute `CaptureStatus` 
+* Replaced `NETN_Aggregate` attribute `SuppliesStatus` with NETN-LOG `AggregateEntity` attribute `SuppliesStatus` 
+* Replaced `NETN_Aggregate` attribute `EquipmentStatus` with NETN-LOG `AggregateEntity` attribute `EquipmentStatus` 
+* Replaced `NETN_Aggregate` attribute `PersonnelStatus` with NETN-LOG `AggregateEntity` attribute `PersonnelStatus` 
+* Replaced `NETN_Aggregate` attribute `VisualSignature` with NETN-ENTITY `BaseEntity` attribute `Signatures` 
+* Replaced `NETN_Aggregate` attribute `HUMINTSignature` with NETN-ENTITY `BaseEntity` attribute `Signatures` 
+* Replaced `NETN_Aggregate` attribute `ElectronicSignature` with NETN-ENTITY `BaseEntity` attribute `Signatures`  `ElectronicSignature` 
+* Replaced `NETN_Aggregate` attribute `CombatValue` with NETN-ENTITY `AggregateEntity` attribute `CombatValue` 
+* Replaced `NETN_Aggregate` attribute `CoverStatus` with NETN-ENTITY `BaseEntity` attribute `Protection` 
+* Replaced `NETN_Aggregate` attribute `CaptureStatus` with NETN-ETR `BaseEntity` attribute `CaptureStatus` 
 * Removed `NETN_Aggregate` attribute `Mission` 
 * Replaced `NETN_Aggregate` attribute `Activity` with NETN-ETR `BaseEntity` attribute `Activity` 
 * Replaced `NETN_Aggregate` attribute `Route` with NETN-ETR `BaseEntity` attribute `Route` 
 * Replaced `NETN_Aggregate` attribute `Destination` with NETN-ETR `BaseEntity` attribute `Destination` 
-* Replaced `NETN_Aggregate` attribute `WeaponsControlOrder` with NETN-Physical `AggregateEntity` attribute `WeaponsControlOrder` 
+* Replaced `NETN_Aggregate` attribute `WeaponsControlOrder` with NETN-ENTITY `AggregateEntity` attribute `WeaponsControlOrder` 
 * Removed `MRM_Interaction` interaction class 
 * Replaced `MRM_Interaction` parameter `EventId` with NETN-BASE `HLAinteractionRoot` attribute `UniqueId` 
 * Removed `CapabilitiesSupported` interaction class 
