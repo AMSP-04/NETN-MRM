@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelIdentification notes="netn-mrm_4">
+    <modelIdentification notes="netn-mrm_overview">
         <name>NETN-MRM</name>
         <type>FOM</type>
         <version>3.0</version>
-        <modificationDate>2023-04-09</modificationDate>
+        <modificationDate>2023-11-19</modificationDate>
         <securityClassification>Not Classified</securityClassification>
-        <purpose>The purpose of NETN-MRM is to support federations using multiple levels of resolution and aggregation and where the level of resolution changes during a simulation.</purpose>
+        <purpose>The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution.</purpose>
         <applicationDomain></applicationDomain>
-        <description>Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Individual entities represent distinct objects in the scenario, while aggregated models represent a group of associated physical entities.
+        <description>Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Entities can be represented as individual objects or as part of an aggregated object. Entity representation can change during the simulation and switch between different levels of aggregation and individual physical entities.  
 
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module specifies how to perform aggregation and disaggregation of aggregated entities, e.g. units, to other levels of aggregation or physical entities.
-
-
-The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and intends to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. </description>
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module specifies aggregation, disaggregation, division and merging of aggregate entities.</description>
         <useLimitation>NETN-MRM covers the following cases: 
-* Aggregation of entities representing subunits or physical entities
-* Disaggregation of entities representing a unit into entities representing subunits or physical entities
-* Division of simulated entities into parts - resources divided and all entities simulated
-* Merge of previously divided entities.</useLimitation>
-        <useHistory notes="netn-mrm_1">v1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
-        <useHistory notes="netn-mrm_2">v2.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
-        <useHistory notes="netn-mrm_3">v3.0 - Updated version by MSG-191 to be part of NATO-FOM v4.0</useHistory>
+* Aggregation of subunits into a representation of their parent unit
+* Disaggregation of a unit representation into subunits
+* Division of unit into subunits or physical entities
+* Merging of previously divided entities into a unit</useLimitation>
+        <useHistory notes="netn-mrm_1_1">v1.1 - Initial version of NETN-MRM FOM Module released as part of NETN-FOM v2.0.</useHistory>
+        <useHistory notes="netn-mrm_2_0">v2.0 - Updated version by MSG-163 to be part of NETN-FOM v3.0.</useHistory>
+        <useHistory notes="netn-mrm_3_0">v3.0 - Updated version by MSG-191 to be part of NATO-FOM v4.0</useHistory>
         <poc>
             <pocType>Release authority</pocType>
             <pocName>NATO Modelling and Simulation Group</pocName>
@@ -52,20 +49,26 @@ The MRM FOM module specifies interaction classes necessary to enable federation 
             <pocOrg>NATO Modelling and Simulation Group</pocOrg>
             <pocEmail>msg@cso.nato.int</pocEmail>
         </poc>
-        <reference>
-            <type>Dependency</type>
-            <identification>NETN-ETR</identification>
-        </reference>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>MSG-223 Evolving M&amp;S applications and services for compliance with NATO standards for federated simulation</pocName>
+            <pocOrg>NATO Modelling and Simulation Group</pocOrg>
+            <pocEmail>msg@cso.nato.int</pocEmail>
+        </poc>
         <reference>
             <type>Dependency</type>
             <identification>NETN-BASE</identification>
         </reference>
         <reference>
             <type>Dependency</type>
+            <identification>NETN-SMC</identification>
+        </reference>
+        <reference>
+            <type>Dependency</type>
             <identification>NETN-ORG</identification>
         </reference>
         <other>
-Copyright © 2020 by NATO/OTAN. All rights reserved.
+Copyright © 2023 by NATO/OTAN. All rights reserved.
 This work is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License.
 
 Above license gives you the right to use and redistribute the NETN FOM Module (XML file and Documentation) in its entirety without modification. You are also allowed to develop your own new FOM Modules (in separate XML files and separate documentation) that build-on/extends the NETN module by reference. You are NOT allowed to modify the NETN FOM Module or its documentation without prior permission by the NATO Modelling and Simulation Group.</other>
@@ -148,17 +151,6 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <order>Receive</order>
                         <semantics>Optional. Reference to the disaggregated entities after disaggregation of this `AggregateEntity`. Each element should refer to an existing entity in the federation. The `Status` of this `AggregateEntity` shall be inactive if disaggregated entities exist.|</semantics>
                     </attribute>
-                    <attribute>
-                        <name>SupportedAggregationActions</name>
-                        <dataType>AggregationActionArray</dataType>
-                        <updateType>Conditional</updateType>
-                        <updateCondition>On change</updateCondition>
-                        <ownership>DivestAcquire</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
-                        <semantics>Optional: This aggregated entity supports the listed aggregation actions.</semantics>
-                    </attribute>
                 </objectClass>
             </objectClass>
         </objectClass>
@@ -167,16 +159,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
         <interactionClass>
             <name>HLAinteractionRoot</name>
             <interactionClass>
-                <name>MRM_Root</name>
-                <sharing>Neither</sharing>
-                <transportation>HLAreliable</transportation>
-                <order>Receive</order>
-                <semantics>Base Interaction Class for all MRM related interactions.</semantics>
-                <parameter>
-                    <name>Entity</name>
-                    <dataType>UUID</dataType>
-                    <semantics>Required: Simulated Entity to Aggregate, Disaggregate, Divide or Merge.</semantics>
-                </parameter>
+                <name>SMC_EntityControl</name>
                 <interactionClass>
                     <name>Aggregate</name>
                     <sharing>PublishSubscribe</sharing>
@@ -190,6 +173,11 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                     <transportation>HLAreliable</transportation>
                     <order>Receive</order>
                     <semantics>Instructs a federate application to disaggregate the indicated `AggregateEntity`.</semantics>
+                    <parameter>
+                        <name>Formation</name>
+                        <dataType>FormationStruct</dataType>
+                        <semantics>The formation of the disaggregated units.</semantics>
+                    </parameter>
                 </interactionClass>
                 <interactionClass>
                     <name>Divide</name>
@@ -217,6 +205,11 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <dataType>HLAboolean</dataType>
                         <semantics>Optional. If true, all Equipment of type Platform and Lifeform are published as individual objects in the federation.</semantics>
                     </parameter>
+                    <parameter>
+                        <name>Formation</name>
+                        <dataType>FormationStruct</dataType>
+                        <semantics>The formation of the divided units.</semantics>
+                    </parameter>
                 </interactionClass>
                 <interactionClass>
                     <name>Merge</name>
@@ -230,67 +223,41 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
                         <semantics>Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicates which divided entities to merge with the AggregateEntity.</semantics>
                     </parameter>
                 </interactionClass>
-                <interactionClass>
-                    <name>Response</name>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
-                    <semantics>A response from the receiving federate indicating ability to comply with a request.</semantics>
-                    <parameter>
-                        <name>Request</name>
-                        <dataType>UUID</dataType>
-                        <semantics>Required: Reference to the request this interaction is a response to.</semantics>
-                    </parameter>
-                    <parameter>
-                        <name>Status</name>
-                        <dataType>HLAboolean</dataType>
-                        <semantics>Required. Specifies the result of the request action. TRUE indicates success.</semantics>
-                    </parameter>
-                </interactionClass>
             </interactionClass>
         </interactionClass>
     </interactions>
     <dataTypes>
         <enumeratedDataTypes>
             <enumeratedData>
-                <name>AggregationActionsEnum</name>
+                <name>EntityControlActionEnum</name>
                 <representation>HLAinteger32BE</representation>
-                <semantics>The types of MRM aggregation actions.</semantics>
+                <semantics>Control actions for entities.</semantics>
                 <enumerator>
-                    <name>Aggregation</name>
-                    <value>1</value>
+                    <name>Aggregate</name>
+                    <value>100</value>
                 </enumerator>
                 <enumerator>
-                    <name>Disaggregation</name>
-                    <value>2</value>
+                    <name>Disaggregate</name>
+                    <value>101</value>
                 </enumerator>
                 <enumerator>
                     <name>Divide</name>
-                    <value>3</value>
+                    <value>102</value>
                 </enumerator>
                 <enumerator>
                     <name>Merge</name>
-                    <value>4</value>
+                    <value>103</value>
                 </enumerator>
             </enumeratedData>
         </enumeratedDataTypes>
-        <arrayDataTypes>
-            <arrayData>
-                <name>AggregationActionArray</name>
-                <dataType>AggregationActionsEnum</dataType>
-                <cardinality>Dynamic</cardinality>
-                <encoding>HLAvariableArray</encoding>
-                <semantics>A list of aggregation actions.</semantics>
-            </arrayData>
-        </arrayDataTypes>
     </dataTypes>
     <notes>
         <note>
-            <label>netn-mrm_1</label>
+            <label>netn-mrm_1_1</label>
             <semantics>NETN-MRM FOM Module v1.1.1 was developed by MSG-106 and released 2014-05-15.</semantics>
         </note>
         <note>
-            <label>netn-mrm_2</label>
+            <label>netn-mrm_2_0</label>
             <semantics>* Changed Filename to NETN-MRM.xml 
 * Changed `modelIdentification` `securityClassification` from `unclassified` to `Not Classified` 
 * Changed `modelIdentification` `other` to include license information 
@@ -362,7 +329,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
 * Added field `UnitAllocation` to datatype `EntityStruct`</semantics>
         </note>
         <note>
-            <label>netn-mrm_3</label>
+            <label>netn-mrm_3_0</label>
             <semantics>* Removed `NETN_Aggregate` object class 
 * Replaced `NETN_Aggregate` attribute `UniqueId` with NETN-BASE `HLAobjectRoot` attribute `UniqueId` 
 * Replaced `NETN_Aggregate` attribute `Status` with NETN-MRM `BaseEntity` attribute `Status` 
@@ -420,7 +387,7 @@ Above license gives you the right to use and redistribute the NETN FOM Module (X
 * Replaced all use of `PercentFloat64` with `PercentFloat32`</semantics>
         </note>
         <note>
-            <label>netn-mrm_4</label>
+            <label>netn-mrm_overview</label>
             <semantics>## Overview 
  
 NETN-MRM extends the RPR-FOM `BaseEntity` and `AggregateEntity` object classes and defines `ETR_SimCon` interactions classes to trigger aggregation, disaggregation, division, and merge actions for aggregated entities. 

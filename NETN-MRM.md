@@ -2,22 +2,19 @@
 # NETN-MRM
 |Version| Date| Dependencies|
 |---|---|---|
-|3.0|2023-04-09|NETN-ETR, NETN-BASE|
+|3.0|2023-11-19|NETN-BASE, NETN-SMC, NETN-ORG|
 
-The purpose of NETN-MRM is to support federations using multiple levels of resolution and aggregation and where the level of resolution changes during a simulation.
+The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution.
 
-Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Individual entities represent distinct objects in the scenario, while aggregated models represent a group of associated physical entities.
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Entities can be represented as individual objects or as part of an aggregated object. Entity representation can change during the simulation and switch between different levels of aggregation and individual physical entities.  
 
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module specifies how to perform aggregation and disaggregation of aggregated entities, e.g. units, to other levels of aggregation or physical entities.
-
-
-The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and intends to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. 
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module specifies aggregation, disaggregation, division and merging of aggregate entities.
 
 NETN-MRM covers the following cases: 
-* Aggregation of entities representing subunits or physical entities
-* Disaggregation of entities representing a unit into entities representing subunits or physical entities
-* Division of simulated entities into parts - resources divided and all entities simulated
-* Merge of previously divided entities.
+* Aggregation of subunits into a representation of their parent unit
+* Disaggregation of a unit representation into subunits
+* Division of unit into subunits or physical entities
+* Merging of previously divided entities into a unit
 
 ## Overview 
  
@@ -36,8 +33,8 @@ All MRM actions use the same pattern of interaction.
 Use the `AggregateEntity` attribute `SupportedAggregationActions` to check the simulation entity's support for an MRM action. 
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger->>AggregateEntity: Request 
 note over AggregateEntity: Execute action 
@@ -80,8 +77,8 @@ end
  
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger->>AggregateEntity: Disaggregate(aggregate) 
 AggregateEntity->>Federation: aggregate.updateAttributeValues(Status) 
@@ -104,8 +101,8 @@ AggregateEntity->>Trigger: Response
 After performing disaggregation, the following is true: 
  
 ```mermaid 
-flowchart BT
-AggregateEntity[/AggregateEntity/]
+flowchart BT 
+AggregateEntity[/AggregateEntity/] 
 Unit1 --SuperiorUnit--> Unit 
 Unit2 --SuperiorUnit--> Unit 
  
@@ -182,8 +179,8 @@ A federate application can perform aggregation of an `AggregateEntity` under the
  
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger->>AggregateEntity: Aggregate(aggregate) 
 loop entity=aggregate.DisaggregatedEntities 
@@ -213,8 +210,8 @@ A federate application can perform the division of an `AggregateEntity` under th
  
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger->>Federate: Divide(Resources, aggregate/physical) 
  
@@ -237,7 +234,7 @@ Federate->>Trigger: Response
 After division, the following is true: 
  
 ```mermaid 
-flowchart BT
+flowchart BT 
  
 subgraph NETN-ORG 
 Equipment --holding--> Unit 
@@ -267,8 +264,8 @@ Merging of an `AggregateEntity` with one of its divided entities can be performe
  
  
 ```mermaid 
-sequenceDiagram
-autonumber
+sequenceDiagram 
+autonumber 
  
 Trigger->>Federate: Merge(aggregate, dividedEntities) 
 loop entity=dividedEntities 
@@ -318,7 +315,6 @@ A group of one or more separate objects that operate together as part of an orga
 |---|---|---|
 |DividedEntities|ArrayOfUuid|Optional. Reference to other aggregate or physical entities divided from the `AggregateEntity` to represent specific subsets of holdings.|
 |DisaggregatedEntities|ArrayOfUuid|Optional. Reference to the disaggregated entities after disaggregation of this `AggregateEntity`. Each element should refer to an existing entity in the federation. The `Status` of this `AggregateEntity` shall be inactive if disaggregated entities exist.||
-|SupportedAggregationActions|AggregationActionArray|Optional: This aggregated entity supports the listed aggregation actions.|
 
 ## Interaction Classes
 
@@ -326,13 +322,17 @@ Note that inherited and dependency parameters are not included in the descriptio
 
 ```mermaid
 graph RL
-ETR_SimCon-->HLAinteractionRoot
-Aggregate-->ETR_SimCon
-Disaggregate-->ETR_SimCon
-Divide-->ETR_SimCon
-Merge-->ETR_SimCon
-Response-->ETR_SimCon
+SMC_EntityControl-->HLAinteractionRoot
+Aggregate-->SMC_EntityControl
+Disaggregate-->SMC_EntityControl
+Divide-->SMC_EntityControl
+Merge-->SMC_EntityControl
 ```
+
+### SMC_EntityControl
+
+
+
 
 ### Aggregate
 
@@ -343,6 +343,9 @@ Instructs a federate application modelling the `AggregateEntity` to perform aggr
 
 Instructs a federate application to disaggregate the indicated `AggregateEntity`.
 
+|Parameter|Datatype|Semantics|
+|---|---|---|
+|Formation|FormationStruct|The formation of the disaggregated units.|
 
 ### Divide
 
@@ -352,8 +355,9 @@ Instructs a federate application to divide the `AggregateEntity` into multiple s
 |---|---|---|
 |Equipment|ArrayOfResourceStatus|Optional. Amount of equipment of different type and health status to be divided.|
 |Personnel|ArrayOfResourceStatus|Optional. Amount of personnel of different type and health status to be divided.|
-|Supplies|SupplyStructArray|Optional. Amount of supplies to divide.|
+|Supplies|ArrayOfSupplyStatus|Optional. Amount of supplies to divide.|
 |RegisterPhysicalEntities|HLAboolean|Optional. If true, all Equipment of type Platform and Lifeform are published as individual objects in the federation.|
+|Formation|FormationStruct|The formation of the divided units.|
 
 ### Merge
 
@@ -363,11 +367,6 @@ Instructs a federate application to merge an `AggregateEntity` with divided enti
 |---|---|---|
 |DividedEntities|ArrayOfUuid|Required. A subset of identifiers from the DividedEntities attribute of the referenced AggregateEntity. The set of identifiers indicates which divided entities to merge with the AggregateEntity.|
 
-### Response
-
-A response from the receiving federate indicating ability to comply with a request.
-
-
 ## Datatypes
 
 Note that only datatypes defined in this FOM Module are listed below. Please refer to FOM Modules on which this module depends for other referenced datatypes.
@@ -375,16 +374,10 @@ Note that only datatypes defined in this FOM Module are listed below. Please ref
 ### Overview
 |Name|Semantics|
 |---|---|
-|AggregationActionArray|A list of aggregation actions.|
-|AggregationActionsEnum|The types of MRM aggregation actions.|
+|EntityControlActionEnum|Control actions for entities.|
         
 ### Enumerated Datatypes
 |Name|Representation|Semantics|
 |---|---|---|
-|AggregationActionsEnum|HLAinteger32BE|The types of MRM aggregation actions.|
-        
-### Array Datatypes
-|Name|Element Datatype|Semantics|
-|---|---|---|
-|AggregationActionArray|AggregationActionsEnum|A list of aggregation actions.|
+|EntityControlActionEnum|HLAinteger32BE|Control actions for entities.|
     
