@@ -288,12 +288,18 @@ After merging, the `AggregateEntity` representation includes all previously divi
 
 ## Object Classes
 
-Note that inherited and dependency attributes are not included in the description of object classes.
-
 ```mermaid
-graph RL
-BaseEntity-->HLAobjectRoot
-AggregateEntity-->BaseEntity
+classDiagram 
+direction LR
+
+HLAobjectRoot <|-- BaseEntity
+BaseEntity <|-- AggregateEntity
+BaseEntity : OrganizationElement
+BaseEntity : ParentAggregate
+BaseEntity : SourceAggregate
+BaseEntity : Status
+AggregateEntity : DisaggregatedEntities
+AggregateEntity : DividedEntities
 ```
 
 ### BaseEntity
@@ -302,10 +308,10 @@ A base class of aggregate and discrete scenario domain participants. The BaseEnt
 
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|Status|ActiveStatusEnum8|Optional. Indicates if this entity is currently being simulated or not. During an inactive state, the attribute values may not reflect accurate or current values. All attributes are updated to represent the current status of the object instance before setting the state to Active. The default is `Active`.|
-|SourceAggregate|UUID|Optional. Reference to an active `AggregateEnity` instance which is the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.|
-|ParentAggregate|UUID|Optional. If this simulation entity results from a disaggregation, this attribute refers to the disaggregated `AggregateEntity`. The default value is no reference, i.e. all zeros.|
 |OrganizationElement|UUID|Optional: Reference to an existing NETN-ORG  organization element, e.g. a `Unit` or `Equipment` represented by this simulation entity. The default value is no related organization element, i.e. all zeros.|
+|ParentAggregate|UUID|Optional. If this simulation entity results from a disaggregation, this attribute refers to the disaggregated `AggregateEntity`. The default value is no reference, i.e. all zeros.|
+|SourceAggregate|UUID|Optional. Reference to an active `AggregateEnity` instance which is the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.|
+|Status|ActiveStatusEnum8|Optional. Indicates if this entity is currently being simulated or not. During an inactive state, the attribute values may not reflect accurate or current values. All attributes are updated to represent the current status of the object instance before setting the state to Active. The default is `Active`.|
 
 ### AggregateEntity
 
@@ -313,26 +319,31 @@ A group of one or more separate objects that operate together as part of an orga
 
 |Attribute|Datatype|Semantics|
 |---|---|---|
-|DividedEntities|ArrayOfUuid|Optional. Reference to other aggregate or physical entities divided from the `AggregateEntity` to represent specific subsets of holdings.|
 |DisaggregatedEntities|ArrayOfUuid|Optional. Reference to the disaggregated entities after disaggregation of this `AggregateEntity`. Each element should refer to an existing entity in the federation. The `Status` of this `AggregateEntity` shall be inactive if disaggregated entities exist.||
+|DividedEntities|ArrayOfUuid|Optional. Reference to other aggregate or physical entities divided from the `AggregateEntity` to represent specific subsets of holdings.|
+|OrganizationElement|UUID|Optional: Reference to an existing NETN-ORG  organization element, e.g. a `Unit` or `Equipment` represented by this simulation entity. The default value is no related organization element, i.e. all zeros.|
+|ParentAggregate|UUID|Optional. If this simulation entity results from a disaggregation, this attribute refers to the disaggregated `AggregateEntity`. The default value is no reference, i.e. all zeros.|
+|SourceAggregate|UUID|Optional. Reference to an active `AggregateEnity` instance which is the source of a NETN-MRM division. The default value is all zeros representing no source AggregateEntity.|
+|Status|ActiveStatusEnum8|Optional. Indicates if this entity is currently being simulated or not. During an inactive state, the attribute values may not reflect accurate or current values. All attributes are updated to represent the current status of the object instance before setting the state to Active. The default is `Active`.|
 
 ## Interaction Classes
 
-Note that inherited and dependency parameters are not included in the description of interaction classes.
-
 ```mermaid
-graph RL
-SMC_EntityControl-->HLAinteractionRoot
-Aggregate-->SMC_EntityControl
-Disaggregate-->SMC_EntityControl
-Divide-->SMC_EntityControl
-Merge-->SMC_EntityControl
+classDiagram 
+direction LR
+HLAinteractionRoot <|-- SMC_EntityControl
+SMC_EntityControl <|-- Aggregate
+SMC_EntityControl <|-- Disaggregate
+SMC_EntityControl <|-- Divide
+SMC_EntityControl <|-- Merge
+Disaggregate : Formation
+Divide : Equipment
+Divide : Formation
+Divide : Personnel
+Divide : RegisterPhysicalEntities
+Divide : Supplies
+Merge : DividedEntities
 ```
-
-### SMC_EntityControl
-
-
-
 
 ### Aggregate
 
@@ -354,10 +365,10 @@ Instructs a federate application to divide the `AggregateEntity` into multiple s
 |Parameter|Datatype|Semantics|
 |---|---|---|
 |Equipment|ArrayOfResourceStatus|Optional. Amount of equipment of different type and health status to be divided.|
-|Personnel|ArrayOfResourceStatus|Optional. Amount of personnel of different type and health status to be divided.|
-|Supplies|ArrayOfSupplyStatus|Optional. Amount of supplies to divide.|
-|RegisterPhysicalEntities|HLAboolean|Optional. If true, all Equipment of type Platform and Lifeform are published as individual objects in the federation.|
 |Formation|FormationStruct|The formation of the divided units.|
+|Personnel|ArrayOfResourceStatus|Optional. Amount of personnel of different type and health status to be divided.|
+|RegisterPhysicalEntities|HLAboolean|Optional. If true, all Equipment of type Platform and Lifeform are published as individual objects in the federation.|
+|Supplies|ArrayOfSupplyStatus|Optional. Amount of supplies to divide.|
 
 ### Merge
 
