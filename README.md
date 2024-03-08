@@ -3,15 +3,15 @@
 
 |Version| Date| Dependencies|
 |---|---|---|
-|3.0|2023-11-19|NETN-BASE, NETN-SMC, NETN-ORG|
+|3.0|2024-03-07|NETN-BASE, NETN-SMC, NETN-ORG|
 
 > [Full Documentation](NETN-MRM.md)
 
-The purpose of NETN-MRM is to support federations with entities represented at multiple levels of resolution.
+The purpose of the NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) module is to support federations with entities represented at multiple levels of resolution.
 
 Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Entities can be represented as individual objects or as part of an aggregated object. Entity representation can change during the simulation and switch between different levels of aggregation and individual physical entities.  
 
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module specifies aggregation, disaggregation, division and merging of aggregate entities.
+The NETN-MRM module specifies aggregation, disaggregation, division and merging of aggregate entities.
 
 NETN-MRM covers the following cases: 
 * Aggregation of subunits into a representation of their parent unit
