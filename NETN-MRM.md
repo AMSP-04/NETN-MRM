@@ -2,9 +2,9 @@
 # NETN-MRM
 |Version| Date| Dependencies|
 |---|---|---|
-|3.0|2024-03-07|NETN-BASE, NETN-SMC, NETN-ORG|
+|3.0|2024-03-10|NETN-BASE, NETN-SMC, NETN-ORG|
 
-The purpose of the NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) module is to support federations with entities represented at multiple levels of resolution.
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) module supports federations with entities represented at multiple resolution levels.
 
 Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Entities can be represented as individual objects or as part of an aggregated object. Entity representation can change during the simulation and switch between different levels of aggregation and individual physical entities.  
 
@@ -121,11 +121,11 @@ F->>R: SMC_Response
 |---|---|
 |1| Request federate (R) sends a `Disaggregate` action to (A). (F) has the primary modelling responsibility of (A) and processes the action.|
 |2| (F) updates the `Status` attribute of (A) to `Inactive`.|
-|3| If the `OrganizationElement` attribute of (A) reference a NETN-ORG `Unit` (U), then instances of `AggregateEntity` (a+) are registered for each NETN-ORG `Unit` (u+) where the (u+) attribute `SuperiorUnit` referes to (U). |
-|4|(F) updates the initial attribute values for (a+) including the `ParentUnit` attribute set to refer to (A). |
+|3| If the `OrganizationElement` attribute of (A) references a NETN-ORG `Unit` (U), then instances of `AggregateEntity` (a+) are registered for each NETN-ORG `Unit` (u+) where the (u+) attribute `SuperiorUnit` refers to (U). |
+|4|(F) updates the initial attribute values for (a+), including the `ParentUnit` attribute set to refer to (A). |
 |5|(F) updates the `Status` attributes of (a+) to `Active`. |
 |6|(F) updates the `DisaggregatedEntities` attribute of (A) to reference (a+)|
-|7|(F) sends a `SMC_Response` to (R) with `Status` parameter set to `Success`|
+|7|(F) sends a `SMC_Response` to (R) with the `Status` parameter set to `Success`|
 
  
 After performing disaggregation, the following is true: 
@@ -137,7 +137,7 @@ After performing disaggregation, the following is true:
 * (a+).`ParentAggregate` = (A)
 * (A).`DisaggregsatedEntities` = (a+) 
  
-If a (u+), i.e, subunit, has one or more associated NETN-ORG `Equipment` objects (e+), then these are represented in the federation as `PhysicalEntity` objects (p+) and after disaggregation the following is true:
+If a (u+), i.e, subunit, has one or more associated NETN-ORG `Equipment` objects (e+), then these are represented in the federation as `PhysicalEntity` objects (p+). After disaggregation, the following is true:
 
 * (p+).`OrganizationElement` refers to the corresponding (e+)
 * (p+).`Status` = Active
@@ -186,16 +186,16 @@ F->>R: SMC_Response
 |2| (F) deletes all (A).`DisaggregatedEntities` |
 |3| (F) updates (A).`DisaggregatedEntities` = `Empty`. |
 |4| (F) updates (A).`Status` = `Active`. |
-|5| (F) sends a `SMC_Response` to (R) with `Status` parameter set to `Success` |
+|5| (F) sends a `SMC_Response` to (R) with the `Status` parameter set to `Success` |
 
 
 
 
 ## Division 
  
-Division of an `AggregateEntity` is a temporary allocation of some specific resources to another `AggregateEntity` or into one or more `Platform` and `Lifeform` objects. 
+Division of an `AggregateEntity` temporarily allocates some specific resources to another `AggregateEntity` or into one or more `Platform` and `Lifeform` objects. 
  
-A federate application (F) can perform division of an `AggregateEntity` (A) under the following conditions: 
+A federate application (F) can perform the division of an `AggregateEntity` (A) under the following conditions: 
 
 * (F) has the primary modelling responsibility of (A).
 * The `Status` attribute of (A) is `Active`. 
@@ -227,7 +227,7 @@ F->>R: SMC_Response
 |4| (F) updates A+ or P+ with the divided holdings (r+)|
 |5| (F) updates A.`DividedEntities` to reference A+ or P+|
 |6| (F) updates A+ or P+ attribute `SourceAggregate` to refer to (A).
-|7| (F) sends a `SMC_Response` to (R) with `Status` parameter set to `Success` |
+|7| (F) sends a `SMC_Response` to (R) with the `Status` parameter set to `Success` |
 
 
 After performing division, the following is true:
@@ -259,13 +259,13 @@ F->>R: SMC_Response
 ``` 
 |Step|Description|
 |---|---|
-|1| Request federate (R) sends a `Merge` action indicating the `AggregateEntity` (A) and the divided entities (d+) to merge. (F) has the primary modelling responsibility of (A) and processes the action. |
+|1| Request federate (R) sends a `Merge` action indicating that the `AggregateEntity` (A) and the divided entities (d+) should merge. (F) has the primary modelling responsibility of (A) and processes the action. |
 |2| (F) deletes all divided entities (d+) from the federation. |
 |3| (F) updates (A).`DividedEntities` to exclude (d+) |
-|4| (F) sends a `SMC_Response` to (R) with `Status` parameter set to `Success` |
+|4| (F) sends a `SMC_Response` to (R) with the `Status` parameter set to `Success` |
 
  
-After merging, (A) includes a representation of all previously divided entities  (d+).
+After merging, (A) represents all previously divided entities  (d+).
 
 
 ## Object Classes
