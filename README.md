@@ -3,24 +3,21 @@
 
 |Version| Date| Dependencies|
 |---|---|---|
-|3.0|2023-04-09|NETN-ETR, NETN-BASE|
+|3.0|2024-03-10|NETN-BASE, NETN-SMC, NETN-ORG|
 
 > [Full Documentation](NETN-MRM.md)
 
-The purpose of NETN-MRM is to support federations using multiple levels of resolution and aggregation and where the level of resolution changes during a simulation.
+The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) module supports federations with entities represented at multiple resolution levels.
 
-Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Individual entities represent distinct objects in the scenario, while aggregated models represent a group of associated physical entities.
+Models of real-world objects, processes and phenomena are used to create a synthetic representation suitable for the simulation. Entities can be represented as individual objects or as part of an aggregated object. Entity representation can change during the simulation and switch between different levels of aggregation and individual physical entities.  
 
-The NATO Education and Training Network Multi-Resolution Modelling (NETN-MRM) FOM Module specifies how to perform aggregation and disaggregation of aggregated entities, e.g. units, to other levels of aggregation or physical entities.
-
-
-The MRM FOM module specifies interaction classes necessary to enable federation multi-resolution modelling. The specification is based on IEEE 1516 High Level Architecture (HLA) Object Model Template (OMT) and intends to support interoperability in a federated simulation (federation) based on HLA. An HLA-based Federation Object Model (FOM) is used to specify types of data and their encoding on the network. 
+The NETN-MRM module specifies aggregation, disaggregation, division and merging of aggregate entities.
 
 NETN-MRM covers the following cases: 
-* Aggregation of entities representing subunits or physical entities
-* Disaggregation of entities representing a unit into entities representing subunits or physical entities
-* Division of simulated entities into parts - resources divided and all entities simulated
-* Merge of previously divided entities.
+* Aggregation of subunits into a representation of their parent unit
+* Disaggregation of a unit representation into subunits
+* Division of unit into subunits or physical entities
+* Merging of previously divided entities into a unit
 
 ## License
 
